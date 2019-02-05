@@ -1,0 +1,1847 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AccountBookmark">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="AccountBookmark" />
+          </Key>
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BookmarkDate" Type="datetime" Nullable="false" />
+          <Property Name="AccountBookmark" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountStatus">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ActivityHistory">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Activity" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Agenda">
+          <Key>
+            <PropertyRef Name="AgendaId" />
+          </Key>
+          <Property Name="AgendaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
+          <Property Name="Activity" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Hometown" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Point" Type="int" Nullable="false" />
+          <Property Name="TotalPointEarned" Type="int" Nullable="false" />
+          <Property Name="CompanyId" Type="int" />
+          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Booth">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="Booth" Type="int" Nullable="false" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Location" Type="geography" />
+          <Property Name="Logo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="Website" Type="varchar" MaxLength="50" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompanyBookmark">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="CompanyBookmark" />
+          </Key>
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BookmarkDate" Type="datetime" Nullable="false" />
+          <Property Name="CompanyBookmark" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompanyStatus">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exhibition">
+          <Key>
+            <PropertyRef Name="ExhibitionId" />
+          </Key>
+          <Property Name="ExhibitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="OrganizerId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="Location" Type="geography" />
+          <Property Name="Logo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExhibitionAttendee">
+          <Key>
+            <PropertyRef Name="ExhibitionId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BookmarkTime" Type="datetime" Nullable="false" />
+          <Property Name="CheckinTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ProposedAnswer">
+          <Key>
+            <PropertyRef Name="ProposedAnswerId" />
+          </Key>
+          <Property Name="ProposedAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="SurveyId" Type="int" Nullable="false" />
+          <Property Name="QuestionNo" Type="int" Nullable="false" />
+          <Property Name="QuestionType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Reward">
+          <Key>
+            <PropertyRef Name="RewardId" />
+          </Key>
+          <Property Name="RewardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="PointCost" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndtDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RewardHistory">
+          <Key>
+            <PropertyRef Name="RewardId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="RewardId" Type="int" Nullable="false" />
+          <Property Name="ExchangedDate" Type="datetime" Nullable="false" />
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Survey">
+          <Key>
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="SurveyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Point" Type="int" Nullable="false" />
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CompanyId" Type="int" />
+          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SurveyAnswer">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+            <PropertyRef Name="ProposedAnswerId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="int" Nullable="false" />
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Other" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SurveyParticipation">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="SurveyId" Type="int" Nullable="false" />
+          <Property Name="CompleteDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AccountBookmark_AspNetUsers_1">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AccountBookmark" Type="Self.AccountBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountBookmark">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountBookmark_AspNetUsers_2">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AccountBookmark" Type="Self.AccountBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountBookmark">
+              <PropertyRef Name="AccountBookmark" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityHistory_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="ActivityHistory" Type="Self.ActivityHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActivityHistory">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Agenda_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Agenda" Type="Self.Agenda" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Agenda">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserClaims_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserLogins_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserRoles_AspNetRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserRoles_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_AccountStatus">
+          <End Role="AccountStatus" Type="Self.AccountStatus" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountStatus">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Booth_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="Booth">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Booth_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Booth">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_CompanyStatus">
+          <End Role="CompanyStatus" Type="Self.CompanyStatus" Multiplicity="1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyStatus">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyBookmark_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CompanyBookmark" Type="Self.CompanyBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompanyBookmark">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyBookmark_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="CompanyBookmark" Type="Self.CompanyBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="CompanyBookmark">
+              <PropertyRef Name="CompanyBookmark" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exhibition_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exhibition">
+              <PropertyRef Name="OrganizerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExhibitionAttendee_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="ExhibitionAttendee" Type="Self.ExhibitionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExhibitionAttendee">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExhibitionAttendee_Exhibitio">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="ExhibitionAttendee" Type="Self.ExhibitionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="ExhibitionAttendee">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProposedAnswer_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="ProposedAnswer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reward_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Reward" Type="Self.Reward" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reward">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RewardHistory_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="RewardHistory" Type="Self.RewardHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RewardHistory">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RewardHistory_Reward">
+          <End Role="Reward" Type="Self.Reward" Multiplicity="1" />
+          <End Role="RewardHistory" Type="Self.RewardHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reward">
+              <PropertyRef Name="RewardId" />
+            </Principal>
+            <Dependent Role="RewardHistory">
+              <PropertyRef Name="RewardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_ProposedAnswer">
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProposedAnswer">
+              <PropertyRef Name="ProposedAnswerId" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="ProposedAnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyParticipation_AspNetUser">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="SurveyParticipation" Type="Self.SurveyParticipation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyParticipation">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyParticipation_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="SurveyParticipation" Type="Self.SurveyParticipation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="SurveyParticipation">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GamexModelStoreContainer">
+          <EntitySet Name="AccountBookmark" EntityType="Self.AccountBookmark" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountStatus" EntityType="Self.AccountStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActivityHistory" EntityType="Self.ActivityHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Agenda" EntityType="Self.Agenda" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Booth" EntityType="Self.Booth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompanyBookmark" EntityType="Self.CompanyBookmark" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompanyStatus" EntityType="Self.CompanyStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exhibition" EntityType="Self.Exhibition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExhibitionAttendee" EntityType="Self.ExhibitionAttendee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProposedAnswer" EntityType="Self.ProposedAnswer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reward" EntityType="Self.Reward" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RewardHistory" EntityType="Self.RewardHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Survey" EntityType="Self.Survey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyAnswer" EntityType="Self.SurveyAnswer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyParticipation" EntityType="Self.SurveyParticipation" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AccountBookmark_AspNetUsers_1" Association="Self.FK_AccountBookmark_AspNetUsers_1">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AccountBookmark" EntitySet="AccountBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountBookmark_AspNetUsers_2" Association="Self.FK_AccountBookmark_AspNetUsers_2">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AccountBookmark" EntitySet="AccountBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityHistory_AspNetUsers" Association="Self.FK_ActivityHistory_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="ActivityHistory" EntitySet="ActivityHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Agenda_Exhibition" Association="Self.FK_Agenda_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Agenda" EntitySet="Agenda" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers" Association="Self.FK_AspNetUserClaims_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers" Association="Self.FK_AspNetUserLogins_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserRoles_AspNetRoles" Association="Self.FK_AspNetUserRoles_AspNetRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserRoles_AspNetUsers" Association="Self.FK_AspNetUserRoles_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_AccountStatus" Association="Self.FK_AspNetUsers_AccountStatus">
+            <End Role="AccountStatus" EntitySet="AccountStatus" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Company" Association="Self.FK_AspNetUsers_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Booth_Company" Association="Self.FK_Booth_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Booth" EntitySet="Booth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Booth_Exhibition" Association="Self.FK_Booth_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Booth" EntitySet="Booth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_CompanyStatus" Association="Self.FK_Company_CompanyStatus">
+            <End Role="CompanyStatus" EntitySet="CompanyStatus" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyBookmark_AspNetUsers" Association="Self.FK_CompanyBookmark_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CompanyBookmark" EntitySet="CompanyBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyBookmark_Company" Association="Self.FK_CompanyBookmark_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="CompanyBookmark" EntitySet="CompanyBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exhibition_AspNetUsers" Association="Self.FK_Exhibition_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Exhibition" EntitySet="Exhibition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExhibitionAttendee_AspNetUsers" Association="Self.FK_ExhibitionAttendee_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="ExhibitionAttendee" EntitySet="ExhibitionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExhibitionAttendee_Exhibitio" Association="Self.FK_ExhibitionAttendee_Exhibitio">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="ExhibitionAttendee" EntitySet="ExhibitionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProposedAnswer_Question" Association="Self.FK_ProposedAnswer_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="ProposedAnswer" EntitySet="ProposedAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Survey" Association="Self.FK_Question_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reward_AspNetUsers" Association="Self.FK_Reward_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Reward" EntitySet="Reward" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RewardHistory_AspNetUsers" Association="Self.FK_RewardHistory_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="RewardHistory" EntitySet="RewardHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RewardHistory_Reward" Association="Self.FK_RewardHistory_Reward">
+            <End Role="Reward" EntitySet="Reward" />
+            <End Role="RewardHistory" EntitySet="RewardHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_AspNetUsers" Association="Self.FK_Survey_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_Company" Association="Self.FK_Survey_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_Exhibition" Association="Self.FK_Survey_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_AspNetUsers" Association="Self.FK_SurveyAnswer_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_ProposedAnswer" Association="Self.FK_SurveyAnswer_ProposedAnswer">
+            <End Role="ProposedAnswer" EntitySet="ProposedAnswer" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_Question" Association="Self.FK_SurveyAnswer_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyParticipation_AspNetUser" Association="Self.FK_SurveyParticipation_AspNetUser">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyParticipation_Survey" Association="Self.FK_SurveyParticipation_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GamexModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AccountBookmark">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="AccountBookmark1" />
+          </Key>
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookmarkDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AccountBookmark1" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AccountBookmark_AspNetUsers_1" FromRole="AccountBookmark" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="Self.FK_AccountBookmark_AspNetUsers_2" FromRole="AccountBookmark" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AccountStatus">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUsers_AccountStatus" FromRole="AccountStatus" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="ActivityHistory">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Activity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_ActivityHistory_AspNetUsers" FromRole="ActivityHistory" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="Agenda">
+          <Key>
+            <PropertyRef Name="AgendaId" />
+          </Key>
+          <Property Name="AgendaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Activity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Exhibition" Relationship="Self.FK_Agenda_Exhibition" FromRole="Agenda" ToRole="Exhibition" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUserClaims_AspNetUsers" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUserLogins_AspNetUsers" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Hometown" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Point" Type="Int32" Nullable="false" />
+          <Property Name="TotalPointEarned" Type="Int32" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountBookmark" Relationship="Self.FK_AccountBookmark_AspNetUsers_1" FromRole="AspNetUsers" ToRole="AccountBookmark" />
+          <NavigationProperty Name="AccountBookmark1" Relationship="Self.FK_AccountBookmark_AspNetUsers_2" FromRole="AspNetUsers" ToRole="AccountBookmark" />
+          <NavigationProperty Name="AccountStatus" Relationship="Self.FK_AspNetUsers_AccountStatus" FromRole="AspNetUsers" ToRole="AccountStatus" />
+          <NavigationProperty Name="ActivityHistory" Relationship="Self.FK_ActivityHistory_AspNetUsers" FromRole="AspNetUsers" ToRole="ActivityHistory" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_AspNetUserClaims_AspNetUsers" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_AspNetUserLogins_AspNetUsers" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_AspNetUsers_Company" FromRole="AspNetUsers" ToRole="Company" />
+          <NavigationProperty Name="CompanyBookmark" Relationship="Self.FK_CompanyBookmark_AspNetUsers" FromRole="AspNetUsers" ToRole="CompanyBookmark" />
+          <NavigationProperty Name="Exhibition" Relationship="Self.FK_Exhibition_AspNetUsers" FromRole="AspNetUsers" ToRole="Exhibition" />
+          <NavigationProperty Name="ExhibitionAttendee" Relationship="Self.FK_ExhibitionAttendee_AspNetUsers" FromRole="AspNetUsers" ToRole="ExhibitionAttendee" />
+          <NavigationProperty Name="Reward" Relationship="Self.FK_Reward_AspNetUsers" FromRole="AspNetUsers" ToRole="Reward" />
+          <NavigationProperty Name="RewardHistory" Relationship="Self.FK_RewardHistory_AspNetUsers" FromRole="AspNetUsers" ToRole="RewardHistory" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_Survey_AspNetUsers" FromRole="AspNetUsers" ToRole="Survey" />
+          <NavigationProperty Name="SurveyAnswer" Relationship="Self.FK_SurveyAnswer_AspNetUsers" FromRole="AspNetUsers" ToRole="SurveyAnswer" />
+          <NavigationProperty Name="SurveyParticipation" Relationship="Self.FK_SurveyParticipation_AspNetUser" FromRole="AspNetUsers" ToRole="SurveyParticipation" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <EntityType Name="Booth">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Booth1" Type="Int32" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Booth_Company" FromRole="Booth" ToRole="Company" />
+          <NavigationProperty Name="Exhibition" Relationship="Self.FK_Booth_Exhibition" FromRole="Booth" ToRole="Exhibition" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Location" Type="Geography" />
+          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Website" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUsers_Company" FromRole="Company" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Booth" Relationship="Self.FK_Booth_Company" FromRole="Company" ToRole="Booth" />
+          <NavigationProperty Name="CompanyStatus" Relationship="Self.FK_Company_CompanyStatus" FromRole="Company" ToRole="CompanyStatus" />
+          <NavigationProperty Name="CompanyBookmark" Relationship="Self.FK_CompanyBookmark_Company" FromRole="Company" ToRole="CompanyBookmark" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_Survey_Company" FromRole="Company" ToRole="Survey" />
+        </EntityType>
+        <EntityType Name="CompanyBookmark">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="CompanyBookmark1" />
+          </Key>
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookmarkDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CompanyBookmark1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_CompanyBookmark_AspNetUsers" FromRole="CompanyBookmark" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_CompanyBookmark_Company" FromRole="CompanyBookmark" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="CompanyStatus">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Company_CompanyStatus" FromRole="CompanyStatus" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="Exhibition">
+          <Key>
+            <PropertyRef Name="ExhibitionId" />
+          </Key>
+          <Property Name="ExhibitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrganizerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Location" Type="Geography" />
+          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Agenda" Relationship="Self.FK_Agenda_Exhibition" FromRole="Exhibition" ToRole="Agenda" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Exhibition_AspNetUsers" FromRole="Exhibition" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Booth" Relationship="Self.FK_Booth_Exhibition" FromRole="Exhibition" ToRole="Booth" />
+          <NavigationProperty Name="ExhibitionAttendee" Relationship="Self.FK_ExhibitionAttendee_Exhibitio" FromRole="Exhibition" ToRole="ExhibitionAttendee" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_Survey_Exhibition" FromRole="Exhibition" ToRole="Survey" />
+        </EntityType>
+        <EntityType Name="ExhibitionAttendee">
+          <Key>
+            <PropertyRef Name="ExhibitionId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookmarkTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CheckinTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_ExhibitionAttendee_AspNetUsers" FromRole="ExhibitionAttendee" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Exhibition" Relationship="Self.FK_ExhibitionAttendee_Exhibitio" FromRole="ExhibitionAttendee" ToRole="Exhibition" />
+        </EntityType>
+        <EntityType Name="ProposedAnswer">
+          <Key>
+            <PropertyRef Name="ProposedAnswerId" />
+          </Key>
+          <Property Name="ProposedAnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_ProposedAnswer_Question" FromRole="ProposedAnswer" ToRole="Question" />
+          <NavigationProperty Name="SurveyAnswer" Relationship="Self.FK_SurveyAnswer_ProposedAnswer" FromRole="ProposedAnswer" ToRole="SurveyAnswer" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Content" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SurveyId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionNo" Type="Int32" Nullable="false" />
+          <Property Name="QuestionType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_ProposedAnswer_Question" FromRole="Question" ToRole="ProposedAnswer" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_Question_Survey" FromRole="Question" ToRole="Survey" />
+          <NavigationProperty Name="SurveyAnswer" Relationship="Self.FK_SurveyAnswer_Question" FromRole="Question" ToRole="SurveyAnswer" />
+        </EntityType>
+        <EntityType Name="Reward">
+          <Key>
+            <PropertyRef Name="RewardId" />
+          </Key>
+          <Property Name="RewardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="PointCost" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndtDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Reward_AspNetUsers" FromRole="Reward" ToRole="AspNetUsers" />
+          <NavigationProperty Name="RewardHistory" Relationship="Self.FK_RewardHistory_Reward" FromRole="Reward" ToRole="RewardHistory" />
+        </EntityType>
+        <EntityType Name="RewardHistory">
+          <Key>
+            <PropertyRef Name="RewardId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="RewardId" Type="Int32" Nullable="false" />
+          <Property Name="ExchangedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_RewardHistory_AspNetUsers" FromRole="RewardHistory" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Reward" Relationship="Self.FK_RewardHistory_Reward" FromRole="RewardHistory" ToRole="Reward" />
+        </EntityType>
+        <EntityType Name="Survey">
+          <Key>
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="SurveyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Point" Type="Int32" Nullable="false" />
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Survey_AspNetUsers" FromRole="Survey" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Survey_Company" FromRole="Survey" ToRole="Company" />
+          <NavigationProperty Name="Exhibition" Relationship="Self.FK_Survey_Exhibition" FromRole="Survey" ToRole="Exhibition" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_Question_Survey" FromRole="Survey" ToRole="Question" />
+          <NavigationProperty Name="SurveyParticipation" Relationship="Self.FK_SurveyParticipation_Survey" FromRole="Survey" ToRole="SurveyParticipation" />
+        </EntityType>
+        <EntityType Name="SurveyAnswer">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+            <PropertyRef Name="ProposedAnswerId" />
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="Int32" Nullable="false" />
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Other" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_SurveyAnswer_AspNetUsers" FromRole="SurveyAnswer" ToRole="AspNetUsers" />
+          <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_SurveyAnswer_ProposedAnswer" FromRole="SurveyAnswer" ToRole="ProposedAnswer" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_SurveyAnswer_Question" FromRole="SurveyAnswer" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="SurveyParticipation">
+          <Key>
+            <PropertyRef Name="AccountId" />
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SurveyId" Type="Int32" Nullable="false" />
+          <Property Name="CompleteDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_SurveyParticipation_AspNetUser" FromRole="SurveyParticipation" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_SurveyParticipation_Survey" FromRole="SurveyParticipation" ToRole="Survey" />
+        </EntityType>
+        <Association Name="FK_AccountBookmark_AspNetUsers_1">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AccountBookmark" Type="Self.AccountBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountBookmark">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountBookmark_AspNetUsers_2">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AccountBookmark" Type="Self.AccountBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountBookmark">
+              <PropertyRef Name="AccountBookmark1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_AccountStatus">
+          <End Role="AccountStatus" Type="Self.AccountStatus" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountStatus">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityHistory_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="ActivityHistory" Type="Self.ActivityHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActivityHistory">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Agenda_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Agenda" Type="Self.Agenda" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Agenda">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserClaims_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUserLogins_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyBookmark_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CompanyBookmark" Type="Self.CompanyBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompanyBookmark">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exhibition_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exhibition">
+              <PropertyRef Name="OrganizerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExhibitionAttendee_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="ExhibitionAttendee" Type="Self.ExhibitionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExhibitionAttendee">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reward_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Reward" Type="Self.Reward" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reward">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RewardHistory_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="RewardHistory" Type="Self.RewardHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RewardHistory">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyParticipation_AspNetUser">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="SurveyParticipation" Type="Self.SurveyParticipation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SurveyParticipation">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Booth_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="Booth">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Booth_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Booth">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_CompanyStatus">
+          <End Role="CompanyStatus" Type="Self.CompanyStatus" Multiplicity="1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyStatus">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyBookmark_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="CompanyBookmark" Type="Self.CompanyBookmark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="CompanyBookmark">
+              <PropertyRef Name="CompanyBookmark1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExhibitionAttendee_Exhibitio">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="ExhibitionAttendee" Type="Self.ExhibitionAttendee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="ExhibitionAttendee">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Survey_Exhibition">
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exhibition">
+              <PropertyRef Name="ExhibitionId" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="ExhibitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProposedAnswer_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="ProposedAnswer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_ProposedAnswer">
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProposedAnswer">
+              <PropertyRef Name="ProposedAnswerId" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="ProposedAnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyAnswer_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RewardHistory_Reward">
+          <End Role="Reward" Type="Self.Reward" Multiplicity="1" />
+          <End Role="RewardHistory" Type="Self.RewardHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reward">
+              <PropertyRef Name="RewardId" />
+            </Principal>
+            <Dependent Role="RewardHistory">
+              <PropertyRef Name="RewardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyParticipation_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="SurveyParticipation" Type="Self.SurveyParticipation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="SurveyParticipation">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="GamexContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountBookmark" EntityType="Self.AccountBookmark" />
+          <EntitySet Name="AccountStatus" EntityType="Self.AccountStatus" />
+          <EntitySet Name="ActivityHistory" EntityType="Self.ActivityHistory" />
+          <EntitySet Name="Agenda" EntityType="Self.Agenda" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" />
+          <EntitySet Name="Booth" EntityType="Self.Booth" />
+          <EntitySet Name="Company" EntityType="Self.Company" />
+          <EntitySet Name="CompanyBookmark" EntityType="Self.CompanyBookmark" />
+          <EntitySet Name="CompanyStatus" EntityType="Self.CompanyStatus" />
+          <EntitySet Name="Exhibition" EntityType="Self.Exhibition" />
+          <EntitySet Name="ExhibitionAttendee" EntityType="Self.ExhibitionAttendee" />
+          <EntitySet Name="ProposedAnswer" EntityType="Self.ProposedAnswer" />
+          <EntitySet Name="Question" EntityType="Self.Question" />
+          <EntitySet Name="Reward" EntityType="Self.Reward" />
+          <EntitySet Name="RewardHistory" EntityType="Self.RewardHistory" />
+          <EntitySet Name="Survey" EntityType="Self.Survey" />
+          <EntitySet Name="SurveyAnswer" EntityType="Self.SurveyAnswer" />
+          <EntitySet Name="SurveyParticipation" EntityType="Self.SurveyParticipation" />
+          <AssociationSet Name="FK_AccountBookmark_AspNetUsers_1" Association="Self.FK_AccountBookmark_AspNetUsers_1">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AccountBookmark" EntitySet="AccountBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountBookmark_AspNetUsers_2" Association="Self.FK_AccountBookmark_AspNetUsers_2">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AccountBookmark" EntitySet="AccountBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_AccountStatus" Association="Self.FK_AspNetUsers_AccountStatus">
+            <End Role="AccountStatus" EntitySet="AccountStatus" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityHistory_AspNetUsers" Association="Self.FK_ActivityHistory_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="ActivityHistory" EntitySet="ActivityHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Agenda_Exhibition" Association="Self.FK_Agenda_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Agenda" EntitySet="Agenda" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserClaims_AspNetUsers" Association="Self.FK_AspNetUserClaims_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUserLogins_AspNetUsers" Association="Self.FK_AspNetUserLogins_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Company" Association="Self.FK_AspNetUsers_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyBookmark_AspNetUsers" Association="Self.FK_CompanyBookmark_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CompanyBookmark" EntitySet="CompanyBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exhibition_AspNetUsers" Association="Self.FK_Exhibition_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Exhibition" EntitySet="Exhibition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExhibitionAttendee_AspNetUsers" Association="Self.FK_ExhibitionAttendee_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="ExhibitionAttendee" EntitySet="ExhibitionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reward_AspNetUsers" Association="Self.FK_Reward_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Reward" EntitySet="Reward" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RewardHistory_AspNetUsers" Association="Self.FK_RewardHistory_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="RewardHistory" EntitySet="RewardHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_AspNetUsers" Association="Self.FK_Survey_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_AspNetUsers" Association="Self.FK_SurveyAnswer_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyParticipation_AspNetUser" Association="Self.FK_SurveyParticipation_AspNetUser">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Booth_Company" Association="Self.FK_Booth_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Booth" EntitySet="Booth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Booth_Exhibition" Association="Self.FK_Booth_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Booth" EntitySet="Booth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_CompanyStatus" Association="Self.FK_Company_CompanyStatus">
+            <End Role="CompanyStatus" EntitySet="CompanyStatus" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyBookmark_Company" Association="Self.FK_CompanyBookmark_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="CompanyBookmark" EntitySet="CompanyBookmark" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_Company" Association="Self.FK_Survey_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExhibitionAttendee_Exhibitio" Association="Self.FK_ExhibitionAttendee_Exhibitio">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="ExhibitionAttendee" EntitySet="ExhibitionAttendee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Survey_Exhibition" Association="Self.FK_Survey_Exhibition">
+            <End Role="Exhibition" EntitySet="Exhibition" />
+            <End Role="Survey" EntitySet="Survey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProposedAnswer_Question" Association="Self.FK_ProposedAnswer_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="ProposedAnswer" EntitySet="ProposedAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_ProposedAnswer" Association="Self.FK_SurveyAnswer_ProposedAnswer">
+            <End Role="ProposedAnswer" EntitySet="ProposedAnswer" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Survey" Association="Self.FK_Question_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_Question" Association="Self.FK_SurveyAnswer_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RewardHistory_Reward" Association="Self.FK_RewardHistory_Reward">
+            <End Role="Reward" EntitySet="Reward" />
+            <End Role="RewardHistory" EntitySet="RewardHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyParticipation_Survey" Association="Self.FK_SurveyParticipation_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GamexModelStoreContainer" CdmEntityContainer="GamexContext">
+          <EntitySetMapping Name="AccountBookmark">
+            <EntityTypeMapping TypeName="GamexModel.AccountBookmark">
+              <MappingFragment StoreEntitySet="AccountBookmark">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="BookmarkDate" ColumnName="BookmarkDate" />
+                <ScalarProperty Name="AccountBookmark1" ColumnName="AccountBookmark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountStatus">
+            <EntityTypeMapping TypeName="GamexModel.AccountStatus">
+              <MappingFragment StoreEntitySet="AccountStatus">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityHistory">
+            <EntityTypeMapping TypeName="GamexModel.ActivityHistory">
+              <MappingFragment StoreEntitySet="ActivityHistory">
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Agenda">
+            <EntityTypeMapping TypeName="GamexModel.Agenda">
+              <MappingFragment StoreEntitySet="Agenda">
+                <ScalarProperty Name="AgendaId" ColumnName="AgendaId" />
+                <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="GamexModel.AspNetRoles">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="GamexModel.AspNetUserClaims">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="GamexModel.AspNetUserLogins">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="GamexModel.AspNetUsers">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Hometown" ColumnName="Hometown" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Point" ColumnName="Point" />
+                <ScalarProperty Name="TotalPointEarned" ColumnName="TotalPointEarned" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="QR" ColumnName="QR" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Booth">
+            <EntityTypeMapping TypeName="GamexModel.Booth">
+              <MappingFragment StoreEntitySet="Booth">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="QR" ColumnName="QR" />
+                <ScalarProperty Name="Booth1" ColumnName="Booth" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Company">
+            <EntityTypeMapping TypeName="GamexModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="QR" ColumnName="QR" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompanyBookmark">
+            <EntityTypeMapping TypeName="GamexModel.CompanyBookmark">
+              <MappingFragment StoreEntitySet="CompanyBookmark">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="BookmarkDate" ColumnName="BookmarkDate" />
+                <ScalarProperty Name="CompanyBookmark1" ColumnName="CompanyBookmark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompanyStatus">
+            <EntityTypeMapping TypeName="GamexModel.CompanyStatus">
+              <MappingFragment StoreEntitySet="CompanyStatus">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exhibition">
+            <EntityTypeMapping TypeName="GamexModel.Exhibition">
+              <MappingFragment StoreEntitySet="Exhibition">
+                <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="OrganizerId" ColumnName="OrganizerId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="QR" ColumnName="QR" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExhibitionAttendee">
+            <EntityTypeMapping TypeName="GamexModel.ExhibitionAttendee">
+              <MappingFragment StoreEntitySet="ExhibitionAttendee">
+                <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="BookmarkTime" ColumnName="BookmarkTime" />
+                <ScalarProperty Name="CheckinTime" ColumnName="CheckinTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProposedAnswer">
+            <EntityTypeMapping TypeName="GamexModel.ProposedAnswer">
+              <MappingFragment StoreEntitySet="ProposedAnswer">
+                <ScalarProperty Name="ProposedAnswerId" ColumnName="ProposedAnswerId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Question">
+            <EntityTypeMapping TypeName="GamexModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
+                <ScalarProperty Name="QuestionNo" ColumnName="QuestionNo" />
+                <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reward">
+            <EntityTypeMapping TypeName="GamexModel.Reward">
+              <MappingFragment StoreEntitySet="Reward">
+                <ScalarProperty Name="RewardId" ColumnName="RewardId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="PointCost" ColumnName="PointCost" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndtDate" ColumnName="EndtDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RewardHistory">
+            <EntityTypeMapping TypeName="GamexModel.RewardHistory">
+              <MappingFragment StoreEntitySet="RewardHistory">
+                <ScalarProperty Name="RewardId" ColumnName="RewardId" />
+                <ScalarProperty Name="ExchangedDate" ColumnName="ExchangedDate" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Survey">
+            <EntityTypeMapping TypeName="GamexModel.Survey">
+              <MappingFragment StoreEntitySet="Survey">
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Point" ColumnName="Point" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyAnswer">
+            <EntityTypeMapping TypeName="GamexModel.SurveyAnswer">
+              <MappingFragment StoreEntitySet="SurveyAnswer">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="ProposedAnswerId" ColumnName="ProposedAnswerId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Other" ColumnName="Other" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyParticipation">
+            <EntityTypeMapping TypeName="GamexModel.SurveyParticipation">
+              <MappingFragment StoreEntitySet="SurveyParticipation">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
+                <ScalarProperty Name="CompleteDate" ColumnName="CompleteDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="GamexModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
