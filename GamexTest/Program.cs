@@ -12,9 +12,7 @@ namespace GamexTest
     {
         static void Main(string[] args)
         {
-            GamexContext dbContext = new GamexContext();
-            Repository<AspNetUsers> repo = new Repository<AspNetUsers>(dbContext);
-            repo.
+            
         }
     }
 }
