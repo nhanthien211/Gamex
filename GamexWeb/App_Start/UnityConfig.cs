@@ -6,6 +6,8 @@ using Microsoft.Owin.Security;
 using System;
 using System.Data.Entity;
 using System.Web;
+using GamexEntity;
+using GamexRepository;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -51,6 +53,17 @@ namespace GamexWeb
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
+            //Repo + UoW + DBContext registration
+            container.RegisterType<GamexContext>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IUnitOfWork, UnitOfWork>();
+            container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
+            //End of :Repo + UoW + DBContext registration
+
+            //Service registration
+
+            //End of: Service registration
+
+            //ASP.NET Identity registration
             container.RegisterType<ApplicationDbContext>();
             container.RegisterType<ApplicationSignInManager>();
             container.RegisterType<ApplicationUserManager>();
@@ -67,6 +80,7 @@ namespace GamexWeb
             //container.RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new HierarchicalLifetimeManager());
 
             container.RegisterType<IRoleStore<IdentityRole, string>, RoleStore<IdentityRole, string, IdentityUserRole>>();
+            ////End of: ASP.NET Identity registration
         }
     }
 }

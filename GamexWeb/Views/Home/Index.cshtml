@@ -1,31 +1,192 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model GamexService.ViewModel.LoginViewModel
+
+@{
+    var emailPattern = @"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$";   
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | Register</title>
+
+    @Styles.Render("~/Content/indexCss")  
+    <link rel="icon" type="image/png" href="~/Content/img/icons/favicon.png" />
+    
+    
+</head>
+
+<body>
+
+    <!-- Top content -->
+    <div class="top-content">
+        <div class="container">
+
+            <!-- intro info -->
+            <div class="row">
+                <div class="col-sm-12 text">
+                    <img src="~/Content/img/icons/logo1.png" alt="" >
+                    <div class="description">
+                        <h3>Welcome back!</h3>
+                        <p>It's very nice to see you again! Let's sign in and continue your experience now!</p>
+                    </div>
+                    <h1>
+                        <span class="show-login-form active">Log In</span>
+                        <span class="show-forms-divider">|</span>
+                        <span class="show-register-form">Register</span>
+                    </h1>
+
+                </div>
+            </div>
+
+            <!-- Form đăng ký ===================================== -->
+            <div class="row register-form">
+                <!-- right FORM REGISTER -->
+                <div class="col-sm-6" style="display: inline-block; background-color: ghostwhite; padding: 20px 20px 20px 20px;">
+                    <h3>New to our site?</h3>
+                    <p>Join our community to gain access to check out your shopping cart, comment and enjoy free shipping coupon!</p>
+
+                    <!-- TEST FORM VALIDATE -->
+
+@*                     @using (Html.BeginForm("", "Account", FormMethod.Post, new { @class = "to-validate", novalidate = "" })) *@
+@*                     { *@
+@*                         <div class="text-danger">@Model.DuplicateUsernameErrorMessage</div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="text" name="username" value="@Model.Username" placeholder="* Username . . . " class="form-control" id="validationCustom01" pattern="[A-Za-z0-9]{5,20}" required> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Invalid Username (5 - 20 characters excluding special characters) *@
+@*                             </div> *@
+@*                             <i class="fa fa-user form-group-icon"></i> *@
+@*                         </div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="password" name="password" placeholder="* Password . . . " class="form-control" id="validationCustom02" required minLength="8" onkeyup='check();'> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Invalid Password (minimum 8 characters) *@
+@*                             </div> *@
+@*                             <i class="fa fa-unlock-alt form-group-icon"></i> *@
+@*                         </div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="password" name="rePassword" placeholder="* Confirm Password . . . " class="form-control" id="validationCustom03" *@
+@*                                    required onkeyup='check();'> *@
+@*                             <i class="fa fa-unlock-alt form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Confirm Password is required!!! *@
+@*                             </div> *@
+@*                             <span id='message'></span> *@
+@*                         </div> *@
+@* *@
+@*                         <div class="text-danger">@Model.DuplicateEmailErrorMessage</div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="email" name="email" value="@Model.Email" placeholder="* Email . . . " class="form-control" id="validationCustom04" required pattern="@emailPattern"> *@
+@*                             <i class="fa fa-envelope form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Invalid Email pattern!!! *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="text" name="firstName" value="@Model.FirstName" placeholder="* First Name . . . " class="form-control" id="validationCustom05" required pattern=".{2,30}" onblur="$(this).val($(this).val().replace(/^\s+$/,''));"> *@
+@*                             <i class="fa fa-quote-left form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 First Name is required (2 - 30 characters)!!! *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="text" name="lastName" value="@Model.LastName" placeholder="* Last Name . . . " class="form-control" id="validationCustom06" required pattern=".{2,30}" onblur="$(this).val($(this).val().replace(/^\s+$/,''));"> *@
+@*                             <i class="fa fa-quote-right form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Last Name is required (2 - 30 characters)!!! *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="form-group"> *@
+@*                             <input type="text" name="phone" value="@Model.Phone" placeholder="* Phone . . . " class="form-control" id="validationCustom07" required pattern=".{8,11}[0-9]"> *@
+@*                             <i class="fa fa-phone form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Invalid Phone Number (8 - 11 numbers) *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="form-group">            *@
+@*                             @{ *@
+@*                                 string dob = ""; *@
+@*                                 if (Model.Dob.HasValue) *@
+@*                                 { *@
+@*                                     dob = Model.Dob.Value.ToString("yyyy-MM-dd"); *@
+@*                                 } *@
+@*                             } *@
+@*                             <input type="date" name="dob" value="@dob" class="form-control" id="validationCustom08"> *@
+@*                             <i class="fa fa-calendar form-group-icon"></i> *@
+@*                             <div class="invalid-feedback" style="font-size: 15px;"> *@
+@*                                 Birthday cannot exceed current date *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="form-group" style="text-align: left"> *@
+@*                             <div class="btn-group btn-group-toggle" data-toggle="buttons"> *@
+@*                                 <label class="btn btn-secondary @Model.GenderEnableLabel"> *@
+@*                                     <input type="radio" name="gender" value="male" autocomplete="off" @Model.GenderEnable> Male *@
+@*                                 </label> *@
+@*                                 <label class="btn btn-secondary @Model.GenderDisableLabel"> *@
+@*                                     <input type="radio" name="gender" value="female" autocomplete="off" @Model.GenderDisable> Female *@
+@*                                 </label> *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <button class="btn btn-primary" type="submit">Sign Up</button> *@
+@*                         <button class="btn btn-primary" type="reset">Reset</button> *@
+@*                     } *@
+                </div>
+
+            </div>
+            <!-- Form đăng ký ===================================== -->
+
+            <!-- Form đăng nhập ======================================== -->
+            <div class="row login-form">
+                <div class="col-sm-3"></div>
+                <!-- right FORM LOGIN -->
+                <div class="col-sm-6 col-sm-offset-1">
+
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="wrap-input">
+                            @Html.TextBoxFor(m => m.Id, new
+                            {
+                                @placeholder = "Username",
+                                @class = "input-element"
+                            })
+                            <span class="focus-input"></span>
+                            <span class="symbol-input">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Id)
+
+                        <div class="wrap-input">
+                            @Html.PasswordFor(m => m.Password, new
+                            {
+                                @placeholder = "Password",
+                                @class = "input-element"
+                            })
+                            <span class="focus-input"></span>
+                            <span class="symbol-input">
+                                <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Password)
+                        <br/>
+                        <button class="login-button" type="submit">Login</button>
+                    }
+
+                </div>
+
+                <div class="col-sm-3"></div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+    @Scripts.Render("~/bundles/indexScript")  
+    
+</body>
+
+</html>
