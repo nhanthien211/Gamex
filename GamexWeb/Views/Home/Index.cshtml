@@ -1,7 +1,7 @@
 ﻿@model GamexService.ViewModel.LoginViewModel
 
 @{
-    var emailPattern = @"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$";   
+//    var emailPattern = @"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$";   
 }
 
 <!DOCTYPE html>
@@ -149,10 +149,12 @@
                     @using (Html.BeginForm("Login", "Account", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
+                        @Html.ValidationMessageFor(m => m.ErrorMessage)
+                        <br/>
                         <div class="wrap-input">
                             @Html.TextBoxFor(m => m.Id, new
                             {
-                                @placeholder = "Username",
+                                @placeholder = "Username or Email",
                                 @class = "input-element"
                             })
                             <span class="focus-input"></span>
@@ -174,7 +176,13 @@
                             </span>
                         </div>
                         @Html.ValidationMessageFor(m => m.Password)
-                        <br/>
+
+                        <div class="wrap-input checkbox-input">
+                            <div class="custom-checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                        </div>
                         <button class="login-button" type="submit">Login</button>
                     }
 

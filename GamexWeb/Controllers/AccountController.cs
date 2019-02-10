@@ -1,10 +1,11 @@
-﻿using GamexWeb.Identity;
+﻿using GamexService.Interface;
+using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Web;
 using System.Web.Mvc;
-using GamexService.ViewModel;
-using Microsoft.AspNet.Identity.Owin;
+using LoginViewModel = GamexService.ViewModel.LoginViewModel;
 
 namespace GamexWeb.Controllers
 {
@@ -15,13 +16,26 @@ namespace GamexWeb.Controllers
         private readonly ApplicationSignInManager signInManager;
         private readonly IAuthenticationManager authenticationManager;
         private readonly ApplicationRoleManager roleManager;
+        private readonly IAccountService accountService;
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IAuthenticationManager authenticationManager, ApplicationRoleManager roleManager)
+        public AccountController(ApplicationUserManager userManager, 
+            ApplicationSignInManager signInManager, 
+            IAuthenticationManager authenticationManager, 
+            ApplicationRoleManager roleManager, 
+            IAccountService accountService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.authenticationManager = authenticationManager;
             this.roleManager = roleManager;
+            this.accountService = accountService;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Login()
+        {
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -31,10 +45,23 @@ namespace GamexWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
+                return View("~/Views/Home/index.cshtml", model);
             }
-            
-            return null;
+            var account = accountService.GetLoginAccount(model.Id);
+
+            var result = signInManager.PasswordSignIn(account.Email, model.Password, model.RememberMe, true);
+            switch (result)
+            {
+                case SignInStatus.Failure:
+                    ModelState.AddModelError("ErrorMessage", "Wrong password");
+                    return View("~/Views/Home/index.cshtml", model);
+                case SignInStatus.LockedOut:
+                    ModelState.AddModelError("ErrorMessage", "Too many attempts, please try again later");
+                    return View("~/Views/Home/index.cshtml", model);
+                case SignInStatus.Success:
+                    return Content("Login Success");
+            }
+            return Content(account.Email);
         }
 
         #region Sample

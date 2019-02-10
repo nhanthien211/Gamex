@@ -6,7 +6,7 @@ namespace GamexWeb.Identity
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("GamexContext", throwIfV1Schema: false)
+            : base("IdentityContext", throwIfV1Schema: false)
         {
         }
     }

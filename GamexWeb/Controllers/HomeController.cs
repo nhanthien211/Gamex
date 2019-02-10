@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using GamexService.ViewModel;
+using GamexService.Utilities;
 
 namespace GamexWeb.Controllers
 {
@@ -8,10 +8,11 @@ namespace GamexWeb.Controllers
 
         public ActionResult Index()
         {
-//            if (model == null)
-//            {
-//                model = new LoginViewModel();
-//            }
+            if (User.Identity.IsAuthenticated)
+            {
+                
+                return Content("Already login " + User.Identity.GetFullName());
+            }
             return View();
         }
     }

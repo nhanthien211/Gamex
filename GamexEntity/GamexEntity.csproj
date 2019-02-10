@@ -77,6 +77,8 @@
     <Compile Include="CompanyStatus.cs">
       <DependentUpon>GamexModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Constant\CustomClaimTypes.cs" />
+    <Compile Include="Enumeration\AccountStatusEnum.cs" />
     <Compile Include="Exhibition.cs">
       <DependentUpon>GamexModel.tt</DependentUpon>
     </Compile>
@@ -135,10 +137,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Constant\" />
-    <Folder Include="Enum\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="GamexModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

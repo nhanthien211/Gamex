@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GamexService.ViewModel
 {
@@ -15,5 +16,6 @@ namespace GamexService.ViewModel
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
 
+        public String ErrorMessage { get; set; }
     }
 }

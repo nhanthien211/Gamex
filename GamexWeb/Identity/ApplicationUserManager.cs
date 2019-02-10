@@ -29,8 +29,8 @@ namespace GamexWeb.Identity
 
             // Configure user lockout defaults
             this.UserLockoutEnabledByDefault = true;
-            this.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            this.MaxFailedAccessAttemptsBeforeLockout = 5;
+            this.DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(30);
+            this.MaxFailedAccessAttemptsBeforeLockout = 3;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
@@ -55,7 +55,7 @@ namespace GamexWeb.Identity
             }
 
             //alternatively use this if you are running in Azure Web Sites
-            this.UserTokenProvider = new EmailTokenProvider<ApplicationUser, string>();
+//            this.UserTokenProvider = new EmailTokenProvider<ApplicationUser, string>();
         }
     }
 }

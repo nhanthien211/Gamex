@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexEntity;
+﻿using GamexEntity;
+using GamexEntity.Enumeration;
 using GamexRepository;
-using GamexService.ViewModel;
+using GamexService.Interface;
 
 namespace GamexService.Implement
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private IRepository<AspNetUsers> _aspNetUsersRepository;
         private IUnitOfWork _unitOfWork;
@@ -17,12 +13,15 @@ namespace GamexService.Implement
         public AccountService(IRepository<AspNetUsers> _aspNetUsersRepository, IUnitOfWork _unitOfWork)
         {
             this._aspNetUsersRepository = _aspNetUsersRepository;
-            this._unitOfWork = this._unitOfWork;
+            this._unitOfWork = _unitOfWork;
         }
 
-        public LoginViewModel GetLoginAccount(string id)
+        public AspNetUsers GetLoginAccount(string id)
         {
-            return null;
+            var account = _aspNetUsersRepository.GetSingle(u =>
+                (u.Email == id || u.UserName == id)
+                && u.StatusId == (int) AccountStatusEnum.ACTIVE);
+            return account;
         }
     }
 }

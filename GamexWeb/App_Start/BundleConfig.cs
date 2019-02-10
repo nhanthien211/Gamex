@@ -10,7 +10,6 @@ namespace GamexWeb
             //css for index
             bundles.Add(new StyleBundle("~/Content/indexCss")
                 .Include(
-//                    "~/Content/login.css",
                 "~/Content/bootstrap.css",
                 "~/Content/login-form-elements.css",
                 "~/Content/index-style.css")
