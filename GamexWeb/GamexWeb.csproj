@@ -204,9 +204,11 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\ActionLinkHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\dataTables.bootstrap4.css" />
     <Content Include="Content\font-awesome\css\all.css" />
     <Content Include="Content\font-awesome\webfonts\fa-brands-400.svg" />
     <Content Include="Content\font-awesome\webfonts\fa-regular-400.svg" />
@@ -217,6 +219,7 @@
     <Content Include="Content\img\icons\favicon.png" />
     <Content Include="Content\login-form-elements.css" />
     <Content Include="Content\index-style.css" />
+    <Content Include="Content\main-admin-page.css" />
     <Content Include="Content\util.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\montserrat\OFL.txt" />
@@ -227,6 +230,7 @@
     <Content Include="Scripts\jquery.backstretch.js" />
     <Content Include="Scripts\jquery.easing.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\sb-admin.js" />
     <Content Include="Scripts\scripts-login-register.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -241,8 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Account\" />
-    <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\font-awesome\webfonts\fa-brands-400.eot" />
@@ -296,6 +298,9 @@
     <None Include="packages.config" />
     <Content Include="Views\Home\index.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Views\Account\AccountInfo.cshtml" />
+    <Content Include="Views\Partial\_ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

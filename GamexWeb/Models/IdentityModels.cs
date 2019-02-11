@@ -19,6 +19,7 @@ namespace GamexWeb.Models
             // Add custom user claims here
             userIdentity.AddClaim(new Claim(CustomClaimTypes.UserFullName, LastName + " " + FirstName));
             userIdentity.AddClaim(new Claim(CustomClaimTypes.Email, Email));
+            
             return userIdentity;
         }
     }

@@ -1,12 +1,8 @@
-﻿using System.Configuration;
-using System.Net;
-using Microsoft.AspNet.Identity;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Mail;
-using System.Web.Configuration;
+﻿using Microsoft.AspNet.Identity;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Threading.Tasks;
+using System.Web.Configuration;
 
 namespace GamexWeb.Identity
 {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GamexEntity.Constant;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using GamexEntity.Constant;
 
 namespace GamexService.Utilities
 {
@@ -35,5 +30,6 @@ namespace GamexService.Utilities
             }
             return (identity as ClaimsIdentity).FirstOrNull(CustomClaimTypes.Email);
         }
+
     }
 }

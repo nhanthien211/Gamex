@@ -16,6 +16,8 @@ namespace GamexService.ViewModel
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
 
-        public String ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
+
+        public ChangePasswordViewModel ChildModel { get; set; }
     }
 }

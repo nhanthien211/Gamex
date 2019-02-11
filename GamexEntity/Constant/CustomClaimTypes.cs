@@ -8,7 +8,7 @@ namespace GamexEntity.Constant
 {
     public static class CustomClaimTypes
     {
-        public static string UserFullName = "FullName";
-        public static string Email = "Email";
+        public const string UserFullName = "FullName";
+        public const string Email = "Email";
     }
 }
