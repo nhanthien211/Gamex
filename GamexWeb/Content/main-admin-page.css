@@ -15,7 +15,7 @@
     }
 
 .for-input-row {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     padding-right: 10%;
     padding-left: 10%;
     /* margin-left: 10%; */
@@ -634,6 +634,9 @@ footer.sticky-footer {
     box-shadow: 10px 10px 61px -15px rgba(0,0,0,0.75);
 }
 
-.navbar-sidenav {
-    
+/*CSS for Razor Client-side validation*/
+.field-validation-error {
+    color: #fa4251;
+    font-style: oblique;
+    font-weight: 600;
 }

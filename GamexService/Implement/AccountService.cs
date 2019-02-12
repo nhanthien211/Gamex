@@ -5,6 +5,7 @@ using GamexEntity.Enumeration;
 using GamexRepository;
 using System.Linq;
 using GamexService.Interface;
+using GamexService.ViewModel;
 
 namespace GamexService.Implement
 {
@@ -12,7 +13,6 @@ namespace GamexService.Implement
     {
         private IRepository<AspNetUsers> _aspNetUsersRepository;
         private IUnitOfWork _unitOfWork;
-        private GamexContext game;
 
         public AccountService(IRepository<AspNetUsers> _aspNetUsersRepository, IUnitOfWork _unitOfWork)
         {
@@ -20,13 +20,39 @@ namespace GamexService.Implement
             this._unitOfWork = _unitOfWork;
         }
 
-        public AspNetUsers GetLoginAccount(string id)
+        public LoginViewModel GetLoginAccountUsername(string id)
         {
-            var account = _aspNetUsersRepository.GetSingle(
-                u => (u.Email == id || u.UserName == id)
-                && u.StatusId == (int) AccountStatusEnum.ACTIVE,
-                "AspNetRoles");
-            return account;
+            var account = _aspNetUsersRepository.GetSingleProjection(
+                a => new
+                {
+                    Username = a.UserName,
+                    StatusId = a.StatusId
+                },
+                a => a.UserName == id || a.Email == id);
+            LoginViewModel model = new LoginViewModel();
+            if (account.StatusId == (int) AccountStatusEnum.ACTIVE)
+            {
+                model.Id = account.Username;
+            }
+            else
+            {
+                model.ErrorMessage = "Account is currently disabled";
+            }
+            return model;
         }
+
+        public ProfileViewModel GetProfileView(string userId)
+        {
+            return _aspNetUsersRepository.GetSingleProjection(
+                u => new ProfileViewModel
+                {
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Username = u.UserName
+                },
+                  u => u.Id == userId);
+        }
+        
     }
 }

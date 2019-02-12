@@ -11,6 +11,7 @@ namespace GamexRepository
     {
         private readonly GamexContext context;
         private DbSet<T> dbSet;
+        
 
         public Repository(GamexContext context)
         {
@@ -18,40 +19,40 @@ namespace GamexRepository
             dbSet = context.Set<T>();
         }
 
-        public IEnumerable<T> GetListByCondition(
+        public IEnumerable<T> GetList(
             Expression<Func<T, bool>> filter = null,
-            string includeProperties = "")
+            params Expression<Func<T, object>>[] paths)
         {
             IQueryable<T> query = dbSet;
-
+            if (paths != null && paths.Length > 0)
+            {
+                foreach (var path in paths)
+                {
+                    query = query.Include(path);
+                }
+            }
             if (filter != null)
             {
                 query = query.Where(filter);
             }
-            if (!String.IsNullOrEmpty(includeProperties))
-            {
-                foreach (var includeProperty in includeProperties.Split
-                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
+            
             return query.ToList();
         }
 
         public T GetSingle(
             Expression<Func<T, bool>> filter = null,
-            string includeProperties = "")
+            params Expression<Func<T, object>>[] paths)
         {
             IQueryable<T> query = dbSet;
-            if (!String.IsNullOrEmpty(includeProperties))
+
+            if (paths != null && paths.Length > 0)
             {
-                foreach (var includeProperty in includeProperties.Split
-                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var path in paths)
                 {
-                    query = query.Include(includeProperty);
+                    query = query.Include(path);
                 }
             }
+
             if (filter != null)
             {
                 return query.FirstOrDefault(filter);
@@ -62,9 +63,55 @@ namespace GamexRepository
         public IEnumerable<T> GetAll()
         {
             return dbSet.ToList();
+        } 
+
+        public IEnumerable<TResult> GetListProjection<TResult>(
+            Expression<Func<T, TResult>> selector,
+            Expression<Func<T, bool>> filter = null,
+            params Expression<Func<T, object>>[] paths)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (paths != null && paths.Length > 0)
+            {
+                foreach (var path in paths)
+                {
+                    query = query.Include(path);
+                }
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return query.Select(selector).ToList();
         }
 
-        public T GetByID(object id)
+        public TResult GetSingleProjection<TResult>(
+            Expression<Func<T, TResult>> selector,
+            Expression<Func<T, bool>> filter = null,
+            params Expression<Func<T, object>>[] paths)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (paths != null && paths.Length > 0)
+            {
+                foreach (var path in paths)
+                {
+                    query = query.Include(path);
+                }
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return query.Select(selector).FirstOrDefault();
+        }
+
+        public T GetById(object id)
         {
             return dbSet.Find(id);
         }

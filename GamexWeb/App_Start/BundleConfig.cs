@@ -36,6 +36,7 @@ namespace GamexWeb
                 "~/Scripts/jquery.js",
                 "~/Scripts/bootstrap.bundle.js",
                 "~/Scripts/jquery.easing.js",
+                "~/Scripts/jquery.validate*",
                 "~/Scripts/sb-admin.js"));
         }
     }

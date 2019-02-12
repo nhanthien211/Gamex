@@ -11,6 +11,7 @@ using GamexService.ViewModel;
 namespace GamexWeb.Controllers
 {
     [Authorize]
+    [RoutePrefix("Account")]
     public class AccountController : Controller
     {
         private readonly ApplicationUserManager userManager;
@@ -34,9 +35,11 @@ namespace GamexWeb.Controllers
 
         [HttpGet]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
-        public ActionResult Index()
+        [Route("")]
+        public ActionResult AccountInfo()
         {
-            return View("~/Views/Account/AccountInfo.cshtml");
+            var profile = accountService.GetProfileView(User.Identity.GetUserId());
+            return View(profile);
         }
 
         [HttpGet]
@@ -56,18 +59,24 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/index.cshtml", model);
             }
-            var account = accountService.GetLoginAccount(model.Id);
-            var result = signInManager.PasswordSignIn(account.Email, model.Password, model.RememberMe, true);
-            switch (result)
+            var result = accountService.GetLoginAccountUsername(model.Id);
+            if (result.Id == null)
+            {
+                ModelState.AddModelError("ErrorMessage", result.ErrorMessage);
+                return View("~/Views/Home/index.cshtml", model);
+            }
+            var loginResult = signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
+
+            switch (loginResult)
             {
                 case SignInStatus.Failure:
-                    ModelState.AddModelError("ErrorMessage", "Wrong password");
+                    ModelState.AddModelError("ErrorMessage", "Invalid Username or Password");
                     return View("~/Views/Home/index.cshtml", model);
                 case SignInStatus.LockedOut:
                     ModelState.AddModelError("ErrorMessage", "Too many attempts, please try again later");
                     return View("~/Views/Home/index.cshtml", model);
                 case SignInStatus.Success:
-                    return RedirectToAction("Index", "Account");
+                    return RedirectToAction("AccountInfo", "Account");
             }
             //if we got this far, something went wrong 
             ModelState.AddModelError("ErrorMessage", "Unknown Error");
@@ -83,12 +92,39 @@ namespace GamexWeb.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Test(ChangePasswordViewModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        public ActionResult UpdateProfile(ProfileViewModel model)
         {
-            string pwd = model.CurrentPassword;
-            return Content(pwd);
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Account/AccountInfo.cshtml", model);
+            }
+            
+            return Content(model.FirstName);
         }
 
+        [HttpGet]
+        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Route("Password")]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            return View();
+        }
 
         #region Sample
         //        //
@@ -500,6 +536,7 @@ namespace GamexWeb.Controllers
             }
         }
         #endregion
+
 
         
     }

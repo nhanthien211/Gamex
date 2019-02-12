@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GamexService.ViewModel
 {
@@ -10,7 +9,6 @@ namespace GamexService.ViewModel
 
         [Required(ErrorMessage = "This field is required")]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]
@@ -18,6 +16,5 @@ namespace GamexService.ViewModel
 
         public string ErrorMessage { get; set; }
 
-        public ChangePasswordViewModel ChildModel { get; set; }
     }
 }

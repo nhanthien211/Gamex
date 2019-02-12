@@ -10,7 +10,7 @@ namespace GamexWeb.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Account");
+                return RedirectToAction("AccountInfo", "Account");
             }
             return View();
         }

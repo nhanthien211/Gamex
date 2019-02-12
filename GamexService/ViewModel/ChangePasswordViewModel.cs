@@ -19,7 +19,9 @@ namespace GamexService.ViewModel
         [Display(Name = "Re-enter Password")]
         [Compare("NewPassword", ErrorMessage = "Must match your new password")]
         public string ConfirmPassword { get; set; }
-        
-        public string ErrorMessage { get; set; }
+
+        public string ChangePasswordErrorMessage { get; set; }
+
+        public string SuccessMessage { get; set; }
     }
 }
