@@ -1,4 +1,5 @@
-﻿using GamexEntity.Constant;
+﻿using System.Linq;
+using GamexEntity.Constant;
 using GamexService.Interface;
 using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
@@ -59,14 +60,21 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/index.cshtml", model);
             }
-            var result = accountService.GetLoginAccountUsername(model.Id);
+            var result = accountService.GetLoginAccount(model.Id);
             if (result.Id == null)
             {
                 ModelState.AddModelError("ErrorMessage", result.ErrorMessage);
                 return View("~/Views/Home/index.cshtml", model);
             }
-            var loginResult = signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
 
+            var role = userManager.GetRoles(result.UserId).First();
+            if (role == UserRole.User)
+            {
+                ModelState.AddModelError("ErrorMessage", "This account is not allowed. Please refer to our mobile app.");
+                return View("~/Views/Home/index.cshtml", model);
+            }
+
+            var loginResult = signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
             switch (loginResult)
             {
                 case SignInStatus.Failure:
@@ -95,14 +103,17 @@ namespace GamexWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Route("")]
         public ActionResult UpdateProfile(ProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
-            
-            return Content(model.FirstName);
+
+            var result = accountService.UpdateProfile(model, User.Identity.GetUserId());
+            model.IsSuccessful = result;
+            return View("~/Views/Account/AccountInfo.cshtml", model);
         }
 
         [HttpGet]
@@ -116,6 +127,7 @@ namespace GamexWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Route("Password")]
         public ActionResult ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -123,7 +135,20 @@ namespace GamexWeb.Controllers
                 return View();
             }
 
-            return View();
+            var result =
+                userManager.ChangePassword(User.Identity.GetUserId(), model.CurrentPassword, model.NewPassword);
+            
+            if (!result.Succeeded)
+            {
+                string error = "";
+                foreach (string message in result.Errors)
+                {
+                    error = error + message;
+                }
+                model.ErrorMessage = error;
+            }
+            model.IsSuccessful = result.Succeeded;
+            return View(model);
         }
 
         #region Sample

@@ -4,7 +4,8 @@ namespace GamexService.Interface
 {
     public interface IAccountService
     {
-        LoginViewModel GetLoginAccountUsername(string id);
+        LoginViewModel GetLoginAccount(string id);
         ProfileViewModel GetProfileView(string userId);
+        bool UpdateProfile(ProfileViewModel model, string id);
     }
 }

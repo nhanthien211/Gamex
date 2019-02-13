@@ -22,7 +22,7 @@ namespace GamexService.ViewModel
 
         [Required(ErrorMessage = "Username is required")]
         [Display(Name = "Username *")]
-        [UsernameAttribute(ErrorMessage = "At lease 6 characters with letters, digit, underscore, hyphen and dot allowed")]
+        [UsernameAttribute(ErrorMessage = "At lease 6 characters and only letters, digit, underscore, hyphen and dot allowed")]
         [StringLength(256, ErrorMessage = "Maximum 256 characters")]
         public string Username { get; set; }
 
@@ -31,5 +31,6 @@ namespace GamexService.ViewModel
         [Display(Name = "Email *")]
         public string Email { get; set; }
 
+        public bool? IsSuccessful { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace GamexService.ViewModel
 
         public string ErrorMessage { get; set; }
 
+        public string UserId { get; set; }
+
     }
 }

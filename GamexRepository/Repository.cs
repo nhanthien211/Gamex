@@ -134,7 +134,6 @@ namespace GamexRepository
         public void Update(T entity)
         {
             dbSet.Attach(entity);
-            context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

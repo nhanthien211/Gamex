@@ -107,10 +107,7 @@
 
     @Scripts.Render("~/bundles/adminScript")
     @RenderSection("scripts", required: false)
-    @if (TempData["SHOW_MODAL"] != null)
-    {
-        @Html.Raw(TempData["SHOW_MODAL"]);
-    }
+    
 </div>
 
 </body>
