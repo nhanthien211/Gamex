@@ -39,6 +39,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountBookmark.cs">
@@ -80,6 +83,7 @@
     <Compile Include="Constant\CustomClaimTypes.cs" />
     <Compile Include="Constant\UserRole.cs" />
     <Compile Include="Enumeration\AccountStatusEnum.cs" />
+    <Compile Include="Enumeration\CompanyStatusEnum.cs" />
     <Compile Include="Exhibition.cs">
       <DependentUpon>GamexModel.tt</DependentUpon>
     </Compile>

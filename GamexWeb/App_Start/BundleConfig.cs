@@ -11,8 +11,8 @@ namespace GamexWeb
             bundles.Add(new StyleBundle("~/Content/indexCss")
                 .Include(
                 "~/Content/bootstrap.css",
-                "~/Content/login-form-elements.css",
-                "~/Content/index-style.css")
+                "~/Content/index-style.css",
+                "~/Content/login-form-elements.css")
                 .Include("~/Content/font-awesome/css/all.css", 
                     new CssRewriteUrlTransform()));
 
@@ -29,8 +29,7 @@ namespace GamexWeb
                 "~/Scripts/bootstrap.bundle.js",
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/jquery.backstretch.js",
-                "~/Scripts/jquery.validate*",
-               "~/Scripts/scripts-login-register.js"));
+                "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/adminScript").Include(
                 "~/Scripts/jquery.js",

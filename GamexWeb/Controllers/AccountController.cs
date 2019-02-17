@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GamexEntity.Constant;
 using GamexService.Interface;
 using GamexWeb.Identity;
@@ -7,48 +8,49 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Web;
 using System.Web.Mvc;
+using GamexService.Utilities;
 using GamexService.ViewModel;
 
 namespace GamexWeb.Controllers
 {
-    [Authorize]
-    [RoutePrefix("Account")]
     public class AccountController : Controller
     {
-        private readonly ApplicationUserManager userManager;
-        private readonly ApplicationSignInManager signInManager;
-        private readonly IAuthenticationManager authenticationManager;
-        private readonly ApplicationRoleManager roleManager;
-        private readonly IAccountService accountService;
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationSignInManager _signInManager;
+        private readonly IAuthenticationManager _authenticationManager;
+        private readonly ApplicationRoleManager _roleManager;
+        private readonly IAccountService _accountService;
+        private readonly IIdentityMessageService _emailService;
 
         public AccountController(ApplicationUserManager userManager, 
             ApplicationSignInManager signInManager, 
             IAuthenticationManager authenticationManager, 
             ApplicationRoleManager roleManager, 
-            IAccountService accountService)
+            IAccountService accountService,
+            IIdentityMessageService emailService)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.authenticationManager = authenticationManager;
-            this.roleManager = roleManager;
-            this.accountService = accountService;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _authenticationManager = authenticationManager;
+            _roleManager = roleManager;
+            _accountService = accountService;
+            _emailService = emailService;
         }
 
         [HttpGet]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
-        [Route("")]
+        [Route("Account")]
         public ActionResult AccountInfo()
         {
-            var profile = accountService.GetProfileView(User.Identity.GetUserId());
+            var profile = _accountService.GetProfileView(User.Identity.GetUserId());
             return View(profile);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl = null)
         {
-            
-            return RedirectToAction("Index", "Home");
+            return View("~/Views/Home/index.cshtml");
         }
 
         [HttpPost]
@@ -60,21 +62,21 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/index.cshtml", model);
             }
-            var result = accountService.GetLoginAccount(model.Id);
+            var result = _accountService.GetLoginAccount(model.Id);
             if (result.Id == null)
             {
                 ModelState.AddModelError("ErrorMessage", result.ErrorMessage);
                 return View("~/Views/Home/index.cshtml", model);
             }
 
-            var role = userManager.GetRoles(result.UserId).First();
-            if (role == UserRole.User)
+            var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == UserRole.User);
+            if (role != null)
             {
                 ModelState.AddModelError("ErrorMessage", "This account is not allowed. Please refer to our mobile app.");
                 return View("~/Views/Home/index.cshtml", model);
             }
 
-            var loginResult = signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
+            var loginResult = _signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
             switch (loginResult)
             {
                 case SignInStatus.Failure:
@@ -92,7 +94,6 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public ActionResult Logout()
         {
@@ -103,7 +104,7 @@ namespace GamexWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
-        [Route("")]
+        [Route("Account")]
         public ActionResult UpdateProfile(ProfileViewModel model)
         {
             if (!ModelState.IsValid)
@@ -111,14 +112,15 @@ namespace GamexWeb.Controllers
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
 
-            var result = accountService.UpdateProfile(model, User.Identity.GetUserId());
+            var result = _accountService.UpdateProfile(model, User.Identity.GetUserId());
+            
             model.IsSuccessful = result;
             return View("~/Views/Account/AccountInfo.cshtml", model);
         }
 
         [HttpGet]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
-        [Route("Password")]
+        [Route("Account/Password")]
         public ActionResult ChangePassword()
         {
             return View();
@@ -127,17 +129,16 @@ namespace GamexWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
-        [Route("Password")]
+        [Route("Account/Password")]
         public ActionResult ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-
             var result =
-                userManager.ChangePassword(User.Identity.GetUserId(), model.CurrentPassword, model.NewPassword);
-            
+                _userManager.ChangePassword(User.Identity.GetUserId(), model.CurrentPassword, model.NewPassword);
+            model.IsSuccessful = result.Succeeded;
             if (!result.Succeeded)
             {
                 string error = "";
@@ -147,9 +148,19 @@ namespace GamexWeb.Controllers
                 }
                 model.ErrorMessage = error;
             }
-            model.IsSuccessful = result.Succeeded;
+            else
+            {
+                _emailService.Send(new IdentityMessage
+                {
+                    Body = "Your password has been changed",
+                    Destination = User.Identity.GetEmail(),
+                    Subject = "[SECURITY ALERT] PASSWORD CHANGED"
+                });
+            }
             return View(model);
         }
+
+        
 
         #region Sample
         //        //

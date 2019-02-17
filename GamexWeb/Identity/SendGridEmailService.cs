@@ -48,6 +48,10 @@ namespace GamexWeb.Identity
             myMessage.PlainTextContent = message.Body;
             myMessage.HtmlContent = message.Body;
 
+            myMessage.SetClickTracking(false, false);
+            myMessage.SetOpenTracking(false);
+            myMessage.SetSubscriptionTracking(false);
+
             await client.SendEmailAsync(myMessage);
         }
     }

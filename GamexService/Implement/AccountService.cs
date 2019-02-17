@@ -13,14 +13,12 @@ namespace GamexService.Implement
     public class AccountService : IAccountService
     {
         private IRepository<AspNetUsers> _aspNetUsersRepository;
-        private IRepository<AspNetRoles> _aspNetRolesRepository;
-        
         private IUnitOfWork _unitOfWork;
 
-        public AccountService(IRepository<AspNetUsers> _aspNetUsersRepository, IUnitOfWork _unitOfWork)
+        public AccountService(IRepository<AspNetUsers> aspNetUsersRepository, IUnitOfWork unitOfWork)
         {
-            this._aspNetUsersRepository = _aspNetUsersRepository;
-            this._unitOfWork = _unitOfWork;
+            _aspNetUsersRepository = aspNetUsersRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public LoginViewModel GetLoginAccount(string id)
@@ -32,17 +30,22 @@ namespace GamexService.Implement
                     StatusId = a.StatusId,
                     UserId = a.Id
                 },
-                a => a.UserName == id || a.Email == id);
+                a => string.Equals(a.UserName, id) || string.Equals(a.Email, id));
+            
             LoginViewModel model = new LoginViewModel();
-            if (account.StatusId == (int) AccountStatusEnum.ACTIVE)
+            if (account == null)
+            {
+                model.ErrorMessage = "Invalid Username or Password";
+                return model;
+            }
+
+            if (account.StatusId == (int) AccountStatusEnum.Active)
             {
                 model.Id = account.Username;
                 model.UserId = account.UserId;
+                return model;
             }
-            else
-            {
-                model.ErrorMessage = "Account is currently disabled";
-            }
+            model.ErrorMessage = "Account is currently disabled";
             return model;
         }
 
@@ -56,7 +59,7 @@ namespace GamexService.Implement
                     LastName = u.LastName,
                     Username = u.UserName
                 },
-                  u => u.Id == userId);
+                  u => string.Equals(u.Id, userId));
         }
 
         public bool UpdateProfile(ProfileViewModel model, string id)

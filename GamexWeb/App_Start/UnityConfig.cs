@@ -82,6 +82,7 @@ namespace GamexWeb
 
             //Service registration
             container.RegisterType<IAccountService, AccountService>();
+            container.RegisterType<ICompanyService, CompanyService>();
             //End of: Service registration
         }
     }

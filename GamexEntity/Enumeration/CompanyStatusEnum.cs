@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace GamexEntity.Enumeration
 {
-    public enum AccountStatusEnum
+    public enum CompanyStatusEnum
     {
-        Active = 1
+        Pending = 1,
+        Active = 2,
+        Deactive = 3
     }
 }

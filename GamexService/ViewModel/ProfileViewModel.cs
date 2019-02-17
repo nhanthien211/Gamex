@@ -28,6 +28,7 @@ namespace GamexService.ViewModel
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
+        [StringLength(256, ErrorMessage = "Email cannot exceed 256 characters")]
         [Display(Name = "Email *")]
         public string Email { get; set; }
 

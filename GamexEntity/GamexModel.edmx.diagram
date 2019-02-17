@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1a68903584544c90b340810d6e222849" Name="Diagram1">
+      <Diagram DiagramId="1a68903584544c90b340810d6e222849" Name="Diagram1" ZoomLevel="46">
         <EntityTypeShape EntityType="GamexModel.AccountBookmark" Width="1.5" PointX="7.5" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AccountStatus" Width="1.5" PointX="3" PointY="13.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.ActivityHistory" Width="1.5" PointX="7.5" PointY="11.625" IsExpanded="true" />
@@ -56,6 +56,7 @@
         <AssociationConnector Association="GamexModel.FK_RewardHistory_Reward" ManuallyRouted="false" />
         <AssociationConnector Association="GamexModel.FK_SurveyParticipation_Survey" ManuallyRouted="false" />
         <AssociationConnector Association="GamexModel.AspNetUserRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_SurveyAnswer_Survey" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

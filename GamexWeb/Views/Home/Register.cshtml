@@ -1,0 +1,62 @@
+﻿@using System.Net.Http
+@model GamexService.ViewModel.SelectCompanyViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    ViewBag.Title = "Register";
+}
+
+@section scripts
+{
+
+    @if (Model != null)
+    {
+        if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <script type="text/javascript">
+                $('#alert-message').html('@Model.ErrorMessage');
+            </script>
+        }
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12 text">
+        <img src="~/Content/img/icons/logo1.png" alt="">
+        <div class="description">
+            <h3>New to our site?</h3>
+            <p>Let's grab an account to gain access to our system!</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-lg-2 col-md-2"></div>
+    <div class="col-lg-8 col-md-8">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" >
+            <p id="alert-message">Note! This register form is for company only.</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @using (Html.BeginForm("CheckBeforeRegistration", "Company", HttpMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(m => m.CompanyTaxId)
+                <div style="display: flex">
+                    @Html.TextBoxFor(m => m.CompanyTaxId, new
+                   {
+                       @class = "form-control tax-id-field"
+                   })
+                    <button type="submit" class="btn "><i class="fas fa-arrow-right"></i></button>
+                </div>
+                @Html.ValidationMessageFor(m => m.CompanyTaxId)
+            </div>
+        }
+    </div>
+    <div class="col-lg-2 col-md-2"></div>
+</div>
+
+

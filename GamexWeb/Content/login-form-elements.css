@@ -26,6 +26,7 @@
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
+
 * {
     margin: 0px;
     padding: 0px;
@@ -236,7 +237,7 @@ textarea:-ms-input-placeholder {
 .login-button {
     background: #e65540;
     height: 44px;
-    margin: 10px 0px 0px 0px;
+    margin: 0px 0px 10px 0px;
     padding: 0 40px;
     vertical-align: middle;
     border: 0;
@@ -269,6 +270,38 @@ textarea:-ms-input-placeholder {
     cursor: pointer;
 }
 
+.line-through {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #afa1a1;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+}
+
+.line-through span {
+    background: #fff;
+    padding: 0 10px;
+}
+
+.register-form {
+    margin-top: 50px;
+    text-align: left;
+    color: black;
+}
+
+.register-form label {
+    font-weight: bold;
+}
+
+
+.tax-id-field {
+    text-align: center;
+    flex: 1;
+}
+
+.for-input-row {
+    margin-bottom: 10px;
+}
 
 
 /*CSS for Razor Client-side validation*/
