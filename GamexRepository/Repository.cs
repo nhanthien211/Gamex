@@ -68,6 +68,8 @@ namespace GamexRepository
         public IEnumerable<TResult> GetListProjection<TResult>(
             Expression<Func<T, TResult>> selector,
             Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, object>> sort = null,
+            string sortColumnDirection = null, int take = 0, int skip = 0,
             params Expression<Func<T, object>>[] paths)
         {
             IQueryable<T> query = dbSet;
@@ -79,12 +81,31 @@ namespace GamexRepository
                     query = query.Include(path);
                 }
             }
-
             if (filter != null)
             {
                 query = query.Where(filter);
             }
 
+            if (!string.IsNullOrEmpty(sortColumnDirection) && sort != null)
+            {
+                switch (sortColumnDirection)
+                {
+                    case "asc":
+                        query = query.OrderBy(sort);
+                        break;
+                    case "desc":
+                        query = query.OrderByDescending(sort);
+                        break;
+                }
+            }
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+            if (take > 0)
+            {
+                query = query.Take(take);
+            }
             return query.Select(selector).ToList();
         }
 
@@ -124,11 +145,15 @@ namespace GamexRepository
         public void Delete(object id)
         {
             T entity = dbSet.Find(id);
-            if (context.Entry(entity).State == EntityState.Detached)
+            if (entity != null)
             {
-                dbSet.Attach(entity);
+                if (context.Entry(entity).State == EntityState.Detached)
+                {
+                    dbSet.Attach(entity);
+                }
+                dbSet.Remove(entity);
             }
-            dbSet.Remove(entity);
+            
         }
 
         public void Update(T entity)

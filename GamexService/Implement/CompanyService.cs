@@ -4,6 +4,8 @@ using GamexRepository;
 using GamexService.Interface;
 using GamexService.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GamexService.Implement
 {
@@ -67,6 +69,38 @@ namespace GamexService.Implement
                 return true;
             }
             return false;
+        }
+
+        public List<CompanyRequestTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
+        {
+            var companyRequestList = _companyRepository.GetListProjection(
+                c => new CompanyRequestTableViewModel
+                {
+                    CompanyName = c.Name,
+                    TaxNumber = c.TaxNumber,
+                    Email = c.Email,
+                    CompanyId = c.CompanyId
+                },
+                c => c.StatusId == (int) CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
+                c => c.Name, sortColumnDirection, take, skip
+                );
+            return companyRequestList.ToList();
+        }
+
+        public void ApproveOrRejectCompanyRequest(int companyId, bool isApproved)
+        {
+            if (isApproved)
+            {
+                var company = _companyRepository.GetSingle(c => c.CompanyId == companyId);
+                _companyRepository.Update(company);
+                company.StatusId = (int) CompanyStatusEnum.Active;
+                _unitOfWork.SaveChanges();
+            }
+            else
+            {
+                _companyRepository.Delete(companyId);
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }

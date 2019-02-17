@@ -6,5 +6,39 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>ViewCompanyRequest</h2>
+@section scripts
+{
+    <!--Bổ sung script để load table order-->
+    @Scripts.Render("~/bundles/datatableCompanyRequest")
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Company</li>
+    </ol>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-building fa-fw"></i> Join Request
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Tax Number</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 

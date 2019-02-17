@@ -228,11 +228,14 @@
     <Content Include="fonts\montserrat\OFL.txt" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\dataTables.bootstrap4.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.backstretch.js" />
     <Content Include="Scripts\jquery.easing.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\sb-admin-datatables-company-request.js" />
     <Content Include="Scripts\sb-admin.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

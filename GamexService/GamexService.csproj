@@ -51,6 +51,7 @@
     <Compile Include="Utilities\UsernameAttribute.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />
+    <Compile Include="ViewModel\CompanyRequestTableViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SelectCompanyViewModel.cs" />

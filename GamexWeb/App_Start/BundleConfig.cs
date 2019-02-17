@@ -40,6 +40,11 @@ namespace GamexWeb
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/sb-admin.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatableCompanyRequest").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb-admin-datatables-company-request.js"));
         }
     }
 }
