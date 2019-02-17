@@ -17,10 +17,13 @@ namespace GamexWeb
                     new CssRewriteUrlTransform()));
 
             //css for admin template
-            bundles.Add(new StyleBundle("~/Content/adminCss").Include(
+            bundles.Add(new StyleBundle("~/Content/adminCss")
+                .Include("~/Content/font-awesome/css/all.css", 
+                    new CssRewriteUrlTransform())
+                .Include(
                 "~/Content/bootstrap.css",
                 "~/Content/dataTables.bootstrap4.css",
-                "~/Content/main-admin-page.css").Include("~/Content/font-awesome/css/all.css", new CssRewriteUrlTransform()));
+                "~/Content/main-admin-page.css"));
 
 
             //js for index

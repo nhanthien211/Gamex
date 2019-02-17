@@ -190,6 +190,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -221,6 +222,7 @@
     <Content Include="Content\login-form-elements.css" />
     <Content Include="Content\index-style.css" />
     <Content Include="Content\main-admin-page.css" />
+    <Content Include="Content\tesst.css" />
     <Content Include="Content\util.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\montserrat\OFL.txt" />
@@ -304,6 +306,7 @@
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Shared\_LayoutHome.cshtml" />
     <Content Include="Views\Company\CompanyRegister.cshtml" />
+    <Content Include="Views\Admin\ViewCompanyRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

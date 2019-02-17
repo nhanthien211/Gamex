@@ -94,6 +94,24 @@ body {
     z-index: 1
 }
 
+#mainNav ul,
+#mainNav li {
+    list-style: none;
+    cursor: pointer;
+}
+
+#mainNav ul :not(collapsed) .arrow:before,
+#mainNav li :not(collapsed) .arrow:before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f078";
+    font-weight: 900;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: middle;
+    float: right;
+}
+
 #mainNav .navbar-collapse {
     overflow: auto;
     max-height: 75vh
@@ -110,30 +128,29 @@ body {
     }
 
     #mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse.collapsed:after {
-        content: '\f105'
+        content: '\f105';
     }
 
     #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level,
     #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level {
-        padding-left: 0
+        padding-left: 0px
     }
 
         #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a,
         #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a {
             display: block;
-            padding: .5em 0
+            padding: .5em 0;
+            color: #adb5bd;
+            padding-left: 50px;
         }
 
             #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a:focus,
             #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a:hover,
             #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a:focus,
             #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a:hover {
-                text-decoration: none
+                text-decoration: none;
+                color: rgba(0, 0, 0, .7);
             }
-
-        #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a {
-            padding-left: 1em
-        }
 
         #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a {
             padding-left: 2em
