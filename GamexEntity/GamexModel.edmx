@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountBookmark">
           <Key>
             <PropertyRef Name="AccountId" />
@@ -165,8 +165,8 @@
           </Key>
           <Property Name="ExhibitionId" Type="int" Nullable="false" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="BookmarkTime" Type="datetime" />
           <Property Name="CheckinTime" Type="datetime" />
+          <Property Name="BookmarkDate" Type="datetime" />
         </EntityType>
         <EntityType Name="ProposedAnswer">
           <Key>
@@ -790,7 +790,8 @@
             <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GamexModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -931,12 +932,12 @@
           <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Website" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="TaxNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUsers_Company" FromRole="Company" ToRole="AspNetUsers" />
           <NavigationProperty Name="Booth" Relationship="Self.FK_Booth_Company" FromRole="Company" ToRole="Booth" />
           <NavigationProperty Name="CompanyStatus" Relationship="Self.FK_Company_CompanyStatus" FromRole="Company" ToRole="CompanyStatus" />
           <NavigationProperty Name="CompanyBookmark" Relationship="Self.FK_CompanyBookmark_Company" FromRole="Company" ToRole="CompanyBookmark" />
           <NavigationProperty Name="Survey" Relationship="Self.FK_Survey_Company" FromRole="Company" ToRole="Survey" />
-          <Property Name="TaxNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CompanyBookmark">
           <Key>
@@ -985,8 +986,8 @@
           </Key>
           <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="BookmarkTime" Type="DateTime" Precision="3" />
           <Property Name="CheckinTime" Type="DateTime" Precision="3" />
+          <Property Name="BookmarkDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_ExhibitionAttendee_AspNetUsers" FromRole="ExhibitionAttendee" ToRole="AspNetUsers" />
           <NavigationProperty Name="Exhibition" Relationship="Self.FK_ExhibitionAttendee_Exhibitio" FromRole="ExhibitionAttendee" ToRole="Exhibition" />
         </EntityType>
@@ -1058,8 +1059,8 @@
           <NavigationProperty Name="Company" Relationship="Self.FK_Survey_Company" FromRole="Survey" ToRole="Company" />
           <NavigationProperty Name="Exhibition" Relationship="Self.FK_Survey_Exhibition" FromRole="Survey" ToRole="Exhibition" />
           <NavigationProperty Name="Question" Relationship="Self.FK_Question_Survey" FromRole="Survey" ToRole="Question" />
+          <NavigationProperty Name="SurveyAnswer" Relationship="Self.FK_SurveyAnswer_Survey" FromRole="Survey" ToRole="SurveyAnswer" />
           <NavigationProperty Name="SurveyParticipation" Relationship="Self.FK_SurveyParticipation_Survey" FromRole="Survey" ToRole="SurveyParticipation" />
-          <NavigationProperty Name="SurveyAnswer" Relationship="GamexModel.FK_SurveyAnswer_Survey" FromRole="Survey" ToRole="SurveyAnswer" />
         </EntityType>
         <EntityType Name="SurveyAnswer">
           <Key>
@@ -1071,12 +1072,12 @@
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
           <Property Name="ProposedAnswerId" Type="Int32" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SurveyId" Type="Int32" Nullable="false" />
           <Property Name="Other" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_SurveyAnswer_AspNetUsers" FromRole="SurveyAnswer" ToRole="AspNetUsers" />
           <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_SurveyAnswer_ProposedAnswer" FromRole="SurveyAnswer" ToRole="ProposedAnswer" />
           <NavigationProperty Name="Question" Relationship="Self.FK_SurveyAnswer_Question" FromRole="SurveyAnswer" ToRole="Question" />
-          <Property Name="SurveyId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Survey" Relationship="GamexModel.FK_SurveyAnswer_Survey" FromRole="SurveyAnswer" ToRole="Survey" />
+          <NavigationProperty Name="Survey" Relationship="Self.FK_SurveyAnswer_Survey" FromRole="SurveyAnswer" ToRole="Survey" />
         </EntityType>
         <EntityType Name="SurveyParticipation">
           <Key>
@@ -1429,6 +1430,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SurveyAnswer_Survey">
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
+          <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="SurveyAnswer">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SurveyParticipation_Survey">
           <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
           <End Role="SurveyParticipation" Type="Self.SurveyParticipation" Multiplicity="*" />
@@ -1579,6 +1592,10 @@
             <End Role="Reward" EntitySet="Reward" />
             <End Role="RewardHistory" EntitySet="RewardHistory" />
           </AssociationSet>
+          <AssociationSet Name="FK_SurveyAnswer_Survey" Association="Self.FK_SurveyAnswer_Survey">
+            <End Role="Survey" EntitySet="Survey" />
+            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
+          </AssociationSet>
           <AssociationSet Name="FK_SurveyParticipation_Survey" Association="Self.FK_SurveyParticipation_Survey">
             <End Role="Survey" EntitySet="Survey" />
             <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
@@ -1587,23 +1604,7 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="FK_SurveyAnswer_Survey" Association="GamexModel.FK_SurveyAnswer_Survey">
-            <End Role="Survey" EntitySet="Survey" />
-            <End Role="SurveyAnswer" EntitySet="SurveyAnswer" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_SurveyAnswer_Survey">
-          <End Type="GamexModel.Survey" Role="Survey" Multiplicity="1" />
-          <End Type="GamexModel.SurveyAnswer" Role="SurveyAnswer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Survey">
-              <PropertyRef Name="SurveyId" />
-            </Principal>
-            <Dependent Role="SurveyAnswer">
-              <PropertyRef Name="SurveyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1715,7 +1716,6 @@
           <EntitySetMapping Name="Company">
             <EntityTypeMapping TypeName="GamexModel.Company">
               <MappingFragment StoreEntitySet="Company">
-                <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -1727,6 +1727,7 @@
                 <ScalarProperty Name="QR" ColumnName="QR" />
                 <ScalarProperty Name="Website" ColumnName="Website" />
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1769,8 +1770,8 @@
               <MappingFragment StoreEntitySet="ExhibitionAttendee">
                 <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="BookmarkTime" ColumnName="BookmarkTime" />
                 <ScalarProperty Name="CheckinTime" ColumnName="CheckinTime" />
+                <ScalarProperty Name="BookmarkDate" ColumnName="BookmarkDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1837,10 +1838,10 @@
           <EntitySetMapping Name="SurveyAnswer">
             <EntityTypeMapping TypeName="GamexModel.SurveyAnswer">
               <MappingFragment StoreEntitySet="SurveyAnswer">
-                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="ProposedAnswerId" ColumnName="ProposedAnswerId" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
                 <ScalarProperty Name="Other" ColumnName="Other" />
               </MappingFragment>
             </EntityTypeMapping>

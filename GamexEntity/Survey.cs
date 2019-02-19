@@ -18,8 +18,8 @@ namespace GamexEntity
         public Survey()
         {
             this.Question = new HashSet<Question>();
-            this.SurveyParticipation = new HashSet<SurveyParticipation>();
             this.SurveyAnswer = new HashSet<SurveyAnswer>();
+            this.SurveyParticipation = new HashSet<SurveyParticipation>();
         }
     
         public int SurveyId { get; set; }
@@ -39,8 +39,8 @@ namespace GamexEntity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Question> Question { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SurveyParticipation> SurveyParticipation { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveyAnswer> SurveyAnswer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SurveyParticipation> SurveyParticipation { get; set; }
     }
 }

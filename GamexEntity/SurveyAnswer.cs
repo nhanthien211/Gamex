@@ -17,8 +17,8 @@ namespace GamexEntity
         public int QuestionId { get; set; }
         public int ProposedAnswerId { get; set; }
         public string AccountId { get; set; }
-        public string Other { get; set; }
         public int SurveyId { get; set; }
+        public string Other { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual ProposedAnswer ProposedAnswer { get; set; }
