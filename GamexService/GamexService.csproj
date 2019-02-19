@@ -50,6 +50,7 @@
     <Compile Include="Utilities\IdentityExtensions.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyRequestTableViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />

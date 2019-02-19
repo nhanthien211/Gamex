@@ -11,6 +11,10 @@ namespace GamexWeb.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int Point { get; set; }
+        public int TotalPointEarned { get; set; }
+        public int? CompanyId { get; set; }
+        public int StatusId { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

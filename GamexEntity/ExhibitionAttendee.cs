@@ -16,7 +16,7 @@ namespace GamexEntity
     {
         public int ExhibitionId { get; set; }
         public string AccountId { get; set; }
-        public System.DateTime BookmarkTime { get; set; }
+        public Nullable<System.DateTime> BookmarkTime { get; set; }
         public Nullable<System.DateTime> CheckinTime { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }

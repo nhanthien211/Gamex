@@ -310,6 +310,7 @@
     <Content Include="Views\Shared\_LayoutHome.cshtml" />
     <Content Include="Views\Company\CompanyRegister.cshtml" />
     <Content Include="Views\Admin\ViewCompanyRequest.cshtml" />
+    <Content Include="Views\Company\CompanyEmployeeRegister.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

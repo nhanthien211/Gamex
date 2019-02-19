@@ -165,7 +165,7 @@
           </Key>
           <Property Name="ExhibitionId" Type="int" Nullable="false" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="BookmarkTime" Type="datetime" Nullable="false" />
+          <Property Name="BookmarkTime" Type="datetime" />
           <Property Name="CheckinTime" Type="datetime" />
         </EntityType>
         <EntityType Name="ProposedAnswer">
@@ -985,7 +985,7 @@
           </Key>
           <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="BookmarkTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BookmarkTime" Type="DateTime" Precision="3" />
           <Property Name="CheckinTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_ExhibitionAttendee_AspNetUsers" FromRole="ExhibitionAttendee" ToRole="AspNetUsers" />
           <NavigationProperty Name="Exhibition" Relationship="Self.FK_ExhibitionAttendee_Exhibitio" FromRole="ExhibitionAttendee" ToRole="Exhibition" />

@@ -130,8 +130,7 @@
                 <h4 class="modal-title">Error!</h4>
             </div>
             <div class="modal-body">
-                <p class="text-center">Update unsuccessfully</p>
-                <p class="text-center">Please try again later</p>
+                <div class="field-validation-error">@Html.ValidationSummary("")</div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>

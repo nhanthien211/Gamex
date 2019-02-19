@@ -26,7 +26,9 @@ namespace GamexService.Implement
                 c => new SelectCompanyViewModel
                 {
                     CompanyTaxId = c.TaxNumber,
-                    Status = c.StatusId
+                    CompanyName = c.Name,
+                    Status = c.StatusId,
+                    CompanyId = c.CompanyId
                 },
                 c => string.Equals(c.TaxNumber, model.CompanyTaxId)
                 );

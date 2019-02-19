@@ -8,6 +8,8 @@ namespace GamexEntity.Enumeration
 {
     public enum AccountStatusEnum
     {
-        Active = 1
+        Pending = 1,
+        Active = 2,
+        Deactive = 3
     }
 }

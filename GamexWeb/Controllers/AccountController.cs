@@ -1,15 +1,14 @@
-﻿using System;
-using System.Linq;
-using GamexEntity.Constant;
+﻿using GamexEntity.Constant;
 using GamexService.Interface;
+using GamexService.Utilities;
+using GamexService.ViewModel;
 using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using GamexService.Utilities;
-using GamexService.ViewModel;
 
 namespace GamexWeb.Controllers
 {
@@ -111,10 +110,23 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
-
-            var result = _accountService.UpdateProfile(model, User.Identity.GetUserId());
-            
-            model.IsSuccessful = result;
+            //check username and email duplicate
+            var user = _userManager.FindById(User.Identity.GetUserId());
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.UserName = model.Username;
+            var result = _userManager.Update(user);
+            if (result.Succeeded)
+            {
+                model.IsSuccessful = true;
+                return View("~/Views/Account/AccountInfo.cshtml", model);
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+            model.IsSuccessful = false;
             return View("~/Views/Account/AccountInfo.cshtml", model);
         }
 
