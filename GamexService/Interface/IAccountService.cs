@@ -6,6 +6,6 @@ namespace GamexService.Interface
     {
         LoginViewModel GetLoginAccount(string id);
         ProfileViewModel GetProfileView(string userId);
-        bool UpdateProfile(ProfileViewModel model, string id);
+        
     }
 }

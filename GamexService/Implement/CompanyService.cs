@@ -73,10 +73,10 @@ namespace GamexService.Implement
             return false;
         }
 
-        public List<CompanyRequestTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
+        public List<CompanyTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
         {
             var companyRequestList = _companyRepository.GetListProjection(
-                c => new CompanyRequestTableViewModel
+                c => new CompanyTableViewModel
                 {
                     CompanyName = c.Name,
                     TaxNumber = c.TaxNumber,
@@ -103,6 +103,22 @@ namespace GamexService.Implement
                 _companyRepository.Delete(companyId);
                 _unitOfWork.SaveChanges();
             }
+        }
+
+        public List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take)
+        {
+            var companyRequestList = _companyRepository.GetListProjection(
+                c => new CompanyTableViewModel
+                {
+                    CompanyName = c.Name,
+                    TaxNumber = c.TaxNumber,
+                    Email = c.Email,
+                    CompanyId = c.CompanyId
+                },
+                c => c.StatusId != (int)CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
+                c => c.Name, sortColumnDirection, take, skip
+            );
+            return companyRequestList.ToList();
         }
     }
 }

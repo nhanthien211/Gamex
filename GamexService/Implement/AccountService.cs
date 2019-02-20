@@ -60,32 +60,7 @@ namespace GamexService.Implement
                     Username = u.UserName
                 },
                   u => string.Equals(u.Id, userId));
-        }
-
-        public bool UpdateProfile(ProfileViewModel model, string id)
-        {
-            var account = _aspNetUsersRepository.GetById(id);
-            if (account != null)
-            {
-                _aspNetUsersRepository.Update(account);
-                account.FirstName = model.FirstName;
-                account.LastName = model.LastName;
-                account.UserName = model.Username;
-                account.Email = model.Email;
-
-                try
-                {
-                    int result = _unitOfWork.SaveChanges();
-                    return result >= 0;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-        
+        }  
 
     }
 }

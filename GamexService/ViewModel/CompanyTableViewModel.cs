@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GamexService.ViewModel
 {
-    public class CompanyRequestTableViewModel
+    public class CompanyTableViewModel
     {
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }

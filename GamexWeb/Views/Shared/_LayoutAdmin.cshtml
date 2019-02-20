@@ -36,26 +36,43 @@
                 </li>
                 <li class="nav-item @ViewBag.Profile">
                     <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
-                        <i class="fa fa-fw fa-user fa-fw"></i>
+                        <i class="fas fa-info-circle fa-fw"></i>
                         <span class="nav-link-text">Profile</span>
                     </a>
                 </li>
-                
+
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="nav-item @ViewBag.ManageCompany">
-                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuLink" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuCompany" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-building fa-fw"></i>
                             <span class="arrow">Company</span>
                         </a>
                     </li>
-                    <ul class="sidenav-second-level collapse" id="navbarDropdownMenuLink">
+                    <ul class="sidenav-second-level collapse" id="navbarDropdownMenuCompany">
                         <li class="@ViewBag.CompanyRequest">
-                            @Html.ActionLink("Join request", "ViewCompanyRequest", "Admin")
+                            @Html.ActionLink("Join request", "CompanyRequest", "Admin")
                         </li>
-                        <li><a href="#">View List</a></li>
+                        <li class="@ViewBag.CompanyList">
+                            @Html.ActionLink("Company List", "CompanyList", "Admin")
+                        </li>
                     </ul>
                 }
+
+                @if (User.IsInRole("Company"))
+                {
+                    <li class="nav-item @ViewBag.ManagerUser">
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-fw fa-user fa-fw"></i>
+                            <span class="nav-link-text">Employee</span>
+                        </a>
+                    </li>
+
+                }
+
+
+
+
                 @* <li class="nav-item  @ViewBag.Account" data-toggle="tooltip" data-placement="right" title="Manage Users"> *@
                 @*     <a class="nav-link" href="@Url.Action("ManageAccount", "Admin")"> *@
                 @*         <i class="fa fa-fw fa-users "></i> *@
