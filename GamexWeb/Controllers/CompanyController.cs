@@ -57,18 +57,15 @@ namespace GamexWeb.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [FilterConfig.NoDirectAccess]
         [Route("Register/Employee")]
-        public ActionResult CompanyEmployeeRegister(string companyName, int? companyId)
+        public ActionResult CompanyEmployeeRegister(string companyName, int companyId)
         {
-            if (TempData["RedirectCall"] == null)
-            {
-                return RedirectToAction("Register", "Home");
-            }
             //Display register form wth hidden company name and id
             var viewModel = new CompanyEmployeeRegisterViewModel
             {
                 CompanyName = companyName,
-                CompanyId = companyId.GetValueOrDefault()
+                CompanyId = companyId
             };
             return View(viewModel);
         }
@@ -123,13 +120,10 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
+        [FilterConfig.NoDirectAccess]
         [Route("Register/Company")]
         public ActionResult CompanyRegister()
         {
-            if (TempData["RedirectCall"] == null)
-            {
-                return RedirectToAction("Register", "Home");
-            }
             return View();
         }
 
@@ -155,7 +149,8 @@ namespace GamexWeb.Controllers
             {
                 model.ErrorMessage = "Cannot submit your registration. Please try again later";
                 return View(model);
-            }
+            }            
+
             model = new CompanyRegisterViewModel();
             ModelState.Clear();
             //return success information;

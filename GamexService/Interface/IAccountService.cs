@@ -6,6 +6,5 @@ namespace GamexService.Interface
     {
         LoginViewModel GetLoginAccount(string id);
         ProfileViewModel GetProfileView(string userId);
-        
     }
 }

@@ -61,6 +61,8 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/index.cshtml", model);
             }
+
+            //check if user not registered
             var result = _accountService.GetLoginAccount(model.Id);
             if (result.Id == null)
             {
@@ -68,12 +70,13 @@ namespace GamexWeb.Controllers
                 return View("~/Views/Home/index.cshtml", model);
             }
 
+            //check if normal user
             var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == UserRole.User);
             if (role != null)
             {
                 ModelState.AddModelError("ErrorMessage", "This account is not allowed. Please refer to our mobile app.");
                 return View("~/Views/Home/index.cshtml", model);
-            }
+            }            
 
             var loginResult = _signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
             switch (loginResult)

@@ -3,6 +3,7 @@ using System.Linq;
 using GamexEntity.Constant;
 using System.Web.Mvc;
 using GamexService.Interface;
+using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
 
 namespace GamexWeb.Controllers
@@ -10,12 +11,16 @@ namespace GamexWeb.Controllers
     public class AdminController : Controller
     {
         private readonly ICompanyService _companyService;
+        private readonly IAccountService _accountService;
         private readonly IIdentityMessageService _emailService;
+        private readonly ApplicationUserManager _userManager;
 
-        public AdminController(ICompanyService companyService, IIdentityMessageService emailService)
+        public AdminController(ICompanyService companyService, IAccountService accountService, IIdentityMessageService emailService, ApplicationUserManager userManager)
         {
             _companyService = companyService;
             _emailService = emailService;
+            _accountService = accountService;
+            _userManager = userManager;
         }
 
         // GET: Admin
@@ -52,7 +57,16 @@ namespace GamexWeb.Controllers
         public ActionResult ApproveOrDeny(int companyId, bool isApproved, string email)
         {
             _companyService.ApproveOrRejectCompanyRequest(companyId, isApproved);
-            if (!isApproved)
+            if (isApproved)
+            {
+                _emailService.Send(new IdentityMessage
+                {
+                    Destination = email,
+                    Subject = "[INFO] COMPANY STATUS",
+                    Body = "Your company join request has been approved. We will send you sign in information later"
+                });
+            }
+            else
             {
                 _emailService.Send(new IdentityMessage
                 {
@@ -91,5 +105,7 @@ namespace GamexWeb.Controllers
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
+
+        
     }
 }

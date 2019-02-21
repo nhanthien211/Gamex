@@ -11,8 +11,8 @@ namespace GamexService.Implement
 {
     public class CompanyService : ICompanyService
     {
-        private IRepository<Company> _companyRepository;
-        private IUnitOfWork _unitOfWork;
+        private readonly IRepository<Company> _companyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CompanyService(IRepository<Company> companyRepository, IUnitOfWork unitOfWork)
         {

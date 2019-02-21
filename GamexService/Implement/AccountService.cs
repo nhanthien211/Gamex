@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using GamexEntity;
 using GamexEntity.Enumeration;
@@ -28,7 +29,7 @@ namespace GamexService.Implement
                 {
                     Username = a.UserName,
                     StatusId = a.StatusId,
-                    UserId = a.Id
+                    UserId = a.Id,
                 },
                 a => string.Equals(a.UserName, id) || string.Equals(a.Email, id));
             
@@ -46,6 +47,8 @@ namespace GamexService.Implement
                 return model;
             }
             model.ErrorMessage = "Account is currently disabled";
+            
+
             return model;
         }
 
@@ -60,7 +63,12 @@ namespace GamexService.Implement
                     Username = u.UserName
                 },
                   u => string.Equals(u.Id, userId));
-        }  
+        }
 
+//        public List<AspNetUsers> Test(string role)
+//        {
+//            return _aspNetUsersRepository.GetList(
+//                u => u.AspNetRoles.Select(r => r.Name).Contains("Company")).ToList();
+//        }
     }
 }

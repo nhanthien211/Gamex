@@ -53,7 +53,7 @@
             {
                 "render": function (data, type, full, meta) {
                     return '<a href="/Admin/Manage/Company/View/' +
-                        full.CompanyId +
+                        full.CompanyId +  
                         '"><i class="fa fa-edit"></i>View Detail & Edit</a>';
                 }
             }
