@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using GamexService.Interface;
-using GamexService.Utilities;
+﻿using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
 {

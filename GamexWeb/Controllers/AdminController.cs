@@ -1,25 +1,25 @@
-﻿using System;
-using System.Linq;
-using GamexEntity.Constant;
-using System.Web.Mvc;
+﻿using GamexEntity.Constant;
 using GamexService.Interface;
 using GamexWeb.Identity;
+using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ICompanyService _companyService;
-        private readonly IAccountService _accountService;
         private readonly IIdentityMessageService _emailService;
+        private readonly IAdminService _adminService;
         private readonly ApplicationUserManager _userManager;
+        
 
-        public AdminController(ICompanyService companyService, IAccountService accountService, IIdentityMessageService emailService, ApplicationUserManager userManager)
+        public AdminController(IIdentityMessageService emailService, IAdminService adminService, ApplicationUserManager userManager)
         {
-            _companyService = companyService;
             _emailService = emailService;
-            _accountService = accountService;
+            _adminService = adminService;
             _userManager = userManager;
         }
 
@@ -46,7 +46,7 @@ namespace GamexWeb.Controllers
             var skip = start != null ? Convert.ToInt32(start) : 0;
             
 
-            var data = _companyService.LoadCompanyJoinRequestDataTable(sortColumnDirection, searchValue, skip, take);
+            var data = _adminService.LoadCompanyJoinRequestDataTable(sortColumnDirection, searchValue, skip, take);
             var recordsTotal = data.Count;
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
@@ -54,26 +54,39 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [Authorize(Roles = UserRole.Admin)]
-        public ActionResult ApproveOrDeny(int companyId, bool isApproved, string email)
+        public ActionResult ApproveOrDeny(int companyId, bool isApproved)
         {
-            _companyService.ApproveOrRejectCompanyRequest(companyId, isApproved);
-            if (isApproved)
+            var userid = "";
+            var result = _adminService.ApproveOrRejectCompanyRequest(companyId, isApproved, ref userid);
+
+            if (result)
             {
-                _emailService.Send(new IdentityMessage
+                var user = _userManager.FindById(userid);
+                if (isApproved)
                 {
-                    Destination = email,
-                    Subject = "[INFO] COMPANY STATUS",
-                    Body = "Your company join request has been approved. We will send you sign in information later"
-                });
-            }
-            else
-            {
-                _emailService.Send(new IdentityMessage
+                    //add password
+                    var randomPassword = MyUtilities.GenerateRandomPassword();
+                    _userManager.AddPassword(userid, randomPassword);
+
+                    _emailService.Send(new IdentityMessage
+                    {
+                        Destination = user.Email,
+                        Subject = "[INFO] COMPANY STATUS",
+                        Body = "Your company join request has been approved. " +
+                               "Please login with the following information: " +
+                               "Username/Email: " + user.Email + " " +
+                               "Password: " + randomPassword
+                    });
+                }
+                else
                 {
-                    Destination = email,
-                    Subject = "[INFO] COMPANY STATUS",
-                    Body = "Your company join request has been rejected due to malicious information"
-                });
+                    _emailService.Send(new IdentityMessage
+                    {
+                        Destination = user.Email,
+                        Subject = "[INFO] COMPANY STATUS",
+                        Body = "Your company join request has been rejected due to malicious information"
+                    });
+                }
             }
             return RedirectToAction("CompanyRequest", "Admin");
         }
@@ -100,7 +113,7 @@ namespace GamexWeb.Controllers
             var skip = start != null ? Convert.ToInt32(start) : 0;
             
 
-            var data = _companyService.LoadCompanyDataTable(sortColumnDirection, searchValue, skip, take);
+            var data = _adminService.LoadCompanyDataTable(sortColumnDirection, searchValue, skip, take);
             var recordsTotal = data.Count;
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });

@@ -10,7 +10,7 @@ namespace GamexRepository
         IEnumerable<T> GetAll();
         T GetById(object id);
         void Insert(T entity);
-        void Delete(object id);
+        void Delete(T entity);
         void Update(T entity);
 
         IEnumerable<T> GetList(Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] paths);

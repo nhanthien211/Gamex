@@ -1,15 +1,14 @@
+using GamexEntity;
+using GamexRepository;
+using GamexService.Implement;
+using GamexService.Interface;
 using GamexWeb.Identity;
-using GamexWeb.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using System;
 using System.Data.Entity;
 using System.Web;
-using GamexEntity;
-using GamexRepository;
-using GamexService.Implement;
-using GamexService.Interface;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -83,6 +82,7 @@ namespace GamexWeb
             //Service registration
             container.RegisterType<IAccountService, AccountService>();
             container.RegisterType<ICompanyService, CompanyService>();
+            container.RegisterType<IAdminService, AdminService>();
             //End of: Service registration
         }
     }

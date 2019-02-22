@@ -1,14 +1,10 @@
-﻿using System.Linq;
+﻿using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 using GamexService.Interface;
 using GamexService.ViewModel;
-using System.Web.Mvc;
-using GamexEntity.Constant;
-using GamexEntity.Enumeration;
 using GamexWeb.Identity;
-using GamexWeb.Models;
-using GamexWeb.Utilities;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
 {
@@ -144,7 +140,6 @@ namespace GamexWeb.Controllers
             {
                 return View(model);
             }
-
             var isRegistered = _companyService.IsCompanyRegistered(model.TaxNumber);
             if (isRegistered)
             {
@@ -152,7 +147,6 @@ namespace GamexWeb.Controllers
                 model.ErrorMessage = "Company is already in our system";
                 return View(model);
             }
-            
             //check if email exist
             var isDuplicateUsername = _accountService.IsUsernameDuplicate(model.EmployeeEmail);
             if (isDuplicateUsername)
@@ -184,10 +178,18 @@ namespace GamexWeb.Controllers
             var userResult = _userManager.Create(user);
             if (userResult.Succeeded)
             {
-                model = new CompanyRegisterViewModel();
-                model.IsSuccessful = true;
-                ModelState.Clear();
-                //return success information;
+                var roleResult = _userManager.AddToRole(user.Id, UserRole.Company);
+                if (roleResult.Succeeded)
+                {
+                    model = new CompanyRegisterViewModel();
+                    model.IsSuccessful = true;
+                    ModelState.Clear();
+                    //return success information;
+                    return View(model);
+                }
+                _userManager.Delete(user);
+                model.IsSuccessful = false;
+                model.ErrorMessage = "Cannot submit your registration. Please try again later";
                 return View(model);
             }
             model.IsSuccessful = false;

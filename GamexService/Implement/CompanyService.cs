@@ -73,54 +73,6 @@ namespace GamexService.Implement
             return false;
         }
 
-        public List<CompanyTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
-        {
-            var companyRequestList = _companyRepository.GetListProjection(
-                c => new CompanyTableViewModel
-                {
-                    CompanyName = c.Name,
-                    TaxNumber = c.TaxNumber,
-                    Email = c.Email,
-                    CompanyId = c.CompanyId
-                },
-                c => c.StatusId == (int) CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
-                c => c.Name, sortColumnDirection, take, skip
-                );
-            return companyRequestList.ToList();
-        }
-
-        public void ApproveOrRejectCompanyRequest(int companyId, bool isApproved)
-        {
-            if (isApproved)
-            {
-                var company = _companyRepository.GetSingle(c => c.CompanyId == companyId);
-                _companyRepository.Update(company);
-                company.StatusId = (int) CompanyStatusEnum.Active;
-                _unitOfWork.SaveChanges();
-            }
-            else
-            {
-                _companyRepository.Delete(companyId);
-                _unitOfWork.SaveChanges();
-            }
-        }
-
-        public List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take)
-        {
-            var companyRequestList = _companyRepository.GetListProjection(
-                c => new CompanyTableViewModel
-                {
-                    CompanyName = c.Name,
-                    TaxNumber = c.TaxNumber,
-                    Email = c.Email,
-                    CompanyId = c.CompanyId
-                },
-                c => c.StatusId != (int)CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
-                c => c.Name, sortColumnDirection, take, skip
-            );
-            return companyRequestList.ToList();
-        }
-
         public int GetCompanyId(string taxNumber)
         {
 
@@ -132,7 +84,8 @@ namespace GamexService.Implement
 
         public void RemoveCompany(int companyId)
         {
-            _companyRepository.Delete(companyId);
+            var company = _companyRepository.GetById(companyId);
+            _companyRepository.Delete(company);
             _unitOfWork.SaveChanges();
         }
     }

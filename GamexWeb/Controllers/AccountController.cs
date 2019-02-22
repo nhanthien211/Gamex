@@ -1,8 +1,8 @@
 ﻿using GamexEntity.Constant;
 using GamexService.Interface;
-using GamexService.Utilities;
 using GamexService.ViewModel;
 using GamexWeb.Identity;
+using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -130,6 +130,8 @@ namespace GamexWeb.Controllers
             var result = _userManager.Update(user);
             if (result.Succeeded)
             {
+                User.AddUpdateClaim(CustomClaimTypes.UserFullName, user.LastName + " " + user.FirstName, _authenticationManager);
+                User.AddUpdateClaim(CustomClaimTypes.Email, user.Email, _authenticationManager);
                 model.IsSuccessful = true;
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
