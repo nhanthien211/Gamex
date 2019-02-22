@@ -113,12 +113,20 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
-            //check username and email duplicate
+            //check username duplicate email
+            var isDuplicateUsername = _accountService.IsUsernameDuplicate(model.Username, User.Identity.GetUserId());
+            if (isDuplicateUsername)
+            {
+                ModelState.AddModelError("Username", "Name " + model.Username + " is already taken");
+                return View("~/Views/Account/AccountInfo.cshtml", model);
+            }
+
             var user = _userManager.FindById(User.Identity.GetUserId());
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.UserName = model.Username;
+            
             var result = _userManager.Update(user);
             if (result.Succeeded)
             {

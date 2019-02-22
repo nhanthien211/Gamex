@@ -98,7 +98,7 @@ namespace GamexWeb.Controllers
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-
+            
 
             var data = _companyService.LoadCompanyDataTable(sortColumnDirection, searchValue, skip, take);
             var recordsTotal = data.Count;

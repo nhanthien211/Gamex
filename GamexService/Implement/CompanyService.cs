@@ -120,5 +120,20 @@ namespace GamexService.Implement
             );
             return companyRequestList.ToList();
         }
+
+        public int GetCompanyId(string taxNumber)
+        {
+
+            return _companyRepository.GetSingleProjection(
+                c => c.CompanyId,
+                c => c.TaxNumber == taxNumber
+            );
+        }
+
+        public void RemoveCompany(int companyId)
+        {
+            _companyRepository.Delete(companyId);
+            _unitOfWork.SaveChanges();
+        }
     }
 }

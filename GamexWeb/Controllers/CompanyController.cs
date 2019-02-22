@@ -6,6 +6,7 @@ using GamexEntity.Constant;
 using GamexEntity.Enumeration;
 using GamexWeb.Identity;
 using GamexWeb.Models;
+using GamexWeb.Utilities;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
@@ -14,12 +15,14 @@ namespace GamexWeb.Controllers
     public class CompanyController : Controller
     {
         private readonly ApplicationUserManager _userManager;
+        private readonly IAccountService _accountService;
         private readonly ICompanyService _companyService;
 
-        public CompanyController(ICompanyService companyService, ApplicationUserManager userManager)
+        public CompanyController(ICompanyService companyService, ApplicationUserManager userManager, IAccountService accountService)
         {
             _companyService = companyService;
             _userManager = userManager;
+            _accountService = accountService;
         }
 
         [HttpPost]
@@ -39,9 +42,7 @@ namespace GamexWeb.Controllers
                 if (company.Status == (int) CompanyStatusEnum.Pending)
                 {
                     //display popup tell user to wait until being approved
-                    model.ErrorMessage =
-                        "Your company is registered but not approved yet. " +
-                        "We will inform via your email when you're read";
+                    model.ErrorMessage = "Your company is registered but not approved yet";
                     return View("~/Views/Home/Register.cshtml", model);
                 }
                 if (company.Status == (int) CompanyStatusEnum.Active)
@@ -80,7 +81,14 @@ namespace GamexWeb.Controllers
             {
                 return View(model);
             }
-
+            //check if username is duplicate
+            var isDuplicateUsername = _accountService.IsUsernameDuplicate(model.Username);
+            if (isDuplicateUsername)
+            {
+                ModelState.AddModelError("Username", "Name " + model.Username + " is already taken");
+                return View(model);
+            }
+            
             var user = new ApplicationUser
             {
                 UserName = model.Username,
@@ -140,22 +148,56 @@ namespace GamexWeb.Controllers
             var isRegistered = _companyService.IsCompanyRegistered(model.TaxNumber);
             if (isRegistered)
             {
+                model.IsSuccessful = false;
                 model.ErrorMessage = "Company is already in our system";
                 return View(model);
             }
-
-            var result = _companyService.RegisterNewCompany(model);
-            if (!result)
+            
+            //check if email exist
+            var isDuplicateUsername = _accountService.IsUsernameDuplicate(model.EmployeeEmail);
+            if (isDuplicateUsername)
             {
+                ModelState.AddModelError("EmployeeEmail", "Name " + model.EmployeeEmail + " is already taken");
+                return View(model);
+            }
+                        
+            var companyResult = _companyService.RegisterNewCompany(model);
+            if (!companyResult)
+            {
+                model.IsSuccessful = false;
                 model.ErrorMessage = "Cannot submit your registration. Please try again later";
                 return View(model);
-            }            
+            }
 
-            model = new CompanyRegisterViewModel();
-            ModelState.Clear();
-            //return success information;
-            return View(model);
+            var companyId = _companyService.GetCompanyId(model.TaxNumber);
+            var user = new ApplicationUser
+            {
+                UserName = model.EmployeeEmail,
+                Email = model.EmployeeEmail,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Point = 0,
+                TotalPointEarned = 0,
+                CompanyId = companyId,
+                StatusId = (int)AccountStatusEnum.Pending
+            };
+            var userResult = _userManager.Create(user);
+            if (userResult.Succeeded)
+            {
+                model = new CompanyRegisterViewModel();
+                model.IsSuccessful = true;
+                ModelState.Clear();
+                //return success information;
+                return View(model);
+            }
+            model.IsSuccessful = false;
+            _companyService.RemoveCompany(companyId);
+            model.ErrorMessage = "";
+            foreach (var error in userResult.Errors)
+            {
+                model.ErrorMessage += error;
+            }
+            return View(model);          
         }
-
     }
 }

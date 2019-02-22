@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using GamexService.Utilities;
 
 namespace GamexService.ViewModel
 {
@@ -34,6 +35,24 @@ namespace GamexService.ViewModel
         [Display(Name = "Address")]
         [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters")]
         public string Address { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [StringLength(256, ErrorMessage = "Email cannot exceed 256 characters")]
+        [Display(Name = "Your Email *")]
+        public string EmployeeEmail { get; set; }
+
+        [Required(ErrorMessage = "First Name is required")]
+        [StringLength(100, ErrorMessage = "Maximum 100 characters")]
+        [Display(Name = "Your First Name *")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last Name is required")]
+        [StringLength(100, ErrorMessage = "Maximum 100 characters")]
+        [Display(Name = "Your Last Name *")]
+        public string LastName { get; set; }
+
+        public bool? IsSuccessful { get; set; }
 
         public string ErrorMessage { get; set; }
     }

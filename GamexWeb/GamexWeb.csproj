@@ -206,7 +206,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utilities\ActionLinkHelper.cs" />
+    <Compile Include="Utilities\MyUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -313,7 +313,6 @@
     <Content Include="Views\Admin\CompanyRequest.cshtml" />
     <Content Include="Views\Company\CompanyEmployeeRegister.cshtml" />
     <Content Include="Views\Admin\CompanyList.cshtml" />
-    <Content Include="Views\Admin\CreateEmployeeAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

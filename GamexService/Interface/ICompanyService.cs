@@ -11,5 +11,7 @@ namespace GamexService.Interface
         List<CompanyTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take);
         void ApproveOrRejectCompanyRequest(int companyId, bool isApproved);
         List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take);
+        int GetCompanyId(string taxNumber);
+        void RemoveCompany(int companyId);
     }
 }

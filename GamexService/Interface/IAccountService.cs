@@ -6,5 +6,7 @@ namespace GamexService.Interface
     {
         LoginViewModel GetLoginAccount(string id);
         ProfileViewModel GetProfileView(string userId);
+        bool IsUsernameDuplicate(string username);
+        bool IsUsernameDuplicate(string username, string id);
     }
 }
