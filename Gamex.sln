@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamexWeb", "GamexWeb\GamexW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamexTest", "GamexTest\GamexTest.csproj", "{DE260118-2800-4DFA-A104-2CD6E010C13A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamexApi", "GamexApi\GamexApi.csproj", "{87835C3A-BB37-48C6-A0D6-FDCC1C8F305B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DE260118-2800-4DFA-A104-2CD6E010C13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE260118-2800-4DFA-A104-2CD6E010C13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE260118-2800-4DFA-A104-2CD6E010C13A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87835C3A-BB37-48C6-A0D6-FDCC1C8F305B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87835C3A-BB37-48C6-A0D6-FDCC1C8F305B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87835C3A-BB37-48C6-A0D6-FDCC1C8F305B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87835C3A-BB37-48C6-A0D6-FDCC1C8F305B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
