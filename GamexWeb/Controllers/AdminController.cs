@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using GamexEntity.Enumeration;
 
 namespace GamexWeb.Controllers
 {
@@ -66,7 +67,10 @@ namespace GamexWeb.Controllers
                 {
                     //add password
                     var randomPassword = MyUtilities.GenerateRandomPassword();
+                    user.StatusId = (int) AccountStatusEnum.Active;
                     _userManager.AddPassword(userid, randomPassword);
+                    _userManager.Update(user);
+                    
 
                     _emailService.Send(new IdentityMessage
                     {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexEntity;
+﻿using GamexEntity;
 using GamexEntity.Enumeration;
 using GamexRepository;
 using GamexService.Interface;
 using GamexService.ViewModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GamexService.Implement
 {
@@ -50,10 +48,7 @@ namespace GamexService.Implement
             if (isApproved)
             {
                 _companyRepository.Update(company);
-                _userRepository.Update(user);
-
                 company.StatusId = (int)CompanyStatusEnum.Active;
-                user.StatusId = (int)AccountStatusEnum.Active;
                 
                 int updateResult;
                 try
