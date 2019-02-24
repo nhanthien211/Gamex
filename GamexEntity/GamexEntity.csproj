@@ -84,7 +84,7 @@
       <DependentUpon>GamexModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Constant\CustomClaimTypes.cs" />
-    <Compile Include="Constant\UserRole.cs" />
+    <Compile Include="Constant\AccountRole.cs" />
     <Compile Include="Enumeration\AccountStatusEnum.cs" />
     <Compile Include="Enumeration\CompanyStatusEnum.cs" />
     <Compile Include="Exhibition.cs">

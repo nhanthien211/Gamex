@@ -6,6 +6,7 @@ using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GamexEntity.Constant;
 
 namespace GamexService.Implement
 {
@@ -89,7 +90,7 @@ namespace GamexService.Implement
 
         public List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take)
         {
-            var companyRequestList = _companyRepository.GetListProjection(
+            var companyList = _companyRepository.GetListProjection(
                 c => new CompanyTableViewModel
                 {
                     CompanyName = c.Name,
@@ -100,7 +101,24 @@ namespace GamexService.Implement
                 c => c.StatusId != (int)CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
                 c => c.Name, sortColumnDirection, take, skip
             );
-            return companyRequestList.ToList();
+            return companyList.ToList();
+        }
+
+        public List<OrganizerTableViewModel> LoadOrganizerDataTable(string sortColumnDirection, string searchValue, int skip, int take)
+        {
+            var organizerList = _userRepository.GetListProjection(
+                a => new OrganizerTableViewModel
+                {
+                    FullName = a.LastName + " " + a.FirstName,
+                    Email =  a.Email,
+                    Status = a.AccountStatus.Status
+                }, 
+                a => a.StatusId != (int) AccountStatusEnum.Pending 
+                && a.AspNetRoles.Select(r => r.Name).Contains(AccountRole.Organizer) 
+                && (a.FirstName.Contains(searchValue) || a.LastName.Contains(searchValue) 
+                || a.Email.Contains(searchValue) || a.AccountStatus.Status.Contains(searchValue))
+            );
+            return organizerList.ToList();
         }
     }
 }

@@ -33,22 +33,26 @@
                         <span class="nav-link-text">Welcome @User.Identity.GetFullName()</span>
                     </a>
                 </li>
-                <li class="nav-item @ViewBag.Profile">
-                    <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
-                        <i class="fas fa-info-circle fa-fw"></i>
-                        <span class="nav-link-text">Profile</span>
-                    </a>
-                </li>
 
                 @if (User.IsInRole("Admin"))
                 {
+                    <!--Profile-->
+                    <li class="nav-item @ViewBag.Profile">
+                        <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
+                            <i class="menu-icon fas fa-info-circle fa-fw"></i>
+                            <span class="nav-link-text">Profile</span>
+                        </a>
+                    </li>
+                    <!--End of Profile-->
+
+                    <!--Manage Company-->
                     <li class="nav-item @ViewBag.ManageCompany">
                         <a class="nav-link" href="#" data-target="#navbarDropdownMenuCompany" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-building fa-fw"></i>
+                            <i class="menu-icon fas fa-building fa-fw"></i>
                             <span class="arrow">Company</span>
                         </a>
                     </li>
-                    <ul class="sidenav-second-level collapse" id="navbarDropdownMenuCompany">
+                    <ul class="sidenav-second-level collapse @ViewBag.ManageCompanyDropDownShow" id="navbarDropdownMenuCompany">
                         <li class="@ViewBag.CompanyRequest">
                             @Html.ActionLink("Join request", "CompanyRequest", "Admin")
                         </li>
@@ -56,13 +60,37 @@
                             @Html.ActionLink("Company List", "CompanyList", "Admin")
                         </li>
                     </ul>
+                    <!--End of Manage Company-->
+
+                    <!--Mange User-->
+                    <li class="nav-item @ViewBag.ManageUser">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuUser" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fas fa-users fa-fw"></i>
+                            <span class="arrow">User</span>
+                        </a>
+                    </li>
+                    <ul class="sidenav-second-level collapse @ViewBag.ManageUserDropDownShow" id="navbarDropdownMenuUser">
+                        <li class="@ViewBag.OrganizerList">
+                            @Html.ActionLink("Organizer", "OrganizerList", "Admin")
+                        </li>
+                        <li class="@ViewBag.AttendeeList">
+                            @Html.ActionLink("Attendee", "", "Admin")
+                        </li>
+                    </ul>
+                    <!--End of Mange User-->
                 }
 
                 @if (User.IsInRole("Company"))
                 {
+                    <li class="nav-item @ViewBag.Profile">
+                        <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
+                            <i class="menu-icon fas fa-info-circle fa-fw"></i>
+                            <span class="nav-link-text">Profile</span>
+                        </a>
+                    </li>
                     <li class="nav-item @ViewBag.ManagerUser">
                         <a class="nav-link" href="#">
-                            <i class="fa fa-fw fa-user fa-fw"></i>
+                            <i class="menu-icon fas fa-user fa-fw"></i>
                             <span class="nav-link-text">Employee</span>
                         </a>
                     </li>
@@ -92,7 +120,7 @@
                 @* </li> *@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
-                        <i class="fa fa-fw fa-sign-out-alt fa-fw"></i> Logout
+                        <i class="menu-icon fas fa-sign-out-alt fa-fw"></i> Logout
                     </a>
                 </li>
             </ul>

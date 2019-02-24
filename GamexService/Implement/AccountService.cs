@@ -83,11 +83,6 @@ namespace GamexService.Implement
                             || u.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase))) != null;
         }
 
-        public void ApproveOrCompanyEmployeeRequest(int companyId, bool isApprove)
-        {
-
-        }
-
         //        public List<AspNetUsers> Test(string role)
         //        {
         //            return _aspNetUsersRepository.GetList(

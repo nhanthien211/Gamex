@@ -1,29 +1,31 @@
 ﻿
 @{
-    ViewBag.Title = "Company Request";
-    ViewBag.ManageCompany = "active";
-    ViewBag.CompanyRequest = "active";
-    ViewBag.ManageCompanyDropDownShow = "show";
+    ViewBag.Title = "Organizer List";
+    ViewBag.OrganizerList = "active";
+    ViewBag.ManageUser = "active";
+    ViewBag.ManageUserDropDownShow = "show";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @section scripts
 {
-    <!--Bổ sung script để load table order-->
-    @Scripts.Render("~/bundles/datatableCompanyRequest")
+    @Scripts.Render("~/bundles/datatableOrganizerList")
 }
 
 <div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
-        <li class="breadcrumb-item active">Join Request</li>
+        <li class="breadcrumb-item active">Organizer List</li>
     </ol>
 
     <!-- Content-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-building fa-fw menu-icon"></i> Join Request
-
+            <i class="fas fa-user-tie fa-fw menu-icon"></i> Organizer List
+            @using (@Html.BeginForm("CreateOrganizer", "Admin", FormMethod.Get, new { @class = "form-inline", @style = "display: inline" }))
+            {
+                <button class="btn btn-success" type="submit" style="float: right;">Create Organizer</button>
+            }
         </div>
         <div class="card-body">
 
@@ -31,9 +33,9 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Company Name</th>
-                            <th>Tax Number</th>
+                            <th>Organizer Name</th>
                             <th>Email</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>

@@ -236,6 +236,7 @@
     <Content Include="Scripts\jquery.js" />
     <Content Include="Scripts\sb-admin-datatables-company-list.js" />
     <Content Include="Scripts\sb-admin-datatables-company-request.js" />
+    <Content Include="Scripts\sb-admin-datatables-organizer-list.js" />
     <Content Include="Scripts\sb-admin.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -312,6 +313,8 @@
     <Content Include="Views\Admin\CompanyRequest.cshtml" />
     <Content Include="Views\Company\CompanyEmployeeRegister.cshtml" />
     <Content Include="Views\Admin\CompanyList.cshtml" />
+    <Content Include="Views\Admin\OrganizerList.cshtml" />
+    <Content Include="Views\Admin\CreateOrganizer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

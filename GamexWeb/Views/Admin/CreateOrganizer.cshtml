@@ -1,0 +1,75 @@
+﻿@model GamexService.ViewModel.CreateOrganizerViewModel
+
+@{
+    ViewBag.Title = "Create Organizer";
+    ViewBag.OrganizerList = "active";
+    ViewBag.ManageUser = "active";
+    ViewBag.ManageUserDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            @Html.ActionLink("Organizer List", "OrganizerList", "Admin")
+        </li>
+        <li class="breadcrumb-item active">Create Organizer</li>
+    </ol>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon"></i> Create Organizer
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("CreateOrganizer", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email, new
+                   {
+                       @class = "form-control form-control-sm"
+                   })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.FirstName)
+                        @Html.TextBoxFor(m => m.FirstName, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.FirstName)
+                    </div>
+                </div>
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.LastName)
+                        @Html.TextBoxFor(m => m.LastName, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.LastName)
+                    </div>
+                </div>
+                <div class="row for-input-row">
+                    <div class="col-sm-12 col-lg-12">
+                        @Html.ValidationMessageFor(m => m.ErrorMessage)
+                    </div>
+                </div>
+                <div class="row for-input-row">
+                    <div class="col-sm-12 col-lg-12">
+                        
+                        <button type="submit" class="btn btn-outline-success">Create</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+

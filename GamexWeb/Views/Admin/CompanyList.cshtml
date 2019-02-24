@@ -3,6 +3,7 @@
     ViewBag.Title = "Company List";
     ViewBag.CompanyList = "active";
     ViewBag.ManageCompany = "active";
+    ViewBag.ManageCompanyDropDownShow = "show";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -20,7 +21,7 @@
     <!-- Content-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-building fa-fw"></i> Company List
+            <i class="fas fa-building fa-fw menu-icon"></i> Company List
 
         </div>
         <div class="card-body">
@@ -32,7 +33,7 @@
                         <th>Company Name</th>
                         <th>Tax Number</th>
                         <th>Email</th>
-                        <th>Action</th>
+                        @* <th>Action</th> *@
                     </tr>
                     </thead>
                 </table>

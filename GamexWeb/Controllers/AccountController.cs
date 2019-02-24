@@ -9,6 +9,7 @@ using Microsoft.Owin.Security;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GamexWeb.Controllers
 {
@@ -37,7 +38,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account")]
         public ActionResult AccountInfo()
         {
@@ -71,7 +72,7 @@ namespace GamexWeb.Controllers
             }
 
             //check if normal user
-            var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == UserRole.User);
+            var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == AccountRole.User);
             if (role != null)
             {
                 ModelState.AddModelError("ErrorMessage", "This account is not allowed. Please refer to our mobile app.");
@@ -105,7 +106,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account")]
         public ActionResult UpdateProfile(ProfileViewModel model)
         {
@@ -144,7 +145,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account/Password")]
         public ActionResult ChangePassword()
         {
@@ -153,7 +154,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account/Password")]
         public ActionResult ChangePassword(ChangePasswordViewModel model)
         {

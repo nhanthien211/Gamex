@@ -101,7 +101,7 @@ namespace GamexWeb.Controllers
             if (result.Succeeded)
             {
                 //tao thanh cong
-                var roleResult = _userManager.AddToRole(user.Id, UserRole.Company);
+                var roleResult = _userManager.AddToRole(user.Id, AccountRole.Company);
                 if (roleResult.Succeeded)
                 {
                     model = new CompanyEmployeeRegisterViewModel();
@@ -178,7 +178,7 @@ namespace GamexWeb.Controllers
             var userResult = _userManager.Create(user);
             if (userResult.Succeeded)
             {
-                var roleResult = _userManager.AddToRole(user.Id, UserRole.Company);
+                var roleResult = _userManager.AddToRole(user.Id, AccountRole.Company);
                 if (roleResult.Succeeded)
                 {
                     model = new CompanyRegisterViewModel();
