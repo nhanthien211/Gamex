@@ -55,11 +55,11 @@
                 "render": function (data, type, full, meta) {
                     if (full.Status === "Activated") {
                         return '<form action="/Admin/ActivateOrDeactivateAccount" method="post"> ' +
-                            '<input type="hidden" name="userEmail" value="' + full.Email + '"/>' +
+                            '<input type="hidden" name="userId" value="' + full.Id + '"/>' +
                             '<button type="submit" name="isActivate" value="false" class="btn btn-outline-danger">Deactivate</button></form>';
                     } else {
                         return '<form action="/Admin/ActivateOrDeactivateAccount" method="post"> ' +
-                            '<input type="hidden" name="userEmail" value="' + full.Email + '"/>' +
+                            '<input type="hidden" name="userId" value="' + full.Id + '"/>' +
                             '<button type="submit" name="isActivate" value="true" class="btn btn-outline-success">Activate</button></form>';
                     }
                 }

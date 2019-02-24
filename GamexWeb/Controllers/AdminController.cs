@@ -211,6 +211,30 @@ namespace GamexWeb.Controllers
             return View(model);
         }
 
-        
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Admin)]
+        public ActionResult ActivateOrDeactivateAccount(string userId, bool isActivate)
+        {
+            var user = _userManager.FindById(userId);
+            if (user != null)
+            {
+                switch (isActivate)
+                {
+                    case true:
+                        user.StatusId = (int) AccountStatusEnum.Active;
+                        _userManager.Update(user);
+                        break;;
+                    case false:
+                        user.StatusId = (int)AccountStatusEnum.Deactive;
+                        _userManager.Update(user);
+                        //sign out that user
+                        //also check OnValidateIdentity in Startup.Auth and set Timespan to 1 secs for 
+                        //immediately sign out
+                        _userManager.UpdateSecurityStamp(user.Id);
+                        break;
+                }
+            }
+            return RedirectToAction("OrganizerList", "Admin");
+        }
     }
 }

@@ -111,7 +111,8 @@ namespace GamexService.Implement
                 {
                     FullName = a.LastName + " " + a.FirstName,
                     Email =  a.Email,
-                    Status = a.AccountStatus.Status
+                    Status = a.AccountStatus.Status,
+                    Id =  a.Id
                 }, 
                 a => a.StatusId != (int) AccountStatusEnum.Pending 
                 && a.AspNetRoles.Select(r => r.Name).Contains(AccountRole.Organizer) 

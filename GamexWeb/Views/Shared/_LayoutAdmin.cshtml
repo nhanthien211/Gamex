@@ -1,4 +1,5 @@
-﻿@using GamexWeb.Utilities
+﻿@using GamexEntity.Constant
+@using GamexWeb.Utilities
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +35,7 @@
                     </a>
                 </li>
 
-                @if (User.IsInRole("Admin"))
+                @if (User.IsInRole(AccountRole.Admin))
                 {
                     <!--Profile-->
                     <li class="nav-item @ViewBag.Profile">
@@ -80,7 +81,7 @@
                     <!--End of Mange User-->
                 }
 
-                @if (User.IsInRole("Company"))
+                @if (User.IsInRole(AccountRole.Company))
                 {
                     <li class="nav-item @ViewBag.Profile">
                         <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
@@ -97,7 +98,17 @@
 
                 }
 
+                @if (User.IsInRole(AccountRole.Organizer))
+                {
+                    <li class="nav-item @ViewBag.Profile">
+                        <a class="nav-link" href="@Url.Action("AccountInfo", "Account")">
+                            <i class="menu-icon fas fa-info-circle fa-fw"></i>
+                            <span class="nav-link-text">Profile</span>
+                        </a>
+                    </li>
+                    
 
+                }
 
 
                 @* <li class="nav-item  @ViewBag.Account" data-toggle="tooltip" data-placement="right" title="Manage Users"> *@
