@@ -2,7 +2,8 @@
 
 1. Working endpoints (tested with Postman):
 - POST /api/account/register
-  json body:
+  
+json body:
 ```
 {
   "Email": "user02@gmail.com",
@@ -16,6 +17,7 @@
 ```
 
 - GET /token
+
 body: x-www-form-urlencoded
 ```
 grant_type:password
@@ -36,6 +38,7 @@ response:
 ```
 
 - GET /api/account/userinfo
+
 header:
 ```
 authorization: bearer <access_token>
