@@ -328,7 +328,15 @@ namespace GamexApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() {
+                UserName = model.Email, 
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Point = model.Point,
+                TotalPointEarned = model.TotalPointEarned
+            };
+            user.StatusId = 2;
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

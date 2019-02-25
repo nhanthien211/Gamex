@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using GamexApi.Providers;
 using GamexApi.Models;
+using Microsoft.Owin.Cors;
 
 namespace GamexApi
 {
@@ -45,6 +46,9 @@ namespace GamexApi
 
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
+
+            // CORS enable
+            app.UseCors(CorsOptions.AllowAll);
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
