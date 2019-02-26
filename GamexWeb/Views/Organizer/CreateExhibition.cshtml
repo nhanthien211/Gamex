@@ -1,0 +1,101 @@
+﻿@model GamexService.ViewModel.CreateExhibitionViewModel
+
+@{
+    ViewBag.Title = "Create Exhibition";
+    ViewBag.CreateExhibition = "active";
+    ViewBag.ManageExhibition = "active";
+    ViewBag.ManageExhibitionDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section ckeditor
+{
+    @Scripts.Render("~/bundles/ckeditor")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/validateFile");
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Create Exhibition</li>
+    </ol>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon"></i> Create Exhibition
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("CreateExhibition", "Organizer", FormMethod.Post, new
+            {
+                @id = "CreateExhibitionForm",
+                @enctype = "multipart/form-data"
+            }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-8 col-lg-8 custom-file">
+                        @Html.LabelFor(m => m.Logo)
+                        <div class="custom-file" lang="es">
+                            @Html.TextBoxFor(m => m.Logo, new
+                            {
+                                @class = "custom-file-input",
+                                @type = "file",
+                                accept = "image/*"
+                            })
+                            <label style="border-color: #ccc !important" class="custom-file-label" for="Logo">Choose file</label>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Logo)
+                        <div id="fileUploadResult" class="text-danger"></div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <img alt="" id="imagePreview" style="width: 100%; height: auto" />
+                    </div>
+                </div>
+                <br />
+                <div class="row for-input-row" style="font-weight: bold">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.ValidationMessageFor(m => m.Description)
+                        <textarea id="Description" name="Description" class="form-control text-editor" rows="10" cols="80"> 
+                             @if (Model != null) 
+                             { 
+                                 @Html.Raw(HttpUtility.HtmlDecode(Model.Description)) 
+                             } 
+                         </textarea>
+                        <script>
+                            CKEDITOR.replace('Description', {
+                                htmlEncodeOutput: true
+                            });
+                        </script>
+                    </div>
+                </div>
+                <hr />
+                <div class="row for-input-row">
+                    <div class="col-sm-12 col-lg-12">
+                        <button type="submit" class="btn btn-outline-success" onclick="clearFileError()">Create</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

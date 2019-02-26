@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implement\AccountService.cs" />
@@ -49,11 +50,14 @@
     <Compile Include="Interface\IAdminService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\FileImageAttribute.cs" />
+    <Compile Include="Utilities\FileLength.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyTableViewModel.cs" />
+    <Compile Include="ViewModel\CreateExhibitionViewModel.cs" />
     <Compile Include="ViewModel\CreateOrganizerViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\OrganizerTableViewModel.cs" />

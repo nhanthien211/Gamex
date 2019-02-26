@@ -34,6 +34,7 @@ namespace GamexEntity
         public string Logo { get; set; }
         public string QR { get; set; }
         public bool IsActive { get; set; }
+        public string ExhibitionCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Agenda> Agenda { get; set; }

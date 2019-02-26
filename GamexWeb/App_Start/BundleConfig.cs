@@ -55,6 +55,14 @@ namespace GamexWeb
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb-admin-datatables-organizer-list.js"));
+
+            //CKEditor script
+            bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(
+                "~/Scripts/ckeditor/ckeditor.js"));
+
+            //Validate File Upload
+            bundles.Add(new ScriptBundle("~/bundles/validateFile").Include(
+                "~/Scripts/exhibition.validate.js"));
             
         }
     }

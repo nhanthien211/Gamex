@@ -11,6 +11,7 @@ using GamexService.ViewModel;
 
 namespace GamexWeb.Controllers
 {
+    [RoutePrefix("Admin")]
     public class AdminController : Controller
     {
         private readonly IIdentityMessageService _emailService;
@@ -29,7 +30,7 @@ namespace GamexWeb.Controllers
 
         // GET: Admin
         [HttpGet]
-        [Route("Admin/Company/Request")]
+        [Route("Company/Request")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult CompanyRequest()
         {
@@ -37,7 +38,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/LoadCompanyRequest")]
+        [Route("LoadCompanyRequest")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult LoadCompanyRequest()
         {
@@ -93,7 +94,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Admin/Company/List")]
+        [Route("Company/List")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult CompanyList()
         {
@@ -101,7 +102,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/LoadCompanyList")]
+        [Route("LoadCompanyList")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult LoadCompanyList()
         {
@@ -118,7 +119,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Admin/Organizer/List")]
+        [Route("Organizer/List")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult OrganizerList()
         {
@@ -126,7 +127,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/LoadOrganizerList")]
+        [Route("LoadOrganizerList")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult LoadOrganizerList()
         {
@@ -143,7 +144,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Admin/Organizer/Create")]
+        [Route("Organizer/Create")]
         [Authorize(Roles = AccountRole.Admin)]
         public ActionResult CreateOrganizer()
         {
@@ -151,7 +152,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/Organizer/Create")]
+        [Route("Organizer/Create")]
         [Authorize(Roles = AccountRole.Admin)]
         [ValidateAntiForgeryToken]
         public ActionResult CreateOrganizer(CreateOrganizerViewModel model)

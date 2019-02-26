@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountBookmark">
           <Key>
             <PropertyRef Name="AccountId" />
@@ -157,6 +157,7 @@
           <Property Name="Logo" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="QR" Type="varchar" MaxLength="50" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="ExhibitionCode" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="ExhibitionAttendee">
           <Key>
@@ -790,8 +791,7 @@
             <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GamexModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -978,6 +978,7 @@
           <NavigationProperty Name="Booth" Relationship="Self.FK_Booth_Exhibition" FromRole="Exhibition" ToRole="Booth" />
           <NavigationProperty Name="ExhibitionAttendee" Relationship="Self.FK_ExhibitionAttendee_Exhibitio" FromRole="Exhibition" ToRole="ExhibitionAttendee" />
           <NavigationProperty Name="Survey" Relationship="Self.FK_Survey_Exhibition" FromRole="Exhibition" ToRole="Survey" />
+          <Property Name="ExhibitionCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ExhibitionAttendee">
           <Key>
@@ -1751,6 +1752,7 @@
           <EntitySetMapping Name="Exhibition">
             <EntityTypeMapping TypeName="GamexModel.Exhibition">
               <MappingFragment StoreEntitySet="Exhibition">
+                <ScalarProperty Name="ExhibitionCode" ColumnName="ExhibitionCode" />
                 <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

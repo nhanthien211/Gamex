@@ -106,8 +106,23 @@
                             <span class="nav-link-text">Profile</span>
                         </a>
                     </li>
-                    
 
+                    <!--Manage Exhibition-->
+                    <li class="nav-item @ViewBag.ManageExhibition">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuExhibition" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa-fw fas fa-calendar-alt"></i>
+                            <span class="arrow">Exhibition</span>
+                        </a>
+                    </li>
+                    <ul class="sidenav-second-level collapse @ViewBag.ManageExhibitionDropDownShow" id="navbarDropdownMenuExhibition">
+                        <li class="@ViewBag.CreateExhibition">
+                            @Html.ActionLink("Create Exhibition", "CreateExhibition", "Organizer")
+                        </li>
+                        <li class="@ViewBag.AttendeeList">
+                            @Html.ActionLink("Upcoming Exhibition", "", "")
+                        </li>
+                    </ul>
+                    <!--End of Manage Exhibition-->
                 }
 
 
