@@ -37,7 +37,7 @@
             }))
             {
                 @Html.AntiForgeryToken()
-                <div class="row for-input-row" style="font-weight: bold">
+                <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8">
                         @Html.LabelFor(m => m.Name)
                         @Html.TextBoxFor(m => m.Name, new
@@ -47,7 +47,8 @@
                         @Html.ValidationMessageFor(m => m.Name)
                     </div>
                 </div>
-                <div class="row for-input-row" style="font-weight: bold">
+
+                <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8 custom-file">
                         @Html.LabelFor(m => m.Logo)
                         <div class="custom-file" lang="es">
@@ -65,13 +66,50 @@
                 </div>
                 <br />
 
-                <div class="row for-input-row" style="font-weight: bold">
+                <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8">
-                        <img alt="" id="imagePreview" style="width: 100%; height: auto" />
+                        <img alt="" id="imagePreview" />
                     </div>
                 </div>
                 <br />
-                <div class="row for-input-row" style="font-weight: bold">
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.StartDate)
+                        @Html.TextBoxFor(m => m.StartDate, new
+                        {
+                            @type = "date",
+                            @class = "form-control form-control-sm",
+                            @min = ""
+                        })
+                        @Html.ValidationMessageFor(m => m.StartDate)
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.EndDate)
+                        @Html.TextBoxFor(m => m.EndDate, new
+                        {
+                            @type = "date",
+                            @class = "form-control form-control-sm",
+                            @min = "",
+                        })
+                        @Html.ValidationMessageFor(m => m.EndDate)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Address)
+                        @Html.TextBoxFor(m => m.Address, new
+                        {
+                            @class = "form-control form-control-sm",
+                        })
+                        @Html.ValidationMessageFor(m => m.Address)
+                    </div>
+
+                </div>
+
+                <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         @Html.LabelFor(m => m.Description)
                         @Html.ValidationMessageFor(m => m.Description)
@@ -88,12 +126,16 @@
                         </script>
                     </div>
                 </div>
+
+
+
                 <hr />
-                <div class="row for-input-row">
+                <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-lg-12">
                         <button type="submit" class="btn btn-outline-success" onclick="clearFileError()">Create</button>
                     </div>
                 </div>
+
             }
 
         </div>

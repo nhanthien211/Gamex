@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using GamexEntity.Constant;
+﻿using GamexEntity.Constant;
 using GamexService.ViewModel;
+using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
 {
@@ -31,8 +27,8 @@ namespace GamexWeb.Controllers
             {
                 return View(model);
             }
+            return Content("alright");
             
-            return View(model);
         }
     }
 }

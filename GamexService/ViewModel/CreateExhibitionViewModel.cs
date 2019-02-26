@@ -20,12 +20,18 @@ namespace GamexService.ViewModel
         [Display(Name = "Address")]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Required")]
+        [Required(ErrorMessage = "Start date required")]
         [Display(Name = "From")]
+        [DisplayFormat(DataFormatString = "{MM/dd/yyyy}" )]
+        [DataType(DataType.DateTime)]
+        [StartDate (ErrorMessage = "Start date must be after current date")]
         public DateTime StartDate { get; set; }
 
-        [Required(ErrorMessage = "Required")]
+        [Required(ErrorMessage = "End date required")]
         [Display(Name = "To")]
+        [DisplayFormat(DataFormatString = "{MM/dd/yyyy}")]
+        [DataType(DataType.DateTime)]
+        [EndDate(StartDateProperty = "StartDate", ErrorMessage = "End date must be after start date")]
         public DateTime EndDate { get; set; }
 
         [Required(ErrorMessage = "Required")]
@@ -34,10 +40,7 @@ namespace GamexService.ViewModel
         [Display(Name = "Exhibition Cover Image")]
         public HttpPostedFileBase Logo { get; set; }
 
-        public string Qr { get; set; }
-
-
-
-
+        public string Qr { get; set; }   
+        
     }
 }

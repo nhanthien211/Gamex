@@ -50,6 +50,7 @@
     <Compile Include="Interface\IAdminService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\CustomDateAttribute.cs" />
     <Compile Include="Utilities\FileImageAttribute.cs" />
     <Compile Include="Utilities\FileLength.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />

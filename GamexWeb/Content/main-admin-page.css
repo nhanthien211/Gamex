@@ -679,3 +679,15 @@ footer.sticky-footer {
 table.dataTable tbody td {
     vertical-align: middle;
 }
+
+.for-exhibition-form {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#imagePreview {
+    width: 100%;
+    height: auto;
+}
