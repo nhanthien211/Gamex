@@ -37,6 +37,8 @@ response:
 }
 ```
 
+note: `access_token`'s expire time is 10 day. Considering apply `refresh_token` and reduce `access_token`'s expire time
+
 - GET /api/account/userinfo
 
 header:

@@ -11,12 +11,16 @@ using Owin;
 using GamexApi.Providers;
 using GamexApi.Models;
 using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security.Facebook;
 
 namespace GamexApi
 {
     public partial class Startup
     {
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
+
+        public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
+        public static FacebookAuthenticationOptions facebookAuthOptions { get; private set; }
 
         public static string PublicClientId { get; private set; }
 
@@ -32,6 +36,8 @@ namespace GamexApi
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
+            OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
+
             // Configure the application for OAuth based flow
             PublicClientId = "self";
             OAuthOptions = new OAuthAuthorizationServerOptions
@@ -39,7 +45,7 @@ namespace GamexApi
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(10),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
@@ -59,9 +65,12 @@ namespace GamexApi
             //    consumerKey: "",
             //    consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //    appId: "",
-            //    appSecret: "");
+            facebookAuthOptions = new FacebookAuthenticationOptions() {
+                AppId = "2142549419154481",
+                AppSecret = "d30af411d4c7a2a50b3bbc6855381014",
+                Provider = new FacebookAuthProvider()
+            };
+            app.UseFacebookAuthentication(facebookAuthOptions);
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{

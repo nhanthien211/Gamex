@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -20,6 +21,7 @@ using GamexApi.Results;
 namespace GamexApi.Controllers
 {
     [Authorize]
+    [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
@@ -225,8 +227,9 @@ namespace GamexApi.Controllers
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
-        {
+        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null) {
+            string redirectUri = string.Empty;
+
             if (error != null)
             {
                 return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
@@ -235,6 +238,11 @@ namespace GamexApi.Controllers
             if (!User.Identity.IsAuthenticated)
             {
                 return new ChallengeResult(provider, this);
+            }
+
+            var redirectUriValidationResult = ValidateClientAndRedirectUri(this.Request, ref redirectUri);
+            if (!string.IsNullOrWhiteSpace(redirectUriValidationResult)) {
+                return BadRequest(redirectUriValidationResult);
             }
 
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
@@ -394,6 +402,53 @@ namespace GamexApi.Controllers
 
         #region Helpers
 
+        private string ValidateClientAndRedirectUri(HttpRequestMessage request, ref string redirectUriOutput) {
+            Uri redirectUri;
+            var redirectUriString = GetQueryString(Request, "redirect_uri");
+            if (string.IsNullOrWhiteSpace(redirectUriString)) {
+                return "redirect_uri is required";
+            }
+
+            bool validUri = Uri.TryCreate(redirectUriString, UriKind.Absolute, out redirectUri);
+            if (!validUri) {
+                return "redirect_uri is invalid";
+            }
+
+            var clientId = GetQueryString(Request, "client_id");
+            if (string.IsNullOrWhiteSpace(clientId)) {
+                return "client_id is required";
+            }
+
+            //var client = _repo.FindClient(clientId);
+
+            //if (client == null) {
+            //    return string.Format("Client_id '{0}' is not registered in the system.", clientId);
+            //}
+
+            //if (!string.Equals(client.AllowedOrigin, redirectUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase)) {
+            //    return string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId);
+            //}
+
+            redirectUriOutput = redirectUri.AbsoluteUri;
+
+            return string.Empty;
+
+        }
+
+        private string GetQueryString(HttpRequestMessage request, string key) {
+            var queryStrings = request.GetQueryNameValuePairs();
+            if (queryStrings == null) {
+                return null;
+            }
+
+            var match = queryStrings.FirstOrDefault(keyValue => string.Compare(keyValue.Key, key, true) == 0);
+            if (string.IsNullOrEmpty(match.Value)) {
+                return null;
+            }
+
+            return match.Value;
+        }
+
         private IAuthenticationManager Authentication
         {
             get { return Request.GetOwinContext().Authentication; }
@@ -433,6 +488,7 @@ namespace GamexApi.Controllers
             public string LoginProvider { get; set; }
             public string ProviderKey { get; set; }
             public string UserName { get; set; }
+            public string ExternalAccessToken { get; set; }
 
             public IList<Claim> GetClaims()
             {
@@ -471,7 +527,8 @@ namespace GamexApi.Controllers
                 {
                     LoginProvider = providerKeyClaim.Issuer,
                     ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name)
+                    UserName = identity.FindFirstValue(ClaimTypes.Name),
+                    ExternalAccessToken = identity.FindFirstValue("ExternalAccessToken")
                 };
             }
         }
