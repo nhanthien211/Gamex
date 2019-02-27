@@ -35,10 +35,11 @@ namespace GamexService.Implement
             return company;
         }
 
-        public bool RegisterNewCompany(CompanyRegisterViewModel model)
+        public bool RegisterNewCompany(CompanyRegisterViewModel model, string companyId)
         {
             Company company = new Company
             {
+                CompanyId = companyId,
                 Name =  model.Name,
                 Email = model.Email,
                 Phone =  model.Phone,
@@ -73,16 +74,15 @@ namespace GamexService.Implement
             return false;
         }
 
-        public int GetCompanyId(string taxNumber)
+        public string GetCompanyId(string taxNumber)
         {
-
             return _companyRepository.GetSingleProjection(
                 c => c.CompanyId,
                 c => c.TaxNumber == taxNumber
             );
         }
 
-        public void RemoveCompany(int companyId)
+        public void RemoveCompany(string companyId)
         {
             var company = _companyRepository.GetById(companyId);
             _companyRepository.Delete(company);

@@ -1,4 +1,5 @@
-﻿using GamexEntity.Constant;
+﻿using System;
+using GamexEntity.Constant;
 using GamexEntity.Enumeration;
 using GamexService.Interface;
 using GamexService.ViewModel;
@@ -56,7 +57,7 @@ namespace GamexWeb.Controllers
         [AllowAnonymous]
         [FilterConfig.NoDirectAccess]
         [Route("Register/Employee")]
-        public ActionResult CompanyEmployeeRegister(string companyName, int companyId)
+        public ActionResult CompanyEmployeeRegister(string companyName, string companyId)
         {
             //Display register form wth hidden company name and id
             var viewModel = new CompanyEmployeeRegisterViewModel
@@ -104,10 +105,14 @@ namespace GamexWeb.Controllers
                 var roleResult = _userManager.AddToRole(user.Id, AccountRole.Company);
                 if (roleResult.Succeeded)
                 {
-                    model = new CompanyEmployeeRegisterViewModel();
-                    model.IsSuccessful = true;
+                    var newModel = new CompanyEmployeeRegisterViewModel
+                    {
+                        IsSuccessful = true, 
+                        CompanyId =  model.CompanyId,
+                        CompanyName = model.CompanyName
+                    };
                     ModelState.Clear();
-                    return View(model);
+                    return View(newModel);
                 }
                 model.IsSuccessful = false;
                 _userManager.Delete(user);
@@ -118,7 +123,6 @@ namespace GamexWeb.Controllers
             {
                 ModelState.AddModelError("", resultError);
             }
-
             model.IsSuccessful = false;
             return View(model);
         }
@@ -154,16 +158,15 @@ namespace GamexWeb.Controllers
                 ModelState.AddModelError("EmployeeEmail", "Name " + model.EmployeeEmail + " is already taken");
                 return View(model);
             }
-                        
-            var companyResult = _companyService.RegisterNewCompany(model);
+
+            var companyId = Guid.NewGuid().ToString();                        
+            var companyResult = _companyService.RegisterNewCompany(model, companyId);
             if (!companyResult)
             {
                 model.IsSuccessful = false;
                 model.ErrorMessage = "Cannot submit your registration. Please try again later";
                 return View(model);
             }
-
-            var companyId = _companyService.GetCompanyId(model.TaxNumber);
             var user = new ApplicationUser
             {
                 UserName = model.EmployeeEmail,

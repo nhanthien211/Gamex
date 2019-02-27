@@ -50,8 +50,7 @@ namespace GamexEntity
         public string LastName { get; set; }
         public int Point { get; set; }
         public int TotalPointEarned { get; set; }
-        public Nullable<int> CompanyId { get; set; }
-        public string QR { get; set; }
+        public string CompanyId { get; set; }
         public int StatusId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

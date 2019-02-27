@@ -16,7 +16,7 @@ namespace GamexEntity
     {
         public string AccountId { get; set; }
         public System.DateTime BookmarkDate { get; set; }
-        public int CompanyBookmark1 { get; set; }
+        public string CompanyBookmark1 { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual Company Company { get; set; }

@@ -30,7 +30,7 @@ namespace GamexService.Utilities
 
             DateTime startDate = (DateTime)startDateProperty.GetValue(validationContext.ObjectInstance, null);
 
-            if ((DateTime) value > startDate)
+            if ((DateTime) value >= startDate)
             {
                 return ValidationResult.Success;
             }

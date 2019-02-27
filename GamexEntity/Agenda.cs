@@ -15,7 +15,7 @@ namespace GamexEntity
     public partial class Agenda
     {
         public int AgendaId { get; set; }
-        public int ExhibitionId { get; set; }
+        public string ExhibitionId { get; set; }
         public System.DateTime StartTime { get; set; }
         public System.DateTime EndTime { get; set; }
         public string Activity { get; set; }

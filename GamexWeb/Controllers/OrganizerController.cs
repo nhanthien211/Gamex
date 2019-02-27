@@ -1,6 +1,9 @@
-﻿using GamexEntity.Constant;
+﻿using System.Threading.Tasks;
+using System.Web.Configuration;
+using GamexEntity.Constant;
 using GamexService.ViewModel;
 using System.Web.Mvc;
+using Firebase.Storage;
 
 namespace GamexWeb.Controllers
 {
@@ -21,13 +24,14 @@ namespace GamexWeb.Controllers
         [Route("Exhibition/Create")]
         [Authorize(Roles = AccountRole.Organizer)]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateExhibition(CreateExhibitionViewModel model)
+        public async Task<ActionResult> CreateExhibition(CreateExhibitionViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            return Content("alright");
+
+            return Content("ahihi");
             
         }
     }

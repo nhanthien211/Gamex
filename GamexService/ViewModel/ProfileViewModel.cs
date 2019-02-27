@@ -32,8 +32,6 @@ namespace GamexService.ViewModel
         [Display(Name = "Email *")]
         public string Email { get; set; }
 
-        public bool? IsSuccessful { get; set; }
-
-        public string ErrorMessage { get; set; }
+        public bool? IsSuccessful { get; set; }        
     }
 }

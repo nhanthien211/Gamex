@@ -240,6 +240,7 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\FirebaseUploadUtility.cs" />
     <Compile Include="Utilities\IdentityExtensions.cs" />
     <Compile Include="Utilities\MyUtilities.cs" />
   </ItemGroup>

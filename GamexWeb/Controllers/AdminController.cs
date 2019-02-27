@@ -56,7 +56,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [Authorize(Roles = AccountRole.Admin)]
-        public ActionResult ApproveOrDeny(int companyId, bool isApproved)
+        public ActionResult ApproveOrDeny(string companyId, bool isApproved)
         {
             var userid = "";
             var result = _adminService.ApproveOrRejectCompanyRequest(companyId, isApproved, ref userid);

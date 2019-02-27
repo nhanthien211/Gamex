@@ -38,9 +38,6 @@ namespace GamexService.ViewModel
         [FileImage(ErrorMessage = "Upload file must be .JPG .PNG or .JPEG")]
         [FileLength(MaxSize = 10 * 1024 * 1024, ErrorMessage = "Upload File must be under 10MB")]
         [Display(Name = "Exhibition Cover Image")]
-        public HttpPostedFileBase Logo { get; set; }
-
-        public string Qr { get; set; }   
-        
+        public HttpPostedFileBase Logo { get; set; }       
     }
 }

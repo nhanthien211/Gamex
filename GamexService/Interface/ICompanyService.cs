@@ -6,9 +6,8 @@ namespace GamexService.Interface
     public interface ICompanyService
     {
         SelectCompanyViewModel SelectCompanyRegisterStatus(SelectCompanyViewModel model);
-        bool RegisterNewCompany(CompanyRegisterViewModel model);
+        bool RegisterNewCompany(CompanyRegisterViewModel model, string companyId);
         bool IsCompanyRegistered(string taxNumber);
-        int GetCompanyId(string taxNumber);
-        void RemoveCompany(int companyId);
+        void RemoveCompany(string companyId);
     }
 }

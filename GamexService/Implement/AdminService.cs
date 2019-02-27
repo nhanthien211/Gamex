@@ -39,7 +39,7 @@ namespace GamexService.Implement
             return companyRequestList.ToList();
         }
 
-        public bool ApproveOrRejectCompanyRequest(int companyId, bool isApproved, ref string userId)
+        public bool ApproveOrRejectCompanyRequest(string companyId, bool isApproved, ref string userId)
         {
             var user = _userRepository.GetSingle(u => u.CompanyId == companyId);
             var company = _companyRepository.GetSingle(c => c.CompanyId == companyId);

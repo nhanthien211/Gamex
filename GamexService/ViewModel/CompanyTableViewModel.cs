@@ -8,7 +8,7 @@ namespace GamexService.ViewModel
 {
     public class CompanyTableViewModel
     {
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
         public string CompanyName { get; set; }
         public string TaxNumber { get; set; }
         public string Email { get; set; }

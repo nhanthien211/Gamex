@@ -14,7 +14,7 @@ namespace GamexEntity
     
     public partial class ExhibitionAttendee
     {
-        public int ExhibitionId { get; set; }
+        public string ExhibitionId { get; set; }
         public string AccountId { get; set; }
         public Nullable<System.DateTime> CheckinTime { get; set; }
         public Nullable<System.DateTime> BookmarkDate { get; set; }
