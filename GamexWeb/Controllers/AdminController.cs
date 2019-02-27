@@ -1,14 +1,13 @@
 ﻿using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 using GamexService.Interface;
+using GamexService.Utilities;
+using GamexService.ViewModel;
 using GamexWeb.Identity;
-using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using GamexEntity.Enumeration;
-using GamexService.Utilities;
-using GamexService.ViewModel;
 
 namespace GamexWeb.Controllers
 {

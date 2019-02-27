@@ -55,6 +55,7 @@
     <Compile Include="Utilities\CustomDateAttribute.cs" />
     <Compile Include="Utilities\FileImageAttribute.cs" />
     <Compile Include="Utilities\FileLength.cs" />
+    <Compile Include="Utilities\MyUtilities.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />

@@ -40,8 +40,10 @@ namespace GamexService.ViewModel
         [Display(Name = "Exhibition Cover Image")]
         public HttpPostedFileBase Logo { get; set; }
 
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
 
-        public double Longitude { get; set; }
+        public double? Longitude { get; set; }
+
+        public bool? IsSuccessful { get; set; }
     }
 }

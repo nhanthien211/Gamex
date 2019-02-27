@@ -1,10 +1,10 @@
-﻿using System;
-using GamexEntity.Constant;
+﻿using GamexEntity.Constant;
 using GamexEntity.Enumeration;
 using GamexService.Interface;
 using GamexService.ViewModel;
 using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Web.Mvc;
 
 namespace GamexWeb.Controllers

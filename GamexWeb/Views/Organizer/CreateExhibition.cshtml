@@ -13,50 +13,35 @@
     @Scripts.Render("~/bundles/ckeditor")
 }
 
-@section mapapi 
+@section mapapi
 {
-    
-
-
-<script>
-    var autoComplete, placeSearch;
-
-    function initAutocomplete() {
-        // Create the autocomplete object, restricting the search predictions to
-        // geographical location types.
-        autocomplete = new google.maps.places.Autocomplete(
-            document.getElementById('Address'), { types: ['geocode'] });
-
-        // Avoid paying for data that you don't need by restricting the set of
-        // place fields that are returned to just the address components.
-        autocomplete.setFields('formatted_address');
-
-        // When the user selects an address from the drop-down, populate the
-        // address fields in the form.
-        autocomplete.addListener('place_changed', function() {
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                // User entered the name of a Place that was not suggested and
-                // pressed the Enter key, or the Place Details request failed.
-                return;
-            }
-            var lat = place.geometry.location.lat(),
-                lng = place.geometry.location.lng();
-            
-        });
-    }
-
-    
-</script>
-<script async defer
-
+    <script type="text/javascript" src="~/Scripts/map.helper.js"></script>
+    <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIoukIzC-C6u_3Ww5G-M2fbnYX5-24ZfA&libraries=places&callback=initAutocomplete">
-</script>
+    </script>
 }
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/validateFile");
+    @Scripts.Render("~/bundles/validateFile")
+    @if (Model != null)
+    {
+        if (Model.IsSuccessful != null)
+        {
+            if (Model.IsSuccessful.Value)
+            {
+                <script type="text/javascript">
+                    $('#successModal').modal();
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    $('#failModal').modal();
+                </script>
+            }
+        }
+    }
 }
 
 <div class="container-fluid">
@@ -75,9 +60,11 @@
             {
                 @id = "CreateExhibitionForm",
                 @enctype = "multipart/form-data"
+                //                onSubmit = "return checkAddress()"
             }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8">
                         @Html.LabelFor(m => m.Name)
@@ -168,9 +155,12 @@
                 </div>
                 @Html.TextBoxFor(m => m.Latitude, new
                 {
-                    @type = "hidden",
-
-                }) 
+                    @type = "hidden"
+                })
+                @Html.TextBoxFor(m => m.Longitude, new
+                {
+                    @type = "hidden"
+                })
                 <hr />
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-lg-12">
@@ -178,6 +168,45 @@
                     </div>
                 </div>
             }
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Create successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Create unsuccessfully</p>
+                <p class="text-center">Please try again later</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
         </div>
     </div>
 </div>
