@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GamexApi.Models {
+namespace GamexApiService.ViewModel {
 
     // Models returned by ExhibitionController actions
 
@@ -15,7 +15,8 @@ namespace GamexApi.Models {
         public string OrganizerId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public string Location { get; set; }
         public string Logo { get; set; }
+        public string Lat { get; set; }
+        public string Lng { get; set; }
     }
 }

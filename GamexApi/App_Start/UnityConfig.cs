@@ -1,8 +1,8 @@
+using GamexApi.Identity;
+using GamexApiService.Implement;
+using GamexApiService.Interface;
 using GamexEntity;
 using GamexRepository;
-using GamexService.Implement;
-using GamexService.Interface;
-using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
@@ -13,7 +13,7 @@ using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
 
-namespace GamexWeb
+namespace GamexApi
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -59,16 +59,12 @@ namespace GamexWeb
             container.RegisterType<ApplicationSignInManager>();
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationRoleManager>();
-
             container.RegisterType<IIdentityMessageService, SendGridEmailService>();
 
             container.RegisterType<DbContext, ApplicationDbContext>(new ContainerControlledLifetimeManager());
-
             container.RegisterType<IAuthenticationManager>(
                 new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
-
             container.RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>();
-            //container.RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new HierarchicalLifetimeManager());
 
             container.RegisterType<IRoleStore<IdentityRole, string>, RoleStore<IdentityRole, string, IdentityUserRole>>();
             ////End of: ASP.NET Identity registration
@@ -79,12 +75,7 @@ namespace GamexWeb
             container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
             //End of :Repo + UoW + DBContext registration
 
-            //Service registration
-            container.RegisterType<IAccountService, AccountService>();
-            container.RegisterType<ICompanyService, CompanyService>();
-            container.RegisterType<IAdminService, AdminService>();
-            container.RegisterType<IOrganizerService, OrganizerService>();
-            //End of: Service registration
+            container.RegisterType<IExhibitionService, ExhibitionService>();
         }
     }
 }
