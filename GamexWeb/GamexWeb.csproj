@@ -527,6 +527,7 @@
     <Content Include="Scripts\jquery.backstretch.js" />
     <Content Include="Scripts\jquery.easing.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\map.widget.js" />
     <Content Include="Scripts\sb-admin-datatables-company-list.js" />
     <Content Include="Scripts\sb-admin-datatables-company-request.js" />
     <Content Include="Scripts\sb-admin-datatables-organizer-list.js" />

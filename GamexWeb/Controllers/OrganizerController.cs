@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Configuration;
 using GamexEntity.Constant;
 using GamexService.ViewModel;
 using System.Web.Mvc;
 using Firebase.Storage;
+using GamexWeb.Utilities;
 
 namespace GamexWeb.Controllers
 {
@@ -31,6 +33,12 @@ namespace GamexWeb.Controllers
                 return View(model);
             }
 
+            var exhibitionCode = Guid.NewGuid().ToString();
+            var uploadUrl = await FirebaseUploadUtility.UploadImageToFirebase(model.Logo.InputStream, exhibitionCode);
+            if (!string.IsNullOrEmpty(uploadUrl))
+            {
+
+            }
             return Content("ahihi");
             
         }

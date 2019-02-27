@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using GamexEntity.Enumeration;
+using GamexService.Utilities;
 using GamexService.ViewModel;
 
 namespace GamexWeb.Controllers

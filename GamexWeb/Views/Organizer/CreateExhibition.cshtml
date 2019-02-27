@@ -13,6 +13,47 @@
     @Scripts.Render("~/bundles/ckeditor")
 }
 
+@section mapapi 
+{
+    
+
+
+<script>
+    var autoComplete, placeSearch;
+
+    function initAutocomplete() {
+        // Create the autocomplete object, restricting the search predictions to
+        // geographical location types.
+        autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('Address'), { types: ['geocode'] });
+
+        // Avoid paying for data that you don't need by restricting the set of
+        // place fields that are returned to just the address components.
+        autocomplete.setFields('formatted_address');
+
+        // When the user selects an address from the drop-down, populate the
+        // address fields in the form.
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                return;
+            }
+            var lat = place.geometry.location.lat(),
+                lng = place.geometry.location.lng();
+            
+        });
+    }
+
+    
+</script>
+<script async defer
+
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIoukIzC-C6u_3Ww5G-M2fbnYX5-24ZfA&libraries=places&callback=initAutocomplete">
+</script>
+}
+
 @section scripts
 {
     @Scripts.Render("~/bundles/validateFile");
@@ -106,7 +147,6 @@
                         })
                         @Html.ValidationMessageFor(m => m.Address)
                     </div>
-
                 </div>
 
                 <div class="row for-exhibition-form">
@@ -126,18 +166,18 @@
                         </script>
                     </div>
                 </div>
+                @Html.TextBoxFor(m => m.Latitude, new
+                {
+                    @type = "hidden",
 
-
-
+                }) 
                 <hr />
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-lg-12">
                         <button type="submit" class="btn btn-outline-success" onclick="clearFileError()">Create</button>
                     </div>
                 </div>
-
             }
-
         </div>
     </div>
 </div>

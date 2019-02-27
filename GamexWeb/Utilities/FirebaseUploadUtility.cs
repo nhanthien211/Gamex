@@ -31,11 +31,6 @@ namespace GamexWeb.Utilities
                 return null;
             }
             return url;
-        }
-
-        private static string ReplaceFileName(string fileName)
-        {
-            return null;
-        }
+        }        
     }
 }
