@@ -8,11 +8,6 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@section ckeditor
-{
-    @Scripts.Render("~/bundles/ckeditor")
-}
-
 @section mapapi
 {
     <script type="text/javascript" src="~/Scripts/map.helper.js"></script>
@@ -60,11 +55,9 @@
             {
                 @id = "CreateExhibitionForm",
                 @enctype = "multipart/form-data"
-                //                onSubmit = "return checkAddress()"
             }))
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8">
                         @Html.LabelFor(m => m.Name)
@@ -139,18 +132,13 @@
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         @Html.LabelFor(m => m.Description)
-                        @Html.ValidationMessageFor(m => m.Description)
-                        <textarea id="Description" name="Description" class="form-control text-editor" rows="10" cols="80"> 
-                             @if (Model != null) 
-                             { 
-                                 @Html.Raw(HttpUtility.HtmlDecode(Model.Description)) 
-                             } 
-                         </textarea>
-                        <script>
-                            CKEDITOR.replace('Description', {
-                                htmlEncodeOutput: true
-                            });
-                        </script>
+                        @Html.TextAreaFor(m => m.Description, new
+                       {
+                           @class = "form-control",
+                           @rows = "10",
+                           @cols = "80"
+                       })
+                        @Html.ValidationMessageFor(m => m.Description)                                                  
                     </div>
                 </div>
                 @Html.TextBoxFor(m => m.Latitude, new
