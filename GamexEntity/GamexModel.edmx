@@ -35,7 +35,7 @@
             <PropertyRef Name="AgendaId" />
           </Key>
           <Property Name="AgendaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="StartTime" Type="datetime" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Nullable="false" />
           <Property Name="Activity" Type="nvarchar" MaxLength="100" Nullable="false" />
@@ -95,8 +95,7 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Point" Type="int" Nullable="false" />
           <Property Name="TotalPointEarned" Type="int" Nullable="false" />
-          <Property Name="CompanyId" Type="int" />
-          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="CompanyId" Type="nvarchar" MaxLength="128" />
           <Property Name="StatusId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Booth">
@@ -104,25 +103,23 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QR" Type="varchar" MaxLength="50" />
           <Property Name="Booth" Type="int" Nullable="false" />
-          <Property Name="CompanyId" Type="int" Nullable="false" />
-          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="CompanyId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
             <PropertyRef Name="CompanyId" />
           </Key>
-          <Property Name="CompanyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
           <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Phone" Type="varchar" MaxLength="20" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" />
           <Property Name="Location" Type="geography" />
-          <Property Name="Logo" Type="nvarchar" MaxLength="50" />
-          <Property Name="QR" Type="varchar" MaxLength="50" />
-          <Property Name="Website" Type="varchar" MaxLength="50" />
+          <Property Name="Logo" Type="nvarchar" MaxLength="2083" />
+          <Property Name="Website" Type="varchar" MaxLength="100" />
           <Property Name="StatusId" Type="int" Nullable="false" />
           <Property Name="TaxNumber" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -133,7 +130,7 @@
           </Key>
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="BookmarkDate" Type="datetime" Nullable="false" />
-          <Property Name="CompanyBookmark" Type="int" Nullable="false" />
+          <Property Name="CompanyBookmark" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="CompanyStatus">
           <Key>
@@ -146,16 +143,15 @@
           <Key>
             <PropertyRef Name="ExhibitionId" />
           </Key>
-          <Property Name="ExhibitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
-          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="OrganizerId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="Location" Type="geography" />
-          <Property Name="Logo" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="QR" Type="varchar" MaxLength="50" />
+          <Property Name="Logo" Type="nvarchar" MaxLength="2083" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ExhibitionAttendee">
@@ -163,7 +159,7 @@
             <PropertyRef Name="ExhibitionId" />
             <PropertyRef Name="AccountId" />
           </Key>
-          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="CheckinTime" Type="datetime" />
           <Property Name="BookmarkDate" Type="datetime" />
@@ -218,8 +214,8 @@
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
           <Property Name="Point" Type="int" Nullable="false" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="CompanyId" Type="int" />
-          <Property Name="ExhibitionId" Type="int" Nullable="false" />
+          <Property Name="CompanyId" Type="nvarchar" MaxLength="128" />
+          <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -829,7 +825,7 @@
             <PropertyRef Name="AgendaId" />
           </Key>
           <Property Name="AgendaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Activity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
@@ -885,8 +881,7 @@
           <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Point" Type="Int32" Nullable="false" />
           <Property Name="TotalPointEarned" Type="Int32" Nullable="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="AccountBookmark" Relationship="Self.FK_AccountBookmark_AspNetUsers_1" FromRole="AspNetUsers" ToRole="AccountBookmark" />
           <NavigationProperty Name="AccountBookmark1" Relationship="Self.FK_AccountBookmark_AspNetUsers_2" FromRole="AspNetUsers" ToRole="AccountBookmark" />
@@ -910,10 +905,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Booth1" Type="Int32" Nullable="false" />
-          <Property Name="CompanyId" Type="Int32" Nullable="false" />
-          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Company" Relationship="Self.FK_Booth_Company" FromRole="Booth" ToRole="Company" />
           <NavigationProperty Name="Exhibition" Relationship="Self.FK_Booth_Exhibition" FromRole="Booth" ToRole="Exhibition" />
         </EntityType>
@@ -921,16 +915,15 @@
           <Key>
             <PropertyRef Name="CompanyId" />
           </Key>
-          <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Location" Type="Geography" />
-          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Website" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Logo" Type="String" MaxLength="2083" FixedLength="false" Unicode="true" />
+          <Property Name="Website" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <Property Name="TaxNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUsers_Company" FromRole="Company" ToRole="AspNetUsers" />
@@ -946,7 +939,7 @@
           </Key>
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="BookmarkDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CompanyBookmark1" Type="Int32" Nullable="false" />
+          <Property Name="CompanyBookmark1" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_CompanyBookmark_AspNetUsers" FromRole="CompanyBookmark" ToRole="AspNetUsers" />
           <NavigationProperty Name="Company" Relationship="Self.FK_CompanyBookmark_Company" FromRole="CompanyBookmark" ToRole="Company" />
         </EntityType>
@@ -962,16 +955,15 @@
           <Key>
             <PropertyRef Name="ExhibitionId" />
           </Key>
-          <Property Name="ExhibitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="OrganizerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Location" Type="Geography" />
-          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="QR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Logo" Type="String" MaxLength="2083" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Agenda" Relationship="Self.FK_Agenda_Exhibition" FromRole="Exhibition" ToRole="Agenda" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Exhibition_AspNetUsers" FromRole="Exhibition" ToRole="AspNetUsers" />
@@ -984,7 +976,7 @@
             <PropertyRef Name="ExhibitionId" />
             <PropertyRef Name="AccountId" />
           </Key>
-          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CheckinTime" Type="DateTime" Precision="3" />
           <Property Name="BookmarkDate" Type="DateTime" Precision="3" />
@@ -1050,8 +1042,8 @@
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Point" Type="Int32" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="ExhibitionId" Type="Int32" Nullable="false" />
+          <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1697,7 +1689,6 @@
                 <ScalarProperty Name="Point" ColumnName="Point" />
                 <ScalarProperty Name="TotalPointEarned" ColumnName="TotalPointEarned" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="QR" ColumnName="QR" />
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1706,7 +1697,6 @@
             <EntityTypeMapping TypeName="GamexModel.Booth">
               <MappingFragment StoreEntitySet="Booth">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="QR" ColumnName="QR" />
                 <ScalarProperty Name="Booth1" ColumnName="Booth" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
@@ -1724,7 +1714,6 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
-                <ScalarProperty Name="QR" ColumnName="QR" />
                 <ScalarProperty Name="Website" ColumnName="Website" />
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
@@ -1760,7 +1749,6 @@
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
-                <ScalarProperty Name="QR" ColumnName="QR" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>

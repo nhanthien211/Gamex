@@ -664,9 +664,30 @@ footer.sticky-footer {
     box-shadow: 10px 10px 61px -15px rgba(0,0,0,0.75);
 }
 
+.menu-icon {
+    margin-right: 10px;
+}
+
 /*CSS for Razor Client-side validation*/
 .field-validation-error {
     color: #fa4251;
     font-style: oblique;
     font-weight: 600;
+}
+
+/*Datatable css*/
+table.dataTable tbody td {
+    vertical-align: middle;
+}
+
+.for-exhibition-form {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#imagePreview {
+    width: 100%;
+    height: auto;
 }

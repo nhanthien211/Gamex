@@ -142,18 +142,13 @@ namespace GamexRepository
             dbSet.Add(entity);
         }
 
-        public void Delete(object id)
+        public void Delete(T entity)
         {
-            T entity = dbSet.Find(id);
-            if (entity != null)
+            if (context.Entry(entity).State == EntityState.Detached)
             {
-                if (context.Entry(entity).State == EntityState.Detached)
-                {
-                    dbSet.Attach(entity);
-                }
-                dbSet.Remove(entity);
+                dbSet.Attach(entity);
             }
-            
+            dbSet.Remove(entity);
         }
 
         public void Update(T entity)

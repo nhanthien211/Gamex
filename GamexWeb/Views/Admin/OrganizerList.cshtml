@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Organizer List";
+    ViewBag.OrganizerList = "active";
+    ViewBag.ManageUser = "active";
+    ViewBag.ManageUserDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/datatableOrganizerList")
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Organizer List</li>
+    </ol>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-user-tie fa-fw menu-icon"></i> Organizer List
+            @using (@Html.BeginForm("CreateOrganizer", "Admin", FormMethod.Get, new { @class = "form-inline", @style = "display: inline" }))
+            {
+                <button class="btn btn-success" type="submit" style="float: right;">Create Organizer</button>
+            }
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Organizer Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

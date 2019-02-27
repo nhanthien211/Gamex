@@ -43,8 +43,7 @@ namespace GamexService.ViewModel
         [Display(Name = "Last Name *")]
         public string LastName { get; set; }
 
-        
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
         public string CompanyName { get; set; }
 

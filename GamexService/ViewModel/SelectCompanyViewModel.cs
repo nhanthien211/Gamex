@@ -9,7 +9,7 @@ namespace GamexService.ViewModel
         [Display(Name = "Find your company by tax identification")]
         public string CompanyTaxId { get; set; }
 
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
         public string CompanyName { get; set; }
 

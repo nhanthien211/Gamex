@@ -27,11 +27,11 @@
                 "targets": [2],
                 "searchable": true,
                 "orderable": false
-            },
-            {
-                "targets": [3],
-                "orderable": false
             }
+//            {
+//                "targets": [3],
+//                "orderable": false
+//            }
         ],
 
         "columns": [
@@ -49,14 +49,14 @@
                 "data": "Email",
                 "name": "Email",
                 "autoWidth": true
-            },
-            {
-                "render": function (data, type, full, meta) {
-                    return '<a href="/Admin/Manage/Company/View/' +
-                        full.CompanyId +
-                        '"><i class="fa fa-edit"></i>View Detail & Edit</a>';
-                }
             }
+//            {
+//                "render": function (data, type, full, meta) {
+//                    return '<a href="/Admin/Manage/Company/View/' +
+//                        full.CompanyId +  
+//                        '"><i class="fa fa-edit"></i>View Detail & Edit</a>';
+//                }
+//            }
         ]
     });
 });

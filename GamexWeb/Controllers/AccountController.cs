@@ -1,14 +1,15 @@
 ﻿using GamexEntity.Constant;
 using GamexService.Interface;
-using GamexService.Utilities;
 using GamexService.ViewModel;
 using GamexWeb.Identity;
+using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GamexWeb.Controllers
 {
@@ -37,7 +38,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account")]
         public ActionResult AccountInfo()
         {
@@ -61,6 +62,8 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/index.cshtml", model);
             }
+
+            //check if user not registered
             var result = _accountService.GetLoginAccount(model.Id);
             if (result.Id == null)
             {
@@ -68,12 +71,13 @@ namespace GamexWeb.Controllers
                 return View("~/Views/Home/index.cshtml", model);
             }
 
-            var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == UserRole.User);
+            //check if normal user
+            var role = _userManager.GetRoles(result.UserId).FirstOrDefault(r => r == AccountRole.User);
             if (role != null)
             {
                 ModelState.AddModelError("ErrorMessage", "This account is not allowed. Please refer to our mobile app.");
                 return View("~/Views/Home/index.cshtml", model);
-            }
+            }            
 
             var loginResult = _signInManager.PasswordSignIn(result.Id, model.Password, model.RememberMe, true);
             switch (loginResult)
@@ -102,7 +106,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account")]
         public ActionResult UpdateProfile(ProfileViewModel model)
         {
@@ -110,15 +114,25 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
-            //check username and email duplicate
+            //check username duplicate email
+            var isDuplicateUsername = _accountService.IsUsernameDuplicate(model.Username, User.Identity.GetUserId());
+            if (isDuplicateUsername)
+            {
+                ModelState.AddModelError("Username", "Name " + model.Username + " is already taken");
+                return View("~/Views/Account/AccountInfo.cshtml", model);
+            }
+
             var user = _userManager.FindById(User.Identity.GetUserId());
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.UserName = model.Username;
+            
             var result = _userManager.Update(user);
             if (result.Succeeded)
             {
+                User.AddUpdateClaim(CustomClaimTypes.UserFullName, user.LastName + " " + user.FirstName, _authenticationManager);
+                User.AddUpdateClaim(CustomClaimTypes.Email, user.Email, _authenticationManager);
                 model.IsSuccessful = true;
                 return View("~/Views/Account/AccountInfo.cshtml", model);
             }
@@ -131,7 +145,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account/Password")]
         public ActionResult ChangePassword()
         {
@@ -140,7 +154,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = UserRole.Admin + ", " + UserRole.Company + ", " + UserRole.Organizer)]
+        [Authorize(Roles = AccountRole.Admin + ", " + AccountRole.Company + ", " + AccountRole.Organizer)]
         [Route("Account/Password")]
         public ActionResult ChangePassword(ChangePasswordViewModel model)
         {

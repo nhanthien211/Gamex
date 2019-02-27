@@ -23,7 +23,7 @@ namespace GamexEntity
             this.Survey = new HashSet<Survey>();
         }
     
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
@@ -31,7 +31,6 @@ namespace GamexEntity
         public string Address { get; set; }
         public System.Data.Entity.Spatial.DbGeography Location { get; set; }
         public string Logo { get; set; }
-        public string QR { get; set; }
         public string Website { get; set; }
         public int StatusId { get; set; }
         public string TaxNumber { get; set; }

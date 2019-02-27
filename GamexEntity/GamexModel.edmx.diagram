@@ -4,28 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e7e0e713cc9f4a42a045877b49ac9de1" Name="Diagram1">
+      <Diagram DiagramId="d4a21b13520b4a1b93b0bfde49d1970e" Name="Diagram1">
         <EntityTypeShape EntityType="GamexModel.AccountBookmark" Width="1.5" PointX="7.5" PointY="9" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.AccountStatus" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.AccountStatus" Width="1.5" PointX="3" PointY="13.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.ActivityHistory" Width="1.5" PointX="7.5" PointY="11.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.Agenda" Width="1.5" PointX="9.75" PointY="23.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Agenda" Width="1.5" PointX="9.75" PointY="23.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AspNetRoles" Width="1.5" PointX="3" PointY="21.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AspNetUserClaims" Width="1.5" PointX="7.5" PointY="14.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AspNetUserLogins" Width="1.5" PointX="7.5" PointY="17.125" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AspNetUsers" Width="1.5" PointX="5.25" PointY="14.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.Booth" Width="1.5" PointX="9.75" PointY="20.125" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.Company" Width="1.5" PointX="3" PointY="16.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.CompanyBookmark" Width="1.5" PointX="10.5" PointY="17.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.CompanyStatus" Width="1.5" PointX="0.75" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.CompanyBookmark" Width="1.5" PointX="10.5" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.CompanyStatus" Width="1.5" PointX="0.75" PointY="17.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.Exhibition" Width="1.5" PointX="7.5" PointY="22.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.ExhibitionAttendee" Width="1.5" PointX="12.75" PointY="19.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.ExhibitionAttendee" Width="1.5" PointX="12.75" PointY="19.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.ProposedAnswer" Width="1.5" PointX="17.25" PointY="15.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.Question" Width="1.5" PointX="15" PointY="15.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.Reward" Width="1.5" PointX="7.5" PointY="27.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.RewardHistory" Width="1.5" PointX="12.75" PointY="22.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.Survey" Width="1.5" PointX="12.75" PointY="14.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.SurveyAnswer" Width="1.5" PointX="19.5" PointY="16.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="GamexModel.SurveyParticipation" Width="1.5" PointX="15" PointY="19.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Question" Width="1.5" PointX="15" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Reward" Width="1.5" PointX="7.5" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.RewardHistory" Width="1.5" PointX="12.75" PointY="22.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Survey" Width="1.5" PointX="12.75" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.SurveyAnswer" Width="1.5" PointX="19.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.SurveyParticipation" Width="1.5" PointX="15" PointY="19.125" IsExpanded="true" />
         <AssociationConnector Association="GamexModel.FK_AccountBookmark_AspNetUsers_1" ManuallyRouted="false" />
         <AssociationConnector Association="GamexModel.FK_AccountBookmark_AspNetUsers_2" ManuallyRouted="false" />
         <AssociationConnector Association="GamexModel.FK_AspNetUsers_AccountStatus" ManuallyRouted="false" />

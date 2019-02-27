@@ -54,7 +54,6 @@ $(document).ready(function () {
                 "render": function(data, type, full, meta) {
                     return '<form action="/Admin/ApproveOrDeny" method="post"> ' +
                         '<input type="hidden" name="companyId" value="' + full.CompanyId + '"/>' +
-                        '<input type="hidden" name="email" value="' + full.Email + '"/>' +
                         '<button type="submit" name="isApproved" value="true" class="btn btn-outline-success" style="margin-right: 10px;">Approve</button>' +
                         '<button type="submit" name="isApproved" value="false" class="btn btn-outline-danger">Reject</button>' + 
                         '</form>';

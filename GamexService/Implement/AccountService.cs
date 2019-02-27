@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using GamexEntity;
 using GamexEntity.Enumeration;
@@ -28,7 +29,7 @@ namespace GamexService.Implement
                 {
                     Username = a.UserName,
                     StatusId = a.StatusId,
-                    UserId = a.Id
+                    UserId = a.Id,
                 },
                 a => string.Equals(a.UserName, id) || string.Equals(a.Email, id));
             
@@ -39,13 +40,19 @@ namespace GamexService.Implement
                 return model;
             }
 
-            if (account.StatusId == (int) AccountStatusEnum.Active)
+            switch (account.StatusId)
             {
-                model.Id = account.Username;
-                model.UserId = account.UserId;
-                return model;
+                case (int)AccountStatusEnum.Pending:
+                    model.ErrorMessage = "Your registration request is being reviewed";
+                    break;
+                case (int)AccountStatusEnum.Deactive:
+                    model.ErrorMessage = "Account is currently disabled";
+                    break;
+                case (int)AccountStatusEnum.Active:
+                    model.Id = account.Username;
+                    model.UserId = account.UserId;
+                    return model;
             }
-            model.ErrorMessage = "Account is currently disabled";
             return model;
         }
 
@@ -60,7 +67,26 @@ namespace GamexService.Implement
                     Username = u.UserName
                 },
                   u => string.Equals(u.Id, userId));
-        }  
+        }
 
+        public bool IsUsernameDuplicate(string username)
+        {
+            return _aspNetUsersRepository.GetSingleProjection(u => u.Id, 
+                       u => u.Email.Equals(username, StringComparison.CurrentCultureIgnoreCase)
+                        || u.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase)) != null;
+        }
+
+        public bool IsUsernameDuplicate(string username, string id)
+        {
+            return _aspNetUsersRepository.GetSingleProjection(u => u.Id,
+                       u => !u.Id.Equals(id) && (u.Email.Equals(username, StringComparison.CurrentCultureIgnoreCase)
+                            || u.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase))) != null;
+        }
+
+        //        public List<AspNetUsers> Test(string role)
+        //        {
+        //            return _aspNetUsersRepository.GetList(
+        //                u => u.AspNetRoles.Select(r => r.Name).Contains("Company")).ToList();
+        //        }
     }
 }

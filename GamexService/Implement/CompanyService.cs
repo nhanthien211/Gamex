@@ -11,8 +11,8 @@ namespace GamexService.Implement
 {
     public class CompanyService : ICompanyService
     {
-        private IRepository<Company> _companyRepository;
-        private IUnitOfWork _unitOfWork;
+        private readonly IRepository<Company> _companyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CompanyService(IRepository<Company> companyRepository, IUnitOfWork unitOfWork)
         {
@@ -35,10 +35,11 @@ namespace GamexService.Implement
             return company;
         }
 
-        public bool RegisterNewCompany(CompanyRegisterViewModel model)
+        public bool RegisterNewCompany(CompanyRegisterViewModel model, string companyId)
         {
             Company company = new Company
             {
+                CompanyId = companyId,
                 Name =  model.Name,
                 Email = model.Email,
                 Phone =  model.Phone,
@@ -73,52 +74,19 @@ namespace GamexService.Implement
             return false;
         }
 
-        public List<CompanyTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
+        public string GetCompanyId(string taxNumber)
         {
-            var companyRequestList = _companyRepository.GetListProjection(
-                c => new CompanyTableViewModel
-                {
-                    CompanyName = c.Name,
-                    TaxNumber = c.TaxNumber,
-                    Email = c.Email,
-                    CompanyId = c.CompanyId
-                },
-                c => c.StatusId == (int) CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
-                c => c.Name, sortColumnDirection, take, skip
-                );
-            return companyRequestList.ToList();
-        }
-
-        public void ApproveOrRejectCompanyRequest(int companyId, bool isApproved)
-        {
-            if (isApproved)
-            {
-                var company = _companyRepository.GetSingle(c => c.CompanyId == companyId);
-                _companyRepository.Update(company);
-                company.StatusId = (int) CompanyStatusEnum.Active;
-                _unitOfWork.SaveChanges();
-            }
-            else
-            {
-                _companyRepository.Delete(companyId);
-                _unitOfWork.SaveChanges();
-            }
-        }
-
-        public List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take)
-        {
-            var companyRequestList = _companyRepository.GetListProjection(
-                c => new CompanyTableViewModel
-                {
-                    CompanyName = c.Name,
-                    TaxNumber = c.TaxNumber,
-                    Email = c.Email,
-                    CompanyId = c.CompanyId
-                },
-                c => c.StatusId != (int)CompanyStatusEnum.Pending && (c.Name.Contains(searchValue) || c.TaxNumber.Contains(searchValue) || c.Email.Contains(searchValue)),
-                c => c.Name, sortColumnDirection, take, skip
+            return _companyRepository.GetSingleProjection(
+                c => c.CompanyId,
+                c => c.TaxNumber == taxNumber
             );
-            return companyRequestList.ToList();
+        }
+
+        public void RemoveCompany(string companyId)
+        {
+            var company = _companyRepository.GetById(companyId);
+            _companyRepository.Delete(company);
+            _unitOfWork.SaveChanges();
         }
     }
 }

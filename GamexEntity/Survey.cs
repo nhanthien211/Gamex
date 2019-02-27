@@ -27,8 +27,8 @@ namespace GamexEntity
         public string Description { get; set; }
         public int Point { get; set; }
         public string AccountId { get; set; }
-        public Nullable<int> CompanyId { get; set; }
-        public int ExhibitionId { get; set; }
+        public string CompanyId { get; set; }
+        public string ExhibitionId { get; set; }
         public System.DateTime StartDate { get; set; }
         public System.DateTime EndDate { get; set; }
         public bool IsActive { get; set; }

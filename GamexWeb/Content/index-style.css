@@ -212,3 +212,12 @@ img:hover {opacity: 1;}
     display: inline-block;
     margin: 100px auto;
 }
+
+.register-title {
+    font-weight: bold;
+    margin: 20px 0px 10px 0px;
+    background-color: #e65540;
+    color: white;
+    padding: 10px;
+    width: fit-content;
+}
