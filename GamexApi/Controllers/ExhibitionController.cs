@@ -34,7 +34,6 @@ namespace GamexApi.Controllers {
                     Name = exhibition.Name,
                     Address = exhibition.Address,
                     Description = exhibition.Description,
-                    Qr = exhibition.QR,
                     StartDate = exhibition.StartDate.ToString(CultureInfo.InvariantCulture),
                     EndDate = exhibition.EndDate.ToString(CultureInfo.InvariantCulture),
                     Location = exhibition.Location == null ? string.Empty : exhibition.Location.ToString(),

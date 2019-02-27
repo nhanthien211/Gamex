@@ -8,7 +8,7 @@ namespace GamexApi.Models {
     // Models returned by ExhibitionController actions
 
     public class ExhibitionViewModel {
-        public int ExhibitionId { get; set; }
+        public string ExhibitionId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
@@ -17,6 +17,5 @@ namespace GamexApi.Models {
         public string EndDate { get; set; }
         public string Location { get; set; }
         public string Logo { get; set; }
-        public string Qr { get; set; }
     }
 }
