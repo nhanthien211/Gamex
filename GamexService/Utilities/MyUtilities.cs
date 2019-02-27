@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data.Entity.Spatial;
+using System.Globalization;
 
-namespace GamexWeb.Utilities
+namespace GamexService.Utilities
 {
-    public class MyUtilities
+    public static class MyUtilities
     {
         public static string GenerateRandomPassword()
         {
@@ -43,6 +42,12 @@ namespace GamexWeb.Utilities
                 );
 
             return generated.Replace("!", string.Empty);
+        }
+
+        public static DbGeography CreateDbGeography(double lat, double lng)
+        {
+            var point = string.Format(CultureInfo.InvariantCulture, "POINT({0} {1})", lat, lng);
+            return DbGeography.FromText(point);
         }
     }
 }

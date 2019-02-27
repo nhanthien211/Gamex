@@ -1,16 +1,24 @@
-﻿using System.Threading.Tasks;
-using System.Web.Configuration;
-using GamexEntity.Constant;
+﻿using GamexEntity.Constant;
 using GamexService.ViewModel;
+using GamexWeb.Utilities;
+using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using Firebase.Storage;
+using GamexService.Interface;
+using Microsoft.AspNet.Identity;
 
 namespace GamexWeb.Controllers
 {
     [RoutePrefix("Organizer")]
     public class OrganizerController : Controller
     {
+        private readonly IOrganizerService _organizerService;
         // GET: Organizer
+
+        public OrganizerController(IOrganizerService organizerService)
+        {
+            _organizerService = organizerService;
+        }
 
         [HttpGet]
         [Authorize(Roles = AccountRole.Organizer)]
@@ -30,9 +38,26 @@ namespace GamexWeb.Controllers
             {
                 return View(model);
             }
-
-            return Content("ahihi");
-            
+            var exhibitionCode = Guid.NewGuid().ToString();
+            var uploadUrl = await FirebaseUploadUtility.UploadImageToFirebase(model.Logo.InputStream, exhibitionCode);
+            if (!string.IsNullOrEmpty(uploadUrl))
+            {
+                //successful upload
+                //create exhibition
+                var result = _organizerService.CreateExhibition(model, exhibitionCode, uploadUrl, User.Identity.GetUserId());
+                if (result)
+                {
+                    //create successfully
+                    model = new CreateExhibitionViewModel();
+                    ModelState.Clear();
+                    model.IsSuccessful = true;
+                }
+                else
+                {
+                    model.IsSuccessful = false;
+                }
+            }
+            return View(model); ;
         }
     }
 }

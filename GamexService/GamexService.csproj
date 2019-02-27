@@ -46,13 +46,16 @@
     <Compile Include="Implement\AccountService.cs" />
     <Compile Include="Implement\AdminService.cs" />
     <Compile Include="Implement\CompanyService.cs" />
+    <Compile Include="Implement\OrganizerService.cs" />
     <Compile Include="Interface\IAccountService.cs" />
     <Compile Include="Interface\IAdminService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
+    <Compile Include="Interface\IOrganizerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\CustomDateAttribute.cs" />
     <Compile Include="Utilities\FileImageAttribute.cs" />
     <Compile Include="Utilities\FileLength.cs" />
+    <Compile Include="Utilities\MyUtilities.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
