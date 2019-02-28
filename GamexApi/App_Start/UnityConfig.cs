@@ -9,6 +9,9 @@ using Microsoft.Owin.Security;
 using System;
 using System.Data.Entity;
 using System.Web;
+using Microsoft.Owin.Security.DataHandler;
+using Microsoft.Owin.Security.DataHandler.Serializer;
+using Microsoft.Owin.Security.DataProtection;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -76,6 +79,13 @@ namespace GamexApi
             //End of :Repo + UoW + DBContext registration
 
             container.RegisterType<IExhibitionService, ExhibitionService>();
+
+            container.RegisterType(typeof(ISecureDataFormat<>), typeof(SecureDataFormat<>));
+            container.RegisterType<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>();
+            container.RegisterType<ISecureDataFormat<AuthenticationTicket>, TicketDataFormat>();
+            container.RegisterType<IDataSerializer<AuthenticationTicket>, TicketSerializer>();
+            container.RegisterType<IDataProtector>(
+                new InjectionFactory(c => new DpapiDataProtectionProvider().Create("ASP.NET Identity")));
         }
     }
 }
