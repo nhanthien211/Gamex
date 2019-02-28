@@ -633,7 +633,6 @@
     <Content Include="Scripts\ckeditor\plugins\wsc\README.md" />
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="Properties\PublishProfiles\GamexWeb - Web Deploy.pubxml" />
-    <Content Include="Views\Organizer\ExhibitionList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">
