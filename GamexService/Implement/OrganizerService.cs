@@ -39,7 +39,7 @@ namespace GamexService.Implement
             };
             if (model.Latitude.HasValue && model.Longitude.HasValue)
             {
-                exhibition.Location = MyUtilities.CreateDbGeography(model.Latitude.Value, model.Longitude.Value);
+                exhibition.Location = MyUtilities.CreateDbGeography(model.Longitude.Value, model.Latitude.Value);
             }
             _exhibitionRepository.Insert(exhibition);
             int result;

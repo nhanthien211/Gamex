@@ -44,9 +44,9 @@ namespace GamexService.Utilities
             return generated.Replace("!", string.Empty);
         }
 
-        public static DbGeography CreateDbGeography(double lat, double lng)
+        public static DbGeography CreateDbGeography(double lng, double lat)
         {
-            var point = string.Format(CultureInfo.InvariantCulture, "POINT({0} {1})", lat, lng);
+            var point = string.Format(CultureInfo.InvariantCulture, "POINT({0} {1})", lng, lat);
             return DbGeography.FromText(point);
         }
     }
