@@ -10,14 +10,13 @@
 
 @section customCss
 {
-    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/Content/tempusdominus-datetimepicker.css" />
 }
 
 @section datepicker
 {
-    <script type="text/javascript" src="~/Scripts/collapse.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/tempusdominus-datetimepicker.js"></script>
     <script type="text/javascript" src="~/Scripts/datepicker.util.js"></script>
 }
 
@@ -70,6 +69,7 @@
                 @enctype = "multipart/form-data"
             }))
             {
+                @Html.ValidationSummary()
                 @Html.AntiForgeryToken()
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-8 col-lg-8">
@@ -109,25 +109,39 @@
 
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-md-6 col-lg-6">
-                        @Html.LabelFor(m => m.StartDate)
-                        @Html.TextBoxFor(m => m.StartDate, new
-                        {
-                            @type = "date",
-                            @class = "form-control form-control-sm",
-                            @min = ""
-                        })
-                        @Html.ValidationMessageFor(m => m.StartDate)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate)
+                            <div class="input-group date" id="startDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.StartDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#startDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#startDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+
+                           
+                            @Html.ValidationMessageFor(m => m.StartDate)
+                        </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6 col-lg-6">
-                        @Html.LabelFor(m => m.EndDate)
-                        @Html.TextBoxFor(m => m.EndDate, new
-                        {
-                            @type = "date",
-                            @class = "form-control form-control-sm",
-                            @min = "",
-                        })
-                        @Html.ValidationMessageFor(m => m.EndDate)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate)
+                            <div class="input-group date" id="endDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.EndDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#endDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#endDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EndDate)
+                        </div>
                     </div>
                 </div>
 
