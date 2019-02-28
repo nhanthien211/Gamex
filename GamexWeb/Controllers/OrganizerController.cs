@@ -60,12 +60,5 @@ namespace GamexWeb.Controllers
             return View(model); ;
         }
 
-        [HttpGet]
-        [Route("Exhibition/Upcoming")]
-        [Authorize(Roles = AccountRole.Organizer)]
-        public ActionResult UpcomingExhibition()
-        {
-            return View();
-        }
     }
 }
