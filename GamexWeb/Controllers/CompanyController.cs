@@ -5,6 +5,7 @@ using GamexService.ViewModel;
 using GamexWeb.Identity;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
@@ -30,7 +31,6 @@ namespace GamexWeb.Controllers
             {
                 return View("~/Views/Home/Register.cshtml", model);
             }
-            TempData["RedirectCall"] = true;
             var company = _companyService.SelectCompanyRegisterStatus(model);
             if (company != null) 
             {
@@ -203,6 +203,14 @@ namespace GamexWeb.Controllers
                 model.ErrorMessage += error;
             }
             return View(model);          
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/New")]
+        public ActionResult ViewNewExhibition()
+        {
+            return View();
         }
     }
 }

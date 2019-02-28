@@ -39,22 +39,27 @@ namespace GamexWeb
                 "~/Scripts/bootstrap.bundle.js",
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/jquery.validate*",
-                "~/Scripts/sb-admin.js"));
+                "~/Scripts/sb.admin.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatableCompanyRequest").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
-                "~/Scripts/sb-admin-datatables-company-request.js"));
+                "~/Scripts/sb.admin.datatables.company.request.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatableCompanyList").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
-                "~/Scripts/sb-admin-datatables-company-list.js"));
+                "~/Scripts/sb.admin.datatables.company.list.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatableOrganizerList").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
-                "~/Scripts/sb-admin-datatables-organizer-list.js"));
+                "~/Scripts/sb.admin.datatables.organizer.list.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatableJoinEvent").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.organizer.list.js"));
 
             //CKEditor script
             bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(

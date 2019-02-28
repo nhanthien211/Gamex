@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="~/Content/img/icons/favicon.png">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/adminCss")
+    @RenderSection("customCss", required: false)
     @RenderSection("ckeditor", required: false)
     <!--If required set to true, will throw error on any site use this layout but does not
     have section implemented-->
@@ -95,6 +96,23 @@
                             <span class="nav-link-text">Employee</span>
                         </a>
                     </li>
+
+                    <!--Manage Exhibition-->
+                    <li class="nav-item @ViewBag.Exhibition">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuViewExhibition" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa-fw fas fa-calendar-alt"></i>
+                            <span class="arrow">Exhibition</span>
+                        </a>
+                    </li>
+                    <ul class="sidenav-second-level collapse @ViewBag.ViewExhibitionDropDownShow" id="navbarDropdownMenuViewExhibition">
+                        <li class="@ViewBag.JoinExhibition">
+                            @Html.ActionLink("Join Exhibition", "ViewNewExhibition", "Company")
+                        </li>
+                        <li class="@ViewBag.UpcomingExhibition">
+                            @Html.ActionLink("Upcoming Exhibition", "", "Company")
+                        </li>
+                    </ul>
+                    <!--End of Manage Exhibition-->
 
                 }
 
@@ -194,6 +212,7 @@
 
         @Scripts.Render("~/bundles/adminScript")
         @RenderSection("mapapi", required: false)
+        @RenderSection("datepicker", required: false)
         @RenderSection("scripts", required: false)
     </div>
 </body>

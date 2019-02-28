@@ -8,6 +8,19 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+@section customCss
+{
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" />
+}
+
+@section datepicker
+{
+    <script type="text/javascript" src="~/Scripts/collapse.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/datepicker.util.js"></script>
+}
+
 @section mapapi
 {
     <script type="text/javascript" src="~/Scripts/map.helper.js"></script>
@@ -138,7 +151,7 @@
                            @rows = "10",
                            @cols = "80"
                        })
-                        @Html.ValidationMessageFor(m => m.Description)                                                  
+                        @Html.ValidationMessageFor(m => m.Description)
                     </div>
                 </div>
                 @Html.TextBoxFor(m => m.Latitude, new
