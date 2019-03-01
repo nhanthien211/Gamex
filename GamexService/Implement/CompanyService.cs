@@ -12,11 +12,15 @@ namespace GamexService.Implement
     public class CompanyService : ICompanyService
     {
         private readonly IRepository<Company> _companyRepository;
+        private readonly IRepository<Exhibition> _exhibitionRepository;
+        private readonly IRepository<Booth> _boothRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CompanyService(IRepository<Company> companyRepository, IUnitOfWork unitOfWork)
+        public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, IRepository<Booth> boothRepository, IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
+            _exhibitionRepository = exhibitionRepository;
+            _boothRepository = boothRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -74,19 +78,102 @@ namespace GamexService.Implement
             return false;
         }
 
-        public string GetCompanyId(string taxNumber)
-        {
-            return _companyRepository.GetSingleProjection(
-                c => c.CompanyId,
-                c => c.TaxNumber == taxNumber
-            );
-        }
-
         public void RemoveCompany(string companyId)
         {
             var company = _companyRepository.GetById(companyId);
             _companyRepository.Delete(company);
             _unitOfWork.SaveChanges();
+        }
+
+        public List<CompanyViewExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        {
+            var newExhibitionList = _exhibitionRepository.GetListProjection(
+                e => new
+                {
+                    ExhibitionId = e.ExhibitionId,
+                    ExhibitionName = e.Name,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate
+                },
+                e => !e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId) 
+                            && e.StartDate > DateTime.Now
+                            && e.Name.Contains(searchValue), 
+                e => e.StartDate, sortColumnDirection, take, skip
+                );
+            var result = newExhibitionList.Select(e => new CompanyViewExhibitionViewModel
+            {
+                ExhibitionId = e.ExhibitionId,
+                ExhibitionName = e.ExhibitionName,
+                Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+            }).ToList();
+            return result;
+        }
+
+        public NewExhibitionDetailViewModel GetNewExhibitionDetail(string exhibitionId)
+        {
+            return _exhibitionRepository.GetSingleProjection(
+                e => new NewExhibitionDetailViewModel
+                {
+                    Description = e.Description,
+                    Logo = e.Logo,
+                    Name = e.Name,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Address = e.Address,
+                    ExhibitionId = e.ExhibitionId
+                },
+                e => e.ExhibitionId == exhibitionId
+                );
+        }
+
+        public bool IsCompanyHasJoinExhibition(string exhibitionId, string companyId)
+        {
+            return  _boothRepository.GetSingleProjection(b => b.Id,
+                b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId) != 0;
+        }
+
+        public bool JoinExhibition(string exhibitionId, string companyId)
+        {
+            var booth = new Booth
+            {
+                CompanyId = companyId,
+                ExhibitionId = exhibitionId,
+            };
+            _boothRepository.Insert(booth);
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
+
+        public List<CompanyViewExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        {
+            var newExhibitionList = _exhibitionRepository.GetListProjection(
+                e => new
+                {
+                    ExhibitionId = e.ExhibitionId,
+                    ExhibitionName = e.Name,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate
+                },
+                e => e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId) 
+                     && e.StartDate > DateTime.Now
+                     && e.Name.Contains(searchValue),
+                e => e.StartDate, sortColumnDirection, take, skip
+            );
+            var result = newExhibitionList.Select(e => new CompanyViewExhibitionViewModel
+            {
+                ExhibitionId = e.ExhibitionId,
+                ExhibitionName = e.ExhibitionName,
+                Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+            }).ToList();
+            return result;
         }
     }
 }

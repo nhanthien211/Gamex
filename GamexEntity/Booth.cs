@@ -15,7 +15,7 @@ namespace GamexEntity
     public partial class Booth
     {
         public int Id { get; set; }
-        public int Booth1 { get; set; }
+        public Nullable<int> Booth1 { get; set; }
         public string CompanyId { get; set; }
         public string ExhibitionId { get; set; }
     

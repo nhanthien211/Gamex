@@ -3,9 +3,10 @@ using GamexEntity.Enumeration;
 using GamexService.Interface;
 using GamexService.ViewModel;
 using GamexWeb.Identity;
+using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
 using System;
-using System.Data.Entity.Core.Metadata.Edm;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
@@ -211,6 +212,91 @@ namespace GamexWeb.Controllers
         public ActionResult ViewNewExhibition()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Route("Company/LoadNewExhibitionList")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadNewExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadNewExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [FilterConfig.NoDirectAccess]
+        [Route("Company/Exhibition/View/{id}")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult ViewNewExhibitionDetail(string id)
+        {
+            //check if company join exhibition or not (validation)
+            var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
+
+            if (join)
+            {
+                return RedirectToAction("ViewNewExhibition", "Company");
+            }
+            var detail = _companyService.GetNewExhibitionDetail(id);
+            if (detail == null)
+            {
+                return RedirectToAction("ViewNewExhibition", "Company");
+            }
+            return View(detail);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/Join/")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult JoinExhibition(string exhibitionId)
+        {
+            var join = _companyService.IsCompanyHasJoinExhibition(exhibitionId, User.Identity.GetCompanyId());
+
+            if (join)
+            {
+                return RedirectToAction("ViewNewExhibition", "Company");
+            }
+            //hasn't joined yet
+
+            var joinResult = _companyService.JoinExhibition(exhibitionId, User.Identity.GetCompanyId());
+            if (joinResult)
+            {
+                //successfully joined, redirect to manage my exhibition page
+                return RedirectToAction("UpcomingExhibition", "Company");
+            }
+            return RedirectToAction("ViewNewExhibitionDetail", "Company", exhibitionId);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/Upcoming")]
+        public ActionResult UpcomingExhibition()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/LoadUpcomingExhibitionList")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadUpcomingExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadUpcomingExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
     }
 }

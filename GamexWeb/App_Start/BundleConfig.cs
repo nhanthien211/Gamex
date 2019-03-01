@@ -59,7 +59,12 @@ namespace GamexWeb
             bundles.Add(new ScriptBundle("~/bundles/datatableJoinEvent").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
-                "~/Scripts/sb.company.datatables.organizer.list.js"));
+                "~/Scripts/sb.company.datatables.view.new.exhibition.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatableUpcomingEvent").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.view.upcoming.exhibition.js"));
 
             //CKEditor script
             bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(

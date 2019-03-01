@@ -23,7 +23,10 @@ namespace GamexWeb.Identity
             // Add custom user claims here
             userIdentity.AddClaim(new Claim(CustomClaimTypes.UserFullName, LastName + " " + FirstName));
             userIdentity.AddClaim(new Claim(CustomClaimTypes.Email, Email));
-            
+            if (!string.IsNullOrEmpty(CompanyId))
+            {
+                userIdentity.AddClaim(new Claim(CustomClaimTypes.CompanyId, CompanyId));
+            }
             return userIdentity;
         }
     }

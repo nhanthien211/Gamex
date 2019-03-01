@@ -1,7 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "New Exhibition";
-    ViewBag.JoinExhibition = "active";
+    ViewBag.Title = "Upcoming Exhibition";
+    ViewBag.UpcomingExhibition = "active";
     ViewBag.Exhibition = "active";
     ViewBag.ViewExhibitionDropDownShow = "show";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -9,7 +9,7 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/datatableJoinEvent")
+    @Scripts.Render("~/bundles/datatableUpcomingEvent")
 }
 
 <div class="container-fluid">
@@ -21,7 +21,7 @@
     <!-- Content-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="menu-icon fa-fw fas fa-calendar-alt"></i> New Exhibition
+            <i class="menu-icon fa-fw fas fa-calendar-alt"></i> Upcoming Exhibition
 
         </div>
         <div class="card-body">
@@ -29,11 +29,11 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Time</th>
-                            <th>Action</th>
-                        </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
                     </thead>
                 </table>
             </div>

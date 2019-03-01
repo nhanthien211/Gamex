@@ -16,7 +16,7 @@ namespace GamexRepository
         IEnumerable<T> GetList(Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] paths);
         T GetSingle(Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] paths);
 
-        IEnumerable<TResult> GetListProjection<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> filter = null, Expression<Func<T, object>> sort = null, string sortColumnDirection = null, int take = 0, int skip = 0, params Expression<Func<T, object>>[] paths);
+        IEnumerable<TResult> GetListProjection<TResult, TKey>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> filter = null, Expression<Func<T, TKey>> sort = null, string sortColumnDirection = null, int take = 0, int skip = 0, params Expression<Func<T, object>>[] paths);
         TResult GetSingleProjection<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] paths);
 
     }

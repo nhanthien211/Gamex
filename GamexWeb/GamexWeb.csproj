@@ -266,6 +266,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\montserrat\OFL.txt" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\tempusdominus-datetimepicker.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -539,7 +540,7 @@
     <Content Include="Scripts\sb.admin.datatables.company.request.js" />
     <Content Include="Scripts\sb.admin.datatables.organizer.list.js" />
     <Content Include="Scripts\sb.admin.js" />
-    <Content Include="Scripts\sb.company.datatables.company.view.exhibition.js" />
+    <Content Include="Scripts\sb.company.datatables.view.new.exhibition.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -639,6 +640,8 @@
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="Properties\PublishProfiles\GamexWeb - Web Deploy.pubxml" />
     <Content Include="Views\Company\ViewNewExhibition.cshtml" />
+    <Content Include="Views\Company\ViewNewExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\UpcomingExhibition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

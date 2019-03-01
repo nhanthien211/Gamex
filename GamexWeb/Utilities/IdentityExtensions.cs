@@ -32,6 +32,16 @@ namespace GamexWeb.Utilities
             return (identity as ClaimsIdentity).FirstOrNull(CustomClaimTypes.Email);
         }
 
+        public static string GetCompanyId(this IIdentity identity)
+        {
+            if (identity == null)
+            {
+                return null;
+            }
+
+            return (identity as ClaimsIdentity).FirstOrNull(CustomClaimTypes.CompanyId);
+        }
+
         public static void AddUpdateClaim(this IPrincipal currentPrincipal, string key, string value, IAuthenticationManager authenticationManager)
         {
             var identity = currentPrincipal.Identity as ClaimsIdentity;

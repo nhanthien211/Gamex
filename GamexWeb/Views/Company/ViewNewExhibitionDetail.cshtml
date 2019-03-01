@@ -1,0 +1,102 @@
+﻿@model GamexService.ViewModel.NewExhibitionDetailViewModel
+
+@{
+    ViewBag.JoinExhibition = "active";
+    ViewBag.Exhibition = "active";
+    ViewBag.ViewExhibitionDropDownShow = "show";
+    ViewBag.Title = "View Detail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Exhibition Detail</li>
+    </ol>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon"></i> Exhibition Detail
+        </div>
+        <div class="card-body">
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <img alt="" src="@Model.Logo" id="imagePreview" />
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    @Html.LabelFor(m => m.Name)
+                    @Html.TextBoxFor(m => m.Name, new
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate)
+                        @Html.TextBoxFor(m => m.StartDate, new
+                       {
+                           @class = "form-control",
+                           @readonly = true
+                       })
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate)
+                        @Html.TextBoxFor(m => m.EndDate, new
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Address)
+                    @Html.TextBoxFor(m => m.Address, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new
+                   {
+                       @class = "form-control",
+                       @readonly = true
+                   })
+                </div>
+            </div>
+            <hr />
+            
+            @using (Html.BeginForm("JoinExhibition", "Company", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.ExhibitionId)
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-lg-12">
+                        <button type="submit" class="btn btn-outline-success">Join</button>
+                    </div>
+                </div>
+            }
+            
+
+        </div>
+    </div>
+</div>
+

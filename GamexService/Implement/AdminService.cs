@@ -117,7 +117,8 @@ namespace GamexService.Implement
                 a => a.StatusId != (int) AccountStatusEnum.Pending 
                 && a.AspNetRoles.Select(r => r.Name).Contains(AccountRole.Organizer) 
                 && (a.FirstName.Contains(searchValue) || a.LastName.Contains(searchValue) 
-                || a.Email.Contains(searchValue) || a.AccountStatus.Status.Contains(searchValue))
+                || a.Email.Contains(searchValue) || a.AccountStatus.Status.Contains(searchValue)), 
+                a => a.FirstName, sortColumnDirection, take, skip
             );
             return organizerList.ToList();
         }

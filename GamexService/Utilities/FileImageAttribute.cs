@@ -7,9 +7,7 @@ namespace GamexService.Utilities
 {
     public class FileImageAttribute : ValidationAttribute
     {
-        private static readonly string JpegSignature = "FF-D8-FF-E0";
-        private static readonly string ExifSignature = "FF-D8-FF-E1";
-        private static readonly string SpiffSignature = "FF-D8-FF-E8";
+        private static readonly string JpegSignature = "FF-D8-FF";
         private static readonly string PngSignature = "89-50-4E-47-0D-0A-1A-0A";
 
         public override bool IsValid(object value)
@@ -31,9 +29,7 @@ namespace GamexService.Utilities
             }
             string signature = GetFileSignature(bytes);
             file.InputStream.Position = 0;
-            return signature.Contains(JpegSignature) 
-                   || signature.Contains(ExifSignature)
-                   || signature.Contains(SpiffSignature) 
+            return signature.Contains(JpegSignature)                    
                    || signature.Contains(PngSignature);
         }
 
