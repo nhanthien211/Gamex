@@ -641,7 +641,7 @@
     <None Include="Properties\PublishProfiles\GamexWeb - Web Deploy.pubxml" />
     <Content Include="Views\Company\ViewNewExhibition.cshtml" />
     <Content Include="Views\Company\ViewNewExhibitionDetail.cshtml" />
-    <Content Include="Views\Company\UpcomingExhibition.cshtml" />
+    <Content Include="Views\Company\ViewUpcomingExhibition.cshtml" />
     <Content Include="Views\Company\ViewUpcomingExhibitionDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>

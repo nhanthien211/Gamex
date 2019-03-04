@@ -109,7 +109,7 @@ namespace GamexService.Implement
             return result;
         }
 
-        public ExhibitionDetailViewOnlyModel GetNewExhibitionDetail(string exhibitionId)
+        public ExhibitionDetailViewOnlyModel GetExhibitionDetail(string exhibitionId)
         {
             return _exhibitionRepository.GetSingleProjection(
                 e => new ExhibitionDetailViewOnlyModel

@@ -29,8 +29,6 @@ namespace GamexEntity
         public string AccountId { get; set; }
         public string CompanyId { get; set; }
         public string ExhibitionId { get; set; }
-        public System.DateTime StartDate { get; set; }
-        public System.DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }

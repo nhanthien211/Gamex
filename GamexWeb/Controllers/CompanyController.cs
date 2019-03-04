@@ -244,7 +244,7 @@ namespace GamexWeb.Controllers
             {
                 return RedirectToAction("ViewNewExhibition", "Company");
             }
-            var detail = _companyService.GetNewExhibitionDetail(id);
+            var detail = _companyService.GetExhibitionDetail(id);
             if (detail == null)
             {
                 return RedirectToAction("ViewNewExhibition", "Company");
@@ -269,7 +269,7 @@ namespace GamexWeb.Controllers
             if (joinResult)
             {
                 //successfully joined, redirect to manage my exhibition page
-                return RedirectToAction("UpcomingExhibition", "Company");
+                return RedirectToAction("ViewUpcomingExhibition", "Company");
             }
             return RedirectToAction("ViewNewExhibitionDetail", "Company", exhibitionId);
         }
@@ -277,7 +277,7 @@ namespace GamexWeb.Controllers
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [Route("Company/Exhibition/Upcoming")]
-        public ActionResult UpcomingExhibition()
+        public ActionResult ViewUpcomingExhibition()
         {
             return View();
         }
@@ -297,6 +297,27 @@ namespace GamexWeb.Controllers
             var data = _companyService.LoadUpcomingExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/{id}")]
+        public ActionResult ViewUpcomingExhibitionDetail(string id)
+        {
+            //check if company join exhibition or not (validation)
+            var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
+
+            if (!join)
+            {
+                return RedirectToAction("ViewUpcomingExhibition", "Company");
+            }
+            var detail = _companyService.GetExhibitionDetail(id);
+            if (detail == null)
+            {
+                return RedirectToAction("ViewUpcomingExhibition", "Company");
+            }
+            return View(detail);
+            
         }
     }
 }

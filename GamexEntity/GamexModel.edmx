@@ -216,8 +216,6 @@
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="CompanyId" Type="nvarchar" MaxLength="128" />
           <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="StartDate" Type="datetime" Nullable="false" />
-          <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SurveyAnswer">
@@ -1043,8 +1041,6 @@
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Survey_AspNetUsers" FromRole="Survey" ToRole="AspNetUsers" />
           <NavigationProperty Name="Company" Relationship="Self.FK_Survey_Company" FromRole="Survey" ToRole="Company" />
@@ -1816,8 +1812,6 @@
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>
