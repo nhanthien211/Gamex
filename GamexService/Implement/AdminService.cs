@@ -25,7 +25,7 @@ namespace GamexService.Implement
 
         public List<CompanyTableViewModel> LoadCompanyJoinRequestDataTable(string sortColumnDirection, string searchValue, int skip, int take)
         {
-            var companyRequestList = _companyRepository.GetListProjection(
+            var companyRequestList = _companyRepository.GetPagingProjection(
                 c => new CompanyTableViewModel
                 {
                     CompanyName = c.Name,
@@ -90,7 +90,7 @@ namespace GamexService.Implement
 
         public List<CompanyTableViewModel> LoadCompanyDataTable(string sortColumnDirection, string searchValue, int skip, int take)
         {
-            var companyList = _companyRepository.GetListProjection(
+            var companyList = _companyRepository.GetPagingProjection(
                 c => new CompanyTableViewModel
                 {
                     CompanyName = c.Name,
@@ -106,7 +106,7 @@ namespace GamexService.Implement
 
         public List<OrganizerTableViewModel> LoadOrganizerDataTable(string sortColumnDirection, string searchValue, int skip, int take)
         {
-            var organizerList = _userRepository.GetListProjection(
+            var organizerList = _userRepository.GetPagingProjection(
                 a => new OrganizerTableViewModel
                 {
                     FullName = a.LastName + " " + a.FirstName,

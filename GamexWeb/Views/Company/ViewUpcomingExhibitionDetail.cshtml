@@ -1,7 +1,7 @@
 ﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
 
 @{
-    ViewBag.JoinExhibition = "active";
+    ViewBag.UpcomingExhibition = "active";
     ViewBag.Exhibition = "active";
     ViewBag.ViewExhibitionDropDownShow = "show";
     ViewBag.Title = "View Detail";
@@ -83,19 +83,6 @@
                    })
                 </div>
             </div>
-            <hr />
-            
-            @using (Html.BeginForm("JoinExhibition", "Company", FormMethod.Post))
-            {
-                @Html.HiddenFor(m => m.ExhibitionId)
-                <div class="row for-exhibition-form">
-                    <div class="col-sm-12 col-lg-12">
-                        <button type="submit" class="btn btn-outline-success">Join</button>
-                    </div>
-                </div>
-            }
-            
-
         </div>
     </div>
 </div>

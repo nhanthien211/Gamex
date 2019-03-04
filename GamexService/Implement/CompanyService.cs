@@ -87,7 +87,7 @@ namespace GamexService.Implement
 
         public List<CompanyViewExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
         {
-            var newExhibitionList = _exhibitionRepository.GetListProjection(
+            var newExhibitionList = _exhibitionRepository.GetPagingProjection(
                 e => new
                 {
                     ExhibitionId = e.ExhibitionId,
@@ -109,10 +109,10 @@ namespace GamexService.Implement
             return result;
         }
 
-        public NewExhibitionDetailViewModel GetNewExhibitionDetail(string exhibitionId)
+        public ExhibitionDetailViewOnlyModel GetNewExhibitionDetail(string exhibitionId)
         {
             return _exhibitionRepository.GetSingleProjection(
-                e => new NewExhibitionDetailViewModel
+                e => new ExhibitionDetailViewOnlyModel
                 {
                     Description = e.Description,
                     Logo = e.Logo,
@@ -154,7 +154,7 @@ namespace GamexService.Implement
 
         public List<CompanyViewExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
         {
-            var newExhibitionList = _exhibitionRepository.GetListProjection(
+            var newExhibitionList = _exhibitionRepository.GetPagingProjection(
                 e => new
                 {
                     ExhibitionId = e.ExhibitionId,

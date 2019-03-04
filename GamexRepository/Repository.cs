@@ -65,10 +65,10 @@ namespace GamexRepository
             return dbSet.ToList();
         } 
 
-        public IEnumerable<TResult> GetListProjection<TResult>(
+        public IEnumerable<TResult> GetPagingProjection<TResult, TKey>(
             Expression<Func<T, TResult>> selector,
             Expression<Func<T, bool>> filter = null,
-            Expression<Func<T, object>> sort = null,
+            Expression<Func<T, TKey>> sort = null,
             string sortColumnDirection = null, int take = 0, int skip = 0,
             params Expression<Func<T, object>>[] paths)
         {
@@ -106,6 +106,28 @@ namespace GamexRepository
             {
                 query = query.Take(take);
             }
+            return query.Select(selector).ToList();
+        }
+
+        public IEnumerable<TResult> GetListProjection<TResult>(
+            Expression<Func<T, TResult>> selector,
+            Expression<Func<T, bool>> filter = null,
+            params Expression<Func<T, object>>[] paths)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (paths != null && paths.Length > 0)
+            {
+                foreach (var path in paths)
+                {
+                    query = query.Include(path);
+                }
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
             return query.Select(selector).ToList();
         }
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GamexService.ViewModel
 {
-    public class NewExhibitionDetailViewModel
+    public class ExhibitionDetailViewOnlyModel
     {
 
         [Display(Name = "Name")]

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexEntity;
+﻿using GamexEntity;
 using GamexRepository;
 using GamexService.Interface;
 using GamexService.Utilities;
 using GamexService.ViewModel;
+using System;
 
 namespace GamexService.Implement
 {
