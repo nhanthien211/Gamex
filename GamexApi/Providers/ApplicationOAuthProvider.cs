@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Providers
 {
@@ -31,18 +32,22 @@ namespace GamexApi.Providers
 
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
 
-            if (user == null)
-            {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
-                return;
+            if (user == null) {
+                // client may passed an email instead of username to get token
+                user = await userManager.FindByEmailAsync(context.UserName);
+                if (user == null) {
+                    context.SetError("invalid_grant", "The user name or password is incorrect.");
+                    return;
+                }
             }
-
+            // TODO: if user.role != "user" -> deny access
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
+                OAuthDefaults.AuthenticationType);
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
             AuthenticationProperties properties = CreateProperties(user.UserName);
+            // TODO: fullname, email
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
