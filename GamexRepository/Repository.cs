@@ -65,10 +65,10 @@ namespace GamexRepository
             return dbSet.ToList();
         } 
 
-        public IEnumerable<TResult> GetListProjection<TResult, TKey>(
+        public IEnumerable<TResult> GetListProjection<TResult>(
             Expression<Func<T, TResult>> selector,
             Expression<Func<T, bool>> filter = null,
-            Expression<Func<T, TKey>> sort = null,
+            Expression<Func<T, object>> sort = null,
             string sortColumnDirection = null, int take = 0, int skip = 0,
             params Expression<Func<T, object>>[] paths)
         {
