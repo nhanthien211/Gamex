@@ -64,6 +64,7 @@
     <Compile Include="ViewModel\CompanyViewExhibitionViewModel.cs" />
     <Compile Include="ViewModel\CreateExhibitionViewModel.cs" />
     <Compile Include="ViewModel\CreateOrganizerViewModel.cs" />
+    <Compile Include="ViewModel\CreateSurveyViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\ExhibitionDetailViewOnlyModel.cs" />
     <Compile Include="ViewModel\OrganizerTableViewModel.cs" />

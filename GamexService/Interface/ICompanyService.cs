@@ -14,6 +14,9 @@ namespace GamexService.Interface
         ExhibitionDetailViewOnlyModel GetExhibitionDetail(string exhibitionId);
         bool IsCompanyHasJoinExhibition(string exhibitionId, string companyId);
         bool JoinExhibition(string exhibitionId, string companyId);
+        
         List<CompanyViewExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId);
+        bool QuitExhibition(string exhibitionId, string companyId);
+        bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId);
     }
 }

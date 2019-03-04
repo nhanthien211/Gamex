@@ -14,13 +14,16 @@ namespace GamexService.Implement
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Exhibition> _exhibitionRepository;
         private readonly IRepository<Booth> _boothRepository;
+        private readonly IRepository<Survey> _surveyRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, IRepository<Booth> boothRepository, IUnitOfWork unitOfWork)
+        public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, 
+            IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _exhibitionRepository = exhibitionRepository;
             _boothRepository = boothRepository;
+            _surveyRepository = surveyRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -122,7 +125,7 @@ namespace GamexService.Implement
                     Address = e.Address,
                     ExhibitionId = e.ExhibitionId
                 },
-                e => e.ExhibitionId == exhibitionId
+                e => e.ExhibitionId == exhibitionId && e.StartDate > DateTime.Now
                 );
         }
 
@@ -174,6 +177,51 @@ namespace GamexService.Implement
                 Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
             }).ToList();
             return result;
+        }
+
+        public bool QuitExhibition(string exhibitionId, string companyId)
+        {
+            var deleteList = _boothRepository.GetList(b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId);
+            foreach (var record in deleteList)
+            {
+                _boothRepository.Delete(record);
+            }
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
+
+        public bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId)
+        {
+            
+            var survey = new Survey
+            {
+                Description = model.Description,
+                Title = model.Title,
+                ExhibitionId = model.ExhibitionId,
+                Point = 100,
+                CompanyId = companyId,
+                AccountId = accountId,
+                IsActive = true
+            };
+            _surveyRepository.Insert(survey);
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
         }
     }
 }

@@ -24,5 +24,7 @@ namespace GamexService.ViewModel
         public string Logo { get; set; }
 
         public string ExhibitionId { get; set; }
+
+        public bool? IsSuccessful { get; set; }
     }
 }
