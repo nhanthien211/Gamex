@@ -186,6 +186,12 @@ namespace GamexService.Implement
             {
                 _boothRepository.Delete(record);
             }
+
+            var surveyList = _surveyRepository.GetList(s => s.ExhibitionId == exhibitionId && s.CompanyId == companyId);
+            foreach (var survey in surveyList)
+            {
+                _surveyRepository.Delete(survey);
+            }
             int result;
             try
             {
@@ -222,6 +228,22 @@ namespace GamexService.Implement
                 return false;
             }
             return result > 0;
+        }
+
+        public List<UpcomingSurveyViewModel> LoadUpcomingSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId)
+        {
+            var upcomingSurveyList = _surveyRepository.GetPagingProjection(
+                e => new UpcomingSurveyViewModel
+                {
+                    ExhibitionId = e.ExhibitionId,                    
+                    SurveyId = e.SurveyId,
+                    SurveyTitle = e.Title
+                },
+                e => e.CompanyId == companyId && e.ExhibitionId == exhibitionId
+                     && e.Title.Contains(searchValue),
+                e => e.Title, sortColumnDirection, take, skip
+            );
+            return upcomingSurveyList.ToList();
         }
     }
 }

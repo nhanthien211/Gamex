@@ -209,7 +209,7 @@ namespace GamexWeb.Controllers
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [Route("Company/Exhibition/New")]
-        public ActionResult ViewNewExhibition()
+        public ActionResult NewExhibition()
         {
             return View();
         }
@@ -235,19 +235,19 @@ namespace GamexWeb.Controllers
         [FilterConfig.NoDirectAccess]
         [Route("Company/Exhibition/View/{id}")]
         [Authorize(Roles = AccountRole.Company)]
-        public ActionResult ViewNewExhibitionDetail(string id)
+        public ActionResult NewExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
             var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
 
             if (join)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
             }
             var detail = _companyService.GetExhibitionDetail(id);
             if (detail == null)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
             }
 
             if (TempData["RESULT"] != null)
@@ -267,7 +267,7 @@ namespace GamexWeb.Controllers
 
             if (join)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
             }
             //hasn't joined yet
 
@@ -275,16 +275,16 @@ namespace GamexWeb.Controllers
             if (joinResult)
             {
                 //successfully joined, redirect to manage my exhibition page
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
             TempData["RESULT"] = false;
-            return RedirectToAction("ViewNewExhibitionDetail", "Company", exhibitionId);
+            return RedirectToAction("NewExhibitionDetail", "Company", exhibitionId);
         }
 
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [Route("Company/Exhibition/Upcoming")]
-        public ActionResult ViewUpcomingExhibition()
+        public ActionResult UpcomingExhibition()
         {
             return View();
         }
@@ -310,19 +310,19 @@ namespace GamexWeb.Controllers
         [Authorize(Roles = AccountRole.Company)]
         [FilterConfig.NoDirectAccess]
         [Route("Company/Exhibition/{id}")]
-        public ActionResult ViewUpcomingExhibitionDetail(string id)
+        public ActionResult UpcomingExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
             var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
 
             if (!join)
             {
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
             var detail = _companyService.GetExhibitionDetail(id);
             if (detail == null)
             {
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
 
             if (TempData["RESULT"] != null)
@@ -343,16 +343,16 @@ namespace GamexWeb.Controllers
 
             if (!join)
             {
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
             var quitResult = _companyService.QuitExhibition(exhibitionId, User.Identity.GetCompanyId());
             if (quitResult)
             {
                 //successfully quit, redirect to manage my exhibition page
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
             TempData["RESULT"] = false;
-            return RedirectToAction("ViewUpcomingExhibitionDetail", "Company", exhibitionId);
+            return RedirectToAction("UpcomingExhibitionDetail", "Company", exhibitionId);
         }
 
         [HttpGet]
@@ -390,6 +390,32 @@ namespace GamexWeb.Controllers
             }
             model.IsSuccessful = false;
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpcomingSurvey(string id)
+        {
+            return View((object)id);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadUpcomingSurveyList(string id)
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadUpcomingSurveyDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId(), id);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
     }
 }
