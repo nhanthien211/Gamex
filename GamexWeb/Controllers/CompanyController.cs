@@ -461,5 +461,37 @@ namespace GamexWeb.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateQuestion(string[] answers)
+        {
+            var result = "";
+            foreach (var answer in answers)
+            {
+                result += answer;
+            }
+
+            return Content(result + " length: " + answers.Length);
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/TextQuestion")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult TextQuestionPartialView()
+        {
+            return PartialView("~/Views/Partial/_TextQuestion.cshtml");
+        }
+
+        [HttpPost]
+        [Route("Company/MultipleChoice")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult MultipleChoicePartialView()
+        {
+            return PartialView("~/Views/Partial/_MultipleChoice.cshtml");
+        }
     }
 }

@@ -22,18 +22,17 @@
             </script>
         }
     }
+    <script type="text/javascript" src="~/Scripts/add.question.util.js"></script>
 }
 
 <div class="container-fluid">
     <!-- Breadcrumbs-->
-
     <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    @Html.ActionLink("Survey Detail", "UpcomingSurveyDetail", "Company", new {  }, new { @class = "nav-link" })
+                    @Html.ActionLink("Survey Detail", "UpcomingSurveyDetail", "Company", new { }, new { @class = "nav-link" })
                 </li>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarQuestion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Question
@@ -51,19 +50,24 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-question-circle fa-fw menu-icon" style="display: inline;"></i> Create Question
-            
         </div>
         <div class="card-body">
-            @using (Html.BeginForm("", "Company", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <hr />
-                <div class="row for-exhibition-form">
-                    <div class="col-sm-12 col-lg-12">
-                        <button type="submit" class="btn btn-outline-success">Create</button>
+                @using (Html.BeginForm("CreateQuestion", "Company", FormMethod.Post, new { id = "create-question-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row for-exhibition-form">
+                        <div class="col-sm-4">
+                            <label for="QuestionType">Type of question</label>
+                            <select class="form-control" id="QuestionType" name="QuestionType">
+                                <option value="-1">--Select type--</option>
+                                <option value="1">Text</option>
+                                <option value="2">Select one</option>
+                                <option value="3">Select multiple</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-            }
+                    <div id="partial-view"></div>
+                }
         </div>
     </div>
 </div>

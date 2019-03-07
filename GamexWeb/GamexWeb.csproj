@@ -266,6 +266,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\montserrat\OFL.txt" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\add.question.util.js" />
+    <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
     <Content Include="Scripts\tempusdominus-datetimepicker.js" />
@@ -648,6 +650,8 @@
     <Content Include="Views\Company\UpcomingSurvey.cshtml" />
     <Content Include="Views\Company\UpcomingSurveyDetail.cshtml" />
     <Content Include="Views\Company\CreateQuestion.cshtml" />
+    <Content Include="Views\Partial\_TextQuestion.cshtml" />
+    <Content Include="Views\Partial\_MultipleChoice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

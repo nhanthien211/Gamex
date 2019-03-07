@@ -15,7 +15,7 @@ namespace GamexService.ViewModel
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Description required")]
-        [StringLength(50, ErrorMessage = "Cannot exceed 50 characters")]
+        [StringLength(1000, ErrorMessage = "Cannot exceed 1000 characters")]
         [Display(Name = "Description")]
         public string Description { get; set; }
 
