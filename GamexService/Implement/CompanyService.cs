@@ -245,5 +245,49 @@ namespace GamexService.Implement
             );
             return upcomingSurveyList.ToList();
         }
+
+        public UpcomingSurveyDetailViewModel GetUpcomingSurveyDetail(string surveyId)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(surveyId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return _surveyRepository.GetSingleProjection(
+                s => new UpcomingSurveyDetailViewModel
+                {
+                    Description = s.Description,
+                    Title = s.Title,
+                    SurveyId = s.SurveyId,
+                }, 
+                s => s.SurveyId == id
+                );
+        }
+
+        public bool UpdateSurveyInfo(UpcomingSurveyDetailViewModel model)
+        {
+            var survey = _surveyRepository.GetById(model.SurveyId);
+            if (survey == null)
+            {
+                return false;
+            }
+            _surveyRepository.Update(survey);
+            survey.Title = model.Title;
+            survey.Description = model.Description;
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result >= 0;
+        }
     }
 }

@@ -646,6 +646,8 @@
     <Content Include="Views\Company\UpcomingExhibitionDetail.cshtml" />
     <Content Include="Views\Company\CreateSurvey.cshtml" />
     <Content Include="Views\Company\UpcomingSurvey.cshtml" />
+    <Content Include="Views\Company\UpcomingSurveyDetail.cshtml" />
+    <Content Include="Views\Company\CreateQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

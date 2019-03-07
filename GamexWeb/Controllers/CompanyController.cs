@@ -364,7 +364,6 @@ namespace GamexWeb.Controllers
             var model = new CreateSurveyViewModel();
             model.ExhibitionId = id;
             ModelState.Clear();
-            
             return View(model);
         }
 
@@ -416,6 +415,51 @@ namespace GamexWeb.Controllers
             var data = _companyService.LoadUpcomingSurveyDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId(), id);
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpcomingSurveyDetail(string id, string exhibitionId)
+        {
+            var survey = _companyService.GetUpcomingSurveyDetail(id);
+            if (survey == null)
+            {
+                return RedirectToAction("UpcomingSurvey", "Company", exhibitionId);
+            }
+            survey.ExhibitionId = exhibitionId;
+            return View(survey);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpdateSurveyInformation(UpcomingSurveyDetailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+            }
+            var updateResult =
+                _companyService.UpdateSurveyInfo(model);
+            if (updateResult)
+            {
+                //update successfully
+                model.IsSuccessful = true;
+                return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+            }
+            model.IsSuccessful = false;
+            return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateQuestion(object id)
+        {
+            return View();
         }
     }
 }

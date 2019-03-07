@@ -20,5 +20,7 @@ namespace GamexService.Interface
         bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId);
 
         List<UpcomingSurveyViewModel> LoadUpcomingSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId);
+        UpcomingSurveyDetailViewModel GetUpcomingSurveyDetail(string surveyId);
+        bool UpdateSurveyInfo(UpcomingSurveyDetailViewModel model);
     }
 }

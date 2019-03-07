@@ -15,10 +15,11 @@ namespace GamexEntity
     public partial class SurveyAnswer
     {
         public int QuestionId { get; set; }
-        public int ProposedAnswerId { get; set; }
+        public Nullable<int> ProposedAnswerId { get; set; }
         public string AccountId { get; set; }
         public int SurveyId { get; set; }
         public string Other { get; set; }
+        public int SurveyAnswerId { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual ProposedAnswer ProposedAnswer { get; set; }

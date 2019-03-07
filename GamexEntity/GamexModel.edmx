@@ -220,16 +220,14 @@
         </EntityType>
         <EntityType Name="SurveyAnswer">
           <Key>
-            <PropertyRef Name="QuestionId" />
-            <PropertyRef Name="ProposedAnswerId" />
-            <PropertyRef Name="AccountId" />
-            <PropertyRef Name="SurveyId" />
+            <PropertyRef Name="SurveyAnswerId" />
           </Key>
           <Property Name="QuestionId" Type="int" Nullable="false" />
-          <Property Name="ProposedAnswerId" Type="int" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="int" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="SurveyId" Type="int" Nullable="false" />
           <Property Name="Other" Type="nvarchar" MaxLength="100" />
+          <Property Name="SurveyAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="SurveyParticipation">
           <Key>
@@ -573,7 +571,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SurveyAnswer_ProposedAnswer">
-          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="0..1" />
           <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProposedAnswer">
@@ -1052,16 +1050,14 @@
         </EntityType>
         <EntityType Name="SurveyAnswer">
           <Key>
-            <PropertyRef Name="QuestionId" />
-            <PropertyRef Name="ProposedAnswerId" />
-            <PropertyRef Name="AccountId" />
-            <PropertyRef Name="SurveyId" />
+            <PropertyRef Name="SurveyAnswerId" />
           </Key>
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="ProposedAnswerId" Type="Int32" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="Int32" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SurveyId" Type="Int32" Nullable="false" />
           <Property Name="Other" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SurveyAnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_SurveyAnswer_AspNetUsers" FromRole="SurveyAnswer" ToRole="AspNetUsers" />
           <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_SurveyAnswer_ProposedAnswer" FromRole="SurveyAnswer" ToRole="ProposedAnswer" />
           <NavigationProperty Name="Question" Relationship="Self.FK_SurveyAnswer_Question" FromRole="SurveyAnswer" ToRole="Question" />
@@ -1371,7 +1367,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SurveyAnswer_ProposedAnswer">
-          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="0..1" />
           <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProposedAnswer">
@@ -1825,6 +1821,7 @@
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
                 <ScalarProperty Name="Other" ColumnName="Other" />
+                <ScalarProperty Name="SurveyAnswerId" ColumnName="SurveyAnswerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
