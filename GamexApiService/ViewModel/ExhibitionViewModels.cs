@@ -19,4 +19,12 @@ namespace GamexApiService.ViewModel {
         public string Lat { get; set; }
         public string Lng { get; set; }
     }
+
+    public class ExhibitionShortViewModel {
+        public string ExhibitionId { get; set; }
+        public string Name { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public string Logo { get; set; }
+    }
 }

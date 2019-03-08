@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using GamexEntity;
+using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 using Microsoft.Ajax.Utilities;
 
 namespace GamexApi.Controllers {
@@ -47,6 +49,18 @@ namespace GamexApi.Controllers {
 
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        // Get api/Account
+        public async Task<AccountViewModel> GetAccount() {
+            var userId = User.Identity.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            return new AccountViewModel {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Roles = user.Roles.ToList().Select(r => r.RoleId.ToString()) as IList<string>
+            };
+        }
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -295,14 +309,18 @@ namespace GamexApi.Controllers {
                 LastName = model.LastName,
                 Point = 0,
                 TotalPointEarned = 0,
-                // TODO: move 0 to num DEFAULT_POINT_
-                StatusId = 2
-                // TODO: Get account status for ACTIVE
+                StatusId = (int)AccountStatusEnum.Active
             };
-            
+
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded) {
+                return GetErrorResult(result);
+            }
+
+            var currentUser = await _userManager.FindAsync(model.Username, model.Password);
+            var addRoleResult = await _userManager.AddToRoleAsync(currentUser.Id, AccountRole.User);
+            if (!addRoleResult.Succeeded) {
                 return GetErrorResult(result);
             }
 
@@ -328,20 +346,28 @@ namespace GamexApi.Controllers {
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Point = model.Point,
-                TotalPointEarned = model.TotalPointEarned,
-                StatusId = 2
+                Point = 0,
+                TotalPointEarned = 0,
+                StatusId = (int)AccountStatusEnum.Active
             };
 
             IdentityResult result = await _userManager.CreateAsync(user);
             if (!result.Succeeded) {
                 return GetErrorResult(result);
+
             }
 
             result = await _userManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded) {
                 return GetErrorResult(result);
             }
+
+            var currentUser = await _userManager.FindAsync(info.Login);
+            var addRoleResult = await _userManager.AddToRoleAsync(currentUser.Id, AccountRole.User);
+            if (!addRoleResult.Succeeded) {
+                return GetErrorResult(result);
+            }
+
             return Ok();
         }
 

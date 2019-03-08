@@ -21,7 +21,7 @@ namespace GamexApi.Controllers
 
         // GET /exhibition
         [Route("exhibition")]
-        public List<ExhibitionViewModel> GetExhibitions()
+        public List<ExhibitionShortViewModel> GetExhibitions()
         {
             var exhibitionList = _exhibitionService.GetExhibitions();
             return exhibitionList;

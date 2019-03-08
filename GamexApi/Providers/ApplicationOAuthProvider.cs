@@ -39,7 +39,7 @@ namespace GamexApi.Providers
                     context.SetError("invalid_grant", "The user name or password is incorrect.");
                     return;
                 }
-            }
+            } 
             // TODO: if user.role != "user" -> deny access
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                 OAuthDefaults.AuthenticationType);
