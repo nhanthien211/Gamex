@@ -429,7 +429,7 @@ namespace GamexApi.Controllers {
             if (!result.Succeeded) {
                 if (result.Errors != null) {
                     foreach (string error in result.Errors) {
-                        ModelState.AddModelError("", error);
+                        ModelState.AddModelError("RegisterError", error);
                     }
                 }
 
