@@ -1,4 +1,5 @@
-﻿using GamexApiService.Interface;
+﻿using System;
+using GamexApiService.Interface;
 using GamexApiService.ViewModel;
 using System.Collections.Generic;
 using System.Web.Http;

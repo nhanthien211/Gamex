@@ -13,7 +13,8 @@ namespace GamexApi.Identity
             this.UserValidator = new UserValidator<ApplicationUser>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                // allow null email
+                RequireUniqueEmail = false
             };
 
             // Configure validation logic for passwords
