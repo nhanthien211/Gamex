@@ -1,11 +1,25 @@
 ﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
 
 @{
-    ViewBag.UpcomingExhibition = "active";
+    ViewBag.JoinExhibition = "active";
     ViewBag.Exhibition = "active";
     ViewBag.ViewExhibitionDropDownShow = "show";
     ViewBag.Title = "View Detail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+
+    @if (Model != null && Model.IsSuccessful.HasValue)
+    {
+        if (!Model.IsSuccessful.Value)
+        {
+            <script type="text/javascript">
+                $('#failModal').modal();
+            </script>
+        }
+    }
 }
 
 <div class="container-fluid">
@@ -43,10 +57,10 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.StartDate)
                         @Html.TextBoxFor(m => m.StartDate, new
-                       {
-                           @class = "form-control",
-                           @readonly = true
-                       })
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
                     </div>
                 </div>
 
@@ -77,11 +91,44 @@
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     @Html.LabelFor(m => m.Description)
                     @Html.TextAreaFor(m => m.Description, new
-                   {
-                       @class = "form-control",
-                       @readonly = true
-                   })
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
                 </div>
+            </div>
+            <hr />
+
+            @using (Html.BeginForm("JoinExhibition", "Company", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.ExhibitionId)
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-lg-12">
+                        <button type="submit" class="btn btn-outline-success">Join</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="field-validation-error">
+                    <p class="text-center">Submit unsuccessfully</p>
+                    <p class="text-center">Please try again later</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>

@@ -24,7 +24,6 @@ namespace GamexEntity
         public int QuestionId { get; set; }
         public string Content { get; set; }
         public int SurveyId { get; set; }
-        public int QuestionNo { get; set; }
         public int QuestionType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

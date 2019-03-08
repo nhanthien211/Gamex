@@ -48,6 +48,7 @@
     <Reference Include="Firebase.Storage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FirebaseStorage.net.1.0.3\lib\netstandard1.1\Firebase.Storage.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
@@ -266,7 +267,10 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\montserrat\OFL.txt" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\add.question.util.js" />
+    <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
+    <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
     <Content Include="Scripts\tempusdominus-datetimepicker.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -639,10 +643,16 @@
     <Content Include="Scripts\ckeditor\plugins\wsc\README.md" />
     <Content Include="Scripts\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="Properties\PublishProfiles\GamexWeb - Web Deploy.pubxml" />
-    <Content Include="Views\Company\ViewNewExhibition.cshtml" />
-    <Content Include="Views\Company\ViewNewExhibitionDetail.cshtml" />
-    <Content Include="Views\Company\ViewUpcomingExhibition.cshtml" />
-    <Content Include="Views\Company\ViewUpcomingExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\NewExhibition.cshtml" />
+    <Content Include="Views\Company\NewExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\UpcomingExhibition.cshtml" />
+    <Content Include="Views\Company\UpcomingExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\CreateSurvey.cshtml" />
+    <Content Include="Views\Company\UpcomingSurvey.cshtml" />
+    <Content Include="Views\Company\UpcomingSurveyDetail.cshtml" />
+    <Content Include="Views\Company\CreateQuestion.cshtml" />
+    <Content Include="Views\Partial\_TextQuestion.cshtml" />
+    <Content Include="Views\Partial\_MultipleChoice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

@@ -1,23 +1,55 @@
 ﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
 
 @{
-    ViewBag.JoinExhibition = "active";
+    ViewBag.UpcomingExhibition = "active";
     ViewBag.Exhibition = "active";
     ViewBag.ViewExhibitionDropDownShow = "show";
     ViewBag.Title = "View Detail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+
+@section scripts
+{
+
+    @if (Model != null && Model.IsSuccessful.HasValue)
+    {
+        if (!Model.IsSuccessful.Value)
+        {
+            <script type="text/javascript">
+                $('#failModal').modal();
+            </script>
+        }
+    }
+}
+
 <div class="container-fluid">
     <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active">Exhibition Detail</li>
-    </ol>
+
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Company", new {id = Model.ExhibitionId}, new { @class = "nav-link" })
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarSurvey" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Survey
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarSurvey">
+                        @Html.ActionLink("Create Survey", "CreateSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Manage Survey", "UpcomingSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-fw fa-sliders-h menu-icon"></i> Exhibition Detail
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="display: inline;"></i> Exhibition Detail
         </div>
         <div class="card-body">
 
@@ -77,26 +109,45 @@
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     @Html.LabelFor(m => m.Description)
                     @Html.TextAreaFor(m => m.Description, new
-                   {
-                       @class = "form-control",
-                       @readonly = true
-                   })
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
                 </div>
             </div>
+
             <hr />
-            
-            @using (Html.BeginForm("JoinExhibition", "Company", FormMethod.Post))
+            @using (Html.BeginForm("QuitExhibition", "Company", FormMethod.Post))
             {
                 @Html.HiddenFor(m => m.ExhibitionId)
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-lg-12">
-                        <button type="submit" class="btn btn-outline-success">Join</button>
+                        <button type="submit" class="btn btn-outline-danger">Quit</button>
                     </div>
                 </div>
             }
-            
-
         </div>
     </div>
 </div>
 
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="field-validation-error">
+                    <p class="text-center">Submit unsuccessfully</p>
+                    <p class="text-center">Please try again later</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

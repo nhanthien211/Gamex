@@ -209,7 +209,7 @@ namespace GamexWeb.Controllers
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [Route("Company/Exhibition/New")]
-        public ActionResult ViewNewExhibition()
+        public ActionResult NewExhibition()
         {
             return View();
         }
@@ -235,19 +235,24 @@ namespace GamexWeb.Controllers
         [FilterConfig.NoDirectAccess]
         [Route("Company/Exhibition/View/{id}")]
         [Authorize(Roles = AccountRole.Company)]
-        public ActionResult ViewNewExhibitionDetail(string id)
+        public ActionResult NewExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
             var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
 
             if (join)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
             }
             var detail = _companyService.GetExhibitionDetail(id);
             if (detail == null)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
+            }
+
+            if (TempData["RESULT"] != null)
+            {
+                detail.IsSuccessful = false;
             }
             return View(detail);
         }
@@ -257,11 +262,12 @@ namespace GamexWeb.Controllers
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult JoinExhibition(string exhibitionId)
         {
+            //TODO: check if exhibitionId modify and exhibition is Expired
             var join = _companyService.IsCompanyHasJoinExhibition(exhibitionId, User.Identity.GetCompanyId());
 
             if (join)
             {
-                return RedirectToAction("ViewNewExhibition", "Company");
+                return RedirectToAction("NewExhibition", "Company");
             }
             //hasn't joined yet
 
@@ -269,15 +275,16 @@ namespace GamexWeb.Controllers
             if (joinResult)
             {
                 //successfully joined, redirect to manage my exhibition page
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
-            return RedirectToAction("ViewNewExhibitionDetail", "Company", exhibitionId);
+            TempData["RESULT"] = false;
+            return RedirectToAction("NewExhibitionDetail", "Company", exhibitionId);
         }
 
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [Route("Company/Exhibition/Upcoming")]
-        public ActionResult ViewUpcomingExhibition()
+        public ActionResult UpcomingExhibition()
         {
             return View();
         }
@@ -301,23 +308,192 @@ namespace GamexWeb.Controllers
 
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
+        [FilterConfig.NoDirectAccess]
         [Route("Company/Exhibition/{id}")]
-        public ActionResult ViewUpcomingExhibitionDetail(string id)
+        public ActionResult UpcomingExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
             var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
 
             if (!join)
             {
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
             }
             var detail = _companyService.GetExhibitionDetail(id);
             if (detail == null)
             {
-                return RedirectToAction("ViewUpcomingExhibition", "Company");
+                return RedirectToAction("UpcomingExhibition", "Company");
+            }
+
+            if (TempData["RESULT"] != null)
+            {
+                detail.IsSuccessful = false;
             }
             return View(detail);
             
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/Quit/")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult QuitExhibition(string exhibitionId)
+        {
+            //TODO: check if exhibitionId modify and exhibition is ongoing
+            var join = _companyService.IsCompanyHasJoinExhibition(exhibitionId, User.Identity.GetCompanyId());
+
+            if (!join)
+            {
+                return RedirectToAction("UpcomingExhibition", "Company");
+            }
+            var quitResult = _companyService.QuitExhibition(exhibitionId, User.Identity.GetCompanyId());
+            if (quitResult)
+            {
+                //successfully quit, redirect to manage my exhibition page
+                return RedirectToAction("UpcomingExhibition", "Company");
+            }
+            TempData["RESULT"] = false;
+            return RedirectToAction("UpcomingExhibitionDetail", "Company", exhibitionId);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{id}/Survey/Create")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateSurvey(string id)
+        {
+            var model = new CreateSurveyViewModel();
+            model.ExhibitionId = id;
+            ModelState.Clear();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{id}/Survey/Create")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateSurvey(CreateSurveyViewModel model)
+        {
+            //TODO: check if exhibitionId modify and exhibition is ongoing or expired
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var addResult =
+                _companyService.CreateSurvey(model, User.Identity.GetCompanyId(), User.Identity.GetUserId());
+            if (addResult)
+            {
+                //add successfully
+                model.IsSuccessful = true;
+                model.Title = model.Description = "";
+                ModelState.Clear();
+                return View(model);
+            }
+            model.IsSuccessful = false;
+            return View(model);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpcomingSurvey(string id)
+        {
+            return View((object)id);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadUpcomingSurveyList(string id)
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadUpcomingSurveyDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId(), id);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpcomingSurveyDetail(string id, string exhibitionId)
+        {
+            var survey = _companyService.GetUpcomingSurveyDetail(id);
+            if (survey == null)
+            {
+                return RedirectToAction("UpcomingSurvey", "Company", exhibitionId);
+            }
+            survey.ExhibitionId = exhibitionId;
+            return View(survey);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpdateSurveyInformation(UpcomingSurveyDetailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+            }
+            var updateResult =
+                _companyService.UpdateSurveyInfo(model);
+            if (updateResult)
+            {
+                //update successfully
+                model.IsSuccessful = true;
+                return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+            }
+            model.IsSuccessful = false;
+            return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateQuestion(object id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult CreateQuestion(string questionTitle, string[] answers, string id, string questionType)
+        {
+            
+            var isValidParams = _companyService.ValidateQuestionCreateField(questionType, id, questionTitle, answers);
+            if (!isValidParams)
+            {
+                ViewBag.IsSuccessful = false;
+                return View();
+            }
+            //TODO: add question
+            ViewBag.IsSuccessful = _companyService.AddQuestionAndAnswer(questionTitle, answers, id, questionType);
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/TextQuestion")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult TextQuestionPartialView()
+        {
+            return PartialView("~/Views/Partial/_TextQuestion.cshtml");
+        }
+
+        [HttpPost]
+        [Route("Company/MultipleChoice")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult MultipleChoicePartialView()
+        {
+            return PartialView("~/Views/Partial/_MultipleChoice.cshtml");
         }
     }
 }

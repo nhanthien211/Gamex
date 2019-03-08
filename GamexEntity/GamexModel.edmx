@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountBookmark">
           <Key>
             <PropertyRef Name="AccountId" />
@@ -179,7 +179,6 @@
           <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Content" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="SurveyId" Type="int" Nullable="false" />
-          <Property Name="QuestionNo" Type="int" Nullable="false" />
           <Property Name="QuestionType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Reward">
@@ -210,7 +209,7 @@
             <PropertyRef Name="SurveyId" />
           </Key>
           <Property Name="SurveyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
           <Property Name="Point" Type="int" Nullable="false" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
@@ -220,16 +219,14 @@
         </EntityType>
         <EntityType Name="SurveyAnswer">
           <Key>
-            <PropertyRef Name="QuestionId" />
-            <PropertyRef Name="ProposedAnswerId" />
-            <PropertyRef Name="AccountId" />
-            <PropertyRef Name="SurveyId" />
+            <PropertyRef Name="SurveyAnswerId" />
           </Key>
           <Property Name="QuestionId" Type="int" Nullable="false" />
-          <Property Name="ProposedAnswerId" Type="int" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="int" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="SurveyId" Type="int" Nullable="false" />
           <Property Name="Other" Type="nvarchar" MaxLength="100" />
+          <Property Name="SurveyAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="SurveyParticipation">
           <Key>
@@ -573,7 +570,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SurveyAnswer_ProposedAnswer">
-          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="0..1" />
           <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProposedAnswer">
@@ -784,7 +781,8 @@
             <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GamexModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -902,7 +900,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Booth1" Type="Int32" Nullable="true" />
+          <Property Name="Booth1" Type="Int32" />
           <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Company" Relationship="Self.FK_Booth_Company" FromRole="Booth" ToRole="Company" />
@@ -997,7 +995,6 @@
           <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Content" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SurveyId" Type="Int32" Nullable="false" />
-          <Property Name="QuestionNo" Type="Int32" Nullable="false" />
           <Property Name="QuestionType" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_ProposedAnswer_Question" FromRole="Question" ToRole="ProposedAnswer" />
           <NavigationProperty Name="Survey" Relationship="Self.FK_Question_Survey" FromRole="Question" ToRole="Survey" />
@@ -1035,7 +1032,7 @@
             <PropertyRef Name="SurveyId" />
           </Key>
           <Property Name="SurveyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Point" Type="Int32" Nullable="false" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
@@ -1051,16 +1048,14 @@
         </EntityType>
         <EntityType Name="SurveyAnswer">
           <Key>
-            <PropertyRef Name="QuestionId" />
-            <PropertyRef Name="ProposedAnswerId" />
-            <PropertyRef Name="AccountId" />
-            <PropertyRef Name="SurveyId" />
+            <PropertyRef Name="SurveyAnswerId" />
           </Key>
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="ProposedAnswerId" Type="Int32" Nullable="false" />
+          <Property Name="ProposedAnswerId" Type="Int32" />
           <Property Name="AccountId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SurveyId" Type="Int32" Nullable="false" />
           <Property Name="Other" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SurveyAnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_SurveyAnswer_AspNetUsers" FromRole="SurveyAnswer" ToRole="AspNetUsers" />
           <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_SurveyAnswer_ProposedAnswer" FromRole="SurveyAnswer" ToRole="ProposedAnswer" />
           <NavigationProperty Name="Question" Relationship="Self.FK_SurveyAnswer_Question" FromRole="SurveyAnswer" ToRole="Question" />
@@ -1370,7 +1365,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SurveyAnswer_ProposedAnswer">
-          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="1" />
+          <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="0..1" />
           <End Role="SurveyAnswer" Type="Self.SurveyAnswer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProposedAnswer">
@@ -1773,7 +1768,6 @@
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
-                <ScalarProperty Name="QuestionNo" ColumnName="QuestionNo" />
                 <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1824,6 +1818,7 @@
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
                 <ScalarProperty Name="Other" ColumnName="Other" />
+                <ScalarProperty Name="SurveyAnswerId" ColumnName="SurveyAnswerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

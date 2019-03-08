@@ -106,14 +106,13 @@
                     </li>
                     <ul class="sidenav-second-level collapse @ViewBag.ViewExhibitionDropDownShow" id="navbarDropdownMenuViewExhibition">
                         <li class="@ViewBag.JoinExhibition">
-                            @Html.ActionLink("Join Exhibition", "ViewNewExhibition", "Company")
+                            @Html.ActionLink("Join Exhibition", "NewExhibition", "Company")
                         </li>
                         <li class="@ViewBag.UpcomingExhibition">
-                            @Html.ActionLink("Upcoming Exhibition", "ViewUpcomingExhibition", "Company")
+                            @Html.ActionLink("Upcoming Exhibition", "UpcomingExhibition", "Company")
                         </li>
                     </ul>
                     <!--End of Manage Exhibition-->
-
                 }
 
                 @if (User.IsInRole(AccountRole.Organizer))

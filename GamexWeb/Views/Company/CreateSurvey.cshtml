@@ -1,0 +1,135 @@
+﻿@model GamexService.ViewModel.CreateSurveyViewModel
+
+@{
+    ViewBag.Title = "Create Survey";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+
+    @if (Model != null && Model.IsSuccessful.HasValue)
+    {
+        if (Model.IsSuccessful.Value)
+        {
+            <script type="text/javascript">
+                $('#successModal').modal();
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                $('#failModal').modal();
+            </script>
+        }
+    }
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Company", new { id = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarSurvey" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Survey
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarSurvey">
+                        @Html.ActionLink("Create Survey", "CreateSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Manage Survey", "UpcomingSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-poll-h menu-icon" style="display: inline;"></i> Create Survey
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("CreateSurvey", "Company", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Title)
+                        @Html.TextBoxFor(m => m.Title, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.TextAreaFor(m => m.Description, new
+                        {
+                            @class = "form-control",
+                            @rows = "10",
+                            @cols = "80"
+                        })
+                        @Html.ValidationMessageFor(m => m.Description)
+                    </div>
+                </div>
+                @Html.TextBoxFor(m => m.ExhibitionId, new
+                {
+                    @type = "hidden"
+                }) 
+                <hr />
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-lg-12">
+                        <button type="submit" class="btn btn-outline-success">Create</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit unsuccessfully</p>
+                <p class="text-center">Please try again later</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

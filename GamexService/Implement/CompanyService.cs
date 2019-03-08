@@ -14,13 +14,22 @@ namespace GamexService.Implement
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Exhibition> _exhibitionRepository;
         private readonly IRepository<Booth> _boothRepository;
+        private readonly IRepository<Survey> _surveyRepository;
+        private readonly IRepository<Question> _questionRepository;
+        private readonly IRepository<ProposedAnswer> _proposedAnswerRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, IRepository<Booth> boothRepository, IUnitOfWork unitOfWork)
+        public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, 
+            IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, 
+            IRepository<Question> questionRepository, IRepository<ProposedAnswer> proposedAnswerRepository,
+            IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _exhibitionRepository = exhibitionRepository;
             _boothRepository = boothRepository;
+            _surveyRepository = surveyRepository;
+            _questionRepository = questionRepository;
+            _proposedAnswerRepository = proposedAnswerRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -122,7 +131,7 @@ namespace GamexService.Implement
                     Address = e.Address,
                     ExhibitionId = e.ExhibitionId
                 },
-                e => e.ExhibitionId == exhibitionId
+                e => e.ExhibitionId == exhibitionId && e.StartDate > DateTime.Now
                 );
         }
 
@@ -174,6 +183,211 @@ namespace GamexService.Implement
                 Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
             }).ToList();
             return result;
+        }
+
+        public bool QuitExhibition(string exhibitionId, string companyId)
+        {
+            var deleteList = _boothRepository.GetList(b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId);
+            foreach (var record in deleteList)
+            {
+                _boothRepository.Delete(record);
+            }
+
+            var surveyList = _surveyRepository.GetList(s => s.ExhibitionId == exhibitionId && s.CompanyId == companyId);
+            foreach (var survey in surveyList)
+            {
+                _surveyRepository.Delete(survey);
+            }
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
+
+        public bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId)
+        {
+            
+            var survey = new Survey
+            {
+                Description = model.Description,
+                Title = model.Title,
+                ExhibitionId = model.ExhibitionId,
+                Point = 100,
+                CompanyId = companyId,
+                AccountId = accountId,
+                IsActive = true
+            };
+            _surveyRepository.Insert(survey);
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
+
+        public List<UpcomingSurveyViewModel> LoadUpcomingSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId)
+        {
+            var upcomingSurveyList = _surveyRepository.GetPagingProjection(
+                e => new UpcomingSurveyViewModel
+                {
+                    ExhibitionId = e.ExhibitionId,                    
+                    SurveyId = e.SurveyId,
+                    SurveyTitle = e.Title
+                },
+                e => e.CompanyId == companyId && e.ExhibitionId == exhibitionId
+                     && e.Title.Contains(searchValue),
+                e => e.Title, sortColumnDirection, take, skip
+            );
+            return upcomingSurveyList.ToList();
+        }
+
+        public UpcomingSurveyDetailViewModel GetUpcomingSurveyDetail(string surveyId)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(surveyId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return _surveyRepository.GetSingleProjection(
+                s => new UpcomingSurveyDetailViewModel
+                {
+                    Description = s.Description,
+                    Title = s.Title,
+                    SurveyId = s.SurveyId,
+                }, 
+                s => s.SurveyId == id
+                );
+        }
+
+        public bool UpdateSurveyInfo(UpcomingSurveyDetailViewModel model)
+        {
+            var survey = _surveyRepository.GetById(model.SurveyId);
+            if (survey == null)
+            {
+                return false;
+            }
+            _surveyRepository.Update(survey);
+            survey.Title = model.Title;
+            survey.Description = model.Description;
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result >= 0;
+        }
+
+        public bool ValidateQuestionCreateField(string questionType, string id, string questionTitle = null, string[] answer = null)
+        {
+            if (string.IsNullOrEmpty(questionTitle))
+            {
+                return false;
+            }
+            if (questionTitle.Length <= 0 || questionTitle.Length > 1000)
+            {
+                return false;
+            }
+            if (answer != null && answer.Length > 0)
+            {
+                foreach (var check in answer)
+                {
+                    if (string.IsNullOrEmpty(check))
+                    {
+                        return false;
+                    }
+                    if (check.Length > 100)
+                    {
+                        return false;
+                    }
+                }
+            }
+            try
+            {
+                int surveyId = Convert.ToInt32(id);
+
+                var survey = _surveyRepository.GetById(surveyId);
+                if (survey == null)
+                {
+                    return false;
+                }
+
+                int type = Convert.ToInt32(questionType);
+                if (type < 1 || type > 3)
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool AddQuestionAndAnswer(string questionTitle, string[] answer, string id, string questionType)
+        {
+            int surveyId = Convert.ToInt32(id);
+            int type = Convert.ToInt32(questionType);
+            var question = new Question
+            {
+                Content = questionTitle,
+                SurveyId = surveyId,
+                QuestionType = type,
+            };
+            _questionRepository.Insert(question);
+            int addQuestion;
+            try
+            {
+                addQuestion = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (addQuestion > 0 && type != (int) QuestionTypeEnum.Text)
+            {
+                foreach (var option in answer)
+                {
+                    var proposedAnswer = new ProposedAnswer
+                    {
+                        Content = option,
+                        QuestionId = question.QuestionId
+                    };
+                    _proposedAnswerRepository.Insert(proposedAnswer);
+                }
+
+                int addAnswer;
+                try
+                {
+                    addAnswer = _unitOfWork.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return addAnswer > 0;
+            }
+            return addQuestion > 0;
         }
     }
 }
