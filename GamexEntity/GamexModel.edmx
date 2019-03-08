@@ -179,7 +179,6 @@
           <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Content" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="SurveyId" Type="int" Nullable="false" />
-          <Property Name="QuestionNo" Type="int" Nullable="false" />
           <Property Name="QuestionType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Reward">
@@ -996,7 +995,6 @@
           <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Content" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SurveyId" Type="Int32" Nullable="false" />
-          <Property Name="QuestionNo" Type="Int32" Nullable="false" />
           <Property Name="QuestionType" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ProposedAnswer" Relationship="Self.FK_ProposedAnswer_Question" FromRole="Question" ToRole="ProposedAnswer" />
           <NavigationProperty Name="Survey" Relationship="Self.FK_Question_Survey" FromRole="Question" ToRole="Survey" />
@@ -1770,7 +1768,6 @@
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
-                <ScalarProperty Name="QuestionNo" ColumnName="QuestionNo" />
                 <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
               </MappingFragment>
             </EntityTypeMapping>

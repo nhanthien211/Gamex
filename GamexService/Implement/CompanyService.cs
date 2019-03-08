@@ -15,15 +15,21 @@ namespace GamexService.Implement
         private readonly IRepository<Exhibition> _exhibitionRepository;
         private readonly IRepository<Booth> _boothRepository;
         private readonly IRepository<Survey> _surveyRepository;
+        private readonly IRepository<Question> _questionRepository;
+        private readonly IRepository<ProposedAnswer> _proposedAnswerRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, 
-            IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, IUnitOfWork unitOfWork)
+            IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, 
+            IRepository<Question> questionRepository, IRepository<ProposedAnswer> proposedAnswerRepository,
+            IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _exhibitionRepository = exhibitionRepository;
             _boothRepository = boothRepository;
             _surveyRepository = surveyRepository;
+            _questionRepository = questionRepository;
+            _proposedAnswerRepository = proposedAnswerRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -288,6 +294,100 @@ namespace GamexService.Implement
                 return false;
             }
             return result >= 0;
+        }
+
+        public bool ValidateQuestionCreateField(string questionType, string id, string questionTitle = null, string[] answer = null)
+        {
+            if (string.IsNullOrEmpty(questionTitle))
+            {
+                return false;
+            }
+            if (questionTitle.Length <= 0 || questionTitle.Length > 1000)
+            {
+                return false;
+            }
+            if (answer != null && answer.Length > 0)
+            {
+                foreach (var check in answer)
+                {
+                    if (string.IsNullOrEmpty(check))
+                    {
+                        return false;
+                    }
+                    if (check.Length > 100)
+                    {
+                        return false;
+                    }
+                }
+            }
+            try
+            {
+                int surveyId = Convert.ToInt32(id);
+
+                var survey = _surveyRepository.GetById(surveyId);
+                if (survey == null)
+                {
+                    return false;
+                }
+
+                int type = Convert.ToInt32(questionType);
+                if (type < 1 || type > 3)
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool AddQuestionAndAnswer(string questionTitle, string[] answer, string id, string questionType)
+        {
+            int surveyId = Convert.ToInt32(id);
+            int type = Convert.ToInt32(questionType);
+            var question = new Question
+            {
+                Content = questionTitle,
+                SurveyId = surveyId,
+                QuestionType = type,
+            };
+            _questionRepository.Insert(question);
+            int addQuestion;
+            try
+            {
+                addQuestion = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (addQuestion > 0 && type != (int) QuestionTypeEnum.Text)
+            {
+                foreach (var option in answer)
+                {
+                    var proposedAnswer = new ProposedAnswer
+                    {
+                        Content = option,
+                        QuestionId = question.QuestionId
+                    };
+                    _proposedAnswerRepository.Insert(proposedAnswer);
+                }
+
+                int addAnswer;
+                try
+                {
+                    addAnswer = _unitOfWork.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return addAnswer > 0;
+            }
+            return addQuestion > 0;
         }
     }
 }

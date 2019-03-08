@@ -1,4 +1,5 @@
 ﻿
+
 @{
     ViewBag.Title = "Create Question";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -7,9 +8,9 @@
 @section scripts
 {
 
-    @if (Model != null && Model.IsSuccessful.HasValue)
+    @if (ViewBag.IsSuccessful != null)
     {
-        if (Model.IsSuccessful.Value)
+        if (ViewBag.IsSuccessful)
         {
             <script type="text/javascript">
                 $('#successModal').modal();

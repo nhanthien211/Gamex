@@ -466,15 +466,17 @@ namespace GamexWeb.Controllers
         [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
-        public ActionResult CreateQuestion(string[] answers)
+        public ActionResult CreateQuestion(string questionTitle, string[] answers, string id, string questionType)
         {
-            var result = "";
-            foreach (var answer in answers)
+            
+            var isValidParams = _companyService.ValidateQuestionCreateField(questionType, id, questionTitle, answers);
+            if (!isValidParams)
             {
-                result += answer;
+                ViewBag.IsSuccessful = false;
+                return View();
             }
-
-            return Content(result + " length: " + answers.Length);
+            //TODO: add question
+            ViewBag.IsSuccessful = _companyService.AddQuestionAndAnswer(questionTitle, answers, id, questionType);
             return View();
         }
 
