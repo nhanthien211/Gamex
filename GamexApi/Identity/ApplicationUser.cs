@@ -22,7 +22,7 @@ namespace GamexApi.Identity
             var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
             // Add custom user claims here
             userIdentity.AddClaim(new Claim(CustomClaimTypes.UserFullName, LastName + " " + FirstName));
-            userIdentity.AddClaim(new Claim(CustomClaimTypes.Email, Email));
+            userIdentity.AddClaim(new Claim(CustomClaimTypes.Username, UserName));
 
             return userIdentity;
         }

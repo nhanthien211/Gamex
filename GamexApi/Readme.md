@@ -1,56 +1,106 @@
-﻿Gamex API
+﻿# Gamex API
 
-1. Working endpoints (tested with Postman):
-- POST /api/account/register
-  
-json body:
-```
+## 1. Working endpoints (tested with Postman):
+### Register Local
+
+	`POST /api/account/`
+content-type: `application/json`
+```json
 {
-  "Email": "user02@gmail.com",
+  "Username": "user02",
+  "Email": "user02@gmail.com", //allow null
   "Password": "1qazXSW@",
   "ConfirmPassword": "1qazXSW@",
   "FirstName": "Bill",
-  "LastName": "Gates",
-  "Point": 0,
-  "TotalPointEarned": 0
+  "LastName": "Gates"
 }
 ```
 
-- GET /token
+### Login - get access token
+	
+	`GET /token`
 
-body: x-www-form-urlencoded
+content-type: `x-www-form-urlencoded`
 ```
 grant_type:password
-username:user02@gmail.com
+username:user02
 password:1qazXSW@
 ```
 
-response:
+*response*:
 ```
 {
-    "access_token": "V1s1RToqK9-6D0YEeABnHafrbFWXd5lXiXOG4ZGdv-_jK37DMZ9xEh7GiFTDwtDQNJw_CcTexwR5nFvBIZW9iKpWDT2zeZiAZQWWFQqaFfkTKtgJPnbCn599KBqBQO2acgOVXHYLFYv_1n6jHvsmQ-Afj1gh6c9o8McRZRao49VephIxUNzqkx5UVAg7PWQcGXgWuDbQMBcikdn6Epr-CAm3XcWft-arxvy749p1pttFvtr1rvC4dDKhPvP-VT6bDd5Bjo3ky7bZHWAI4ZhH6f8kCUfSyWgEIvorlF86otdu5g3pF3EsFS3jYAFccfCfM573cKLfnBM187PCgVjHy-3xNzX80j1SuGrH03dKPxqDEGFdcS9kxCKkX7VdYaoTKW2n-MGFTBdlXQ8WaJEYUfy79YOkqFgnagnZStJ1b7kIyptm2XzdUiIXvHRUsiZV5EosnsCvv0LU3Dlz_n4fUw3G8rjisaeswikzQB52VJR2xRXuw0Wf0CpejbUD4mt3",
+    "access_token": "<access token string>",
     "token_type": "bearer",
     "expires_in": 1209599,
-    "userName": "user02@gmail.com",
+    "userName": "user02",
     ".issued": "Mon, 25 Feb 2019 13:50:02 GMT",
     ".expires": "Mon, 11 Mar 2019 13:50:02 GMT"
 }
 ```
 
-note: `access_token`'s expire time is 10 day. Considering apply `refresh_token` and reduce `access_token`'s expire time
+*Note*: `access_token`'s expire time is 10 day. Considering apply `refresh_token` and reduce `access_token`'s expire time
 
-- GET /api/account/userinfo
+### Get user info
 
-header:
+	`GET /api/account/userinfo`
+
+*header*:
 ```
-authorization: bearer <access_token>
+authorization: Bearer <access_token>
 ```
 
-response:
+*response*:
 ```
 {
-    "email": "user02@gmail.com",
+    "email": "user02",
     "hasRegistered": true,
     "loginProvider": null
 }
 ```
+
+### Register External
+
+#### Step 1. Get external providers
+	`GET /api/Account/ExternalLogins?returnUrl=%2F&generateState=true`
+*response*
+```json
+[
+    {
+        "name": "Facebook",
+        "url": "/api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44319%2F&state=IAYuLNJGOag1hFv-hX6FWXcvvV5fsLlEcHoghybSUnU1",
+        "state": "IAYuLNJGOag1hFv-hX6FWXcvvV5fsLlEcHoghybSUnU1"
+    }
+]
+```
+#### Step 2. Access url in the response above
+	`GET aboveResponse.url`
+- You will receive a web view for Facebook login.
+- After login successfully and approve access data, you will be redirected back to the app with the following info:
+
+`https://localhost:44319/#access_token=SO-YuP6ERrmbPnRWCBcANs8cN7IVaBn4y9rT4Ho1tgghYDht0flLh_QmrndG_9oj5aV_2_MctwYeFIK4A59dF9QAXoI49NOSy-uLuAzjyYKChepN56Hre_DXE5keffDw1Fn5q6pzLH6yL5UtKPc9i_Mggv0sbwrQnIWIiB9X8AS4LeuYyPxPJUJe2r5LY7SyyE1zlg8V5MFJadYwTyv7mcM71QIH6Uvm9jzUm3kHFWk2F3xpMPVbYwHHZcBWmMbpLZ72j7JZQPW1DLAvMRs-ZNviYiYd40E4-tkNBdmxYXE55yeolpqelzr5yN4S35STLmEmOdf729RTbSjMp1j8cYTCyCJHPoB6S0sWMSON3Vw&token_type=bearer&expires_in=864000&state=Bbn88C6rMCxKKRSGz1aHUpCxSIa6PVEp4k__-FbI64E1`
+- Extract the access_token, you can use it to get user info
+- If this account has registered, the `.AspNet.Cookies` is set and we done.
+- Else, only the `.AspNet.ExternalCookie` is set, and need to be registered.
+#### Step 3. Register External
+```
+POST /api/Account/RegisterExternal
+authorization: Bearer <access token from url above>
+content-type: application/json
+
+{
+	"Username": "johnwick",
+	"Email": "john_wick@gmail.com",
+	"FirstName": "John",
+	"LastName": "Wick"
+}
+```
+*Important: POST with .AspNet.ExternalCookie cookie. Don't know if the cookie is automatic added or not. Try sending without explicitly adding cookie first. Good luck :v*
+
+*Response*: `200 OK`
+User now has registered a local account
+
+#### Step 4. Get access token
+	`GET api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44319%2F	
+*Note: Send with `.AspNet.Cookies` cookie*
+We will get a url as step 2 above, which contains an `access_token`. Use this token to access authorized resources.

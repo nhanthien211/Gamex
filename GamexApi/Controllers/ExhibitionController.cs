@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace GamexApi.Controllers
 {
-//    [Authorize]
+    //    [Authorize]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api")]
     public class ExhibitionController : ApiController
