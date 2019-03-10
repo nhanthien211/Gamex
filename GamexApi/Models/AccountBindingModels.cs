@@ -55,6 +55,11 @@ namespace GamexApi.Models
         [Required]
         public string LastName { get; set; }
 
+        [Required]
+        public int Point { get; set; }
+
+        [Required]
+        public int TotalPointEarned { get; set; }
     }
 
     public class RegisterExternalBindingModel
@@ -62,12 +67,6 @@ namespace GamexApi.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
-
-        [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
     }
 
     public class RemoveLoginBindingModel

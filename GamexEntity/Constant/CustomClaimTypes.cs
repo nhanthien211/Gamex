@@ -11,7 +11,5 @@ namespace GamexEntity.Constant
         public const string UserFullName = "FullName";
         public const string Email = "Email";
         public const string CompanyId = "CompanyId";
-        public const string FirstName = "FirstName";
-        public const string LastName = "LastName";
     }
 }

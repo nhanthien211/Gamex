@@ -2,11 +2,10 @@
 using GamexApiService.ViewModel;
 using System.Collections.Generic;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Controllers
 {
-    
+//    [Authorize]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api")]
     public class ExhibitionController : ApiController
@@ -20,8 +19,6 @@ namespace GamexApi.Controllers
         }
 
         // GET /exhibition
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("exhibition")]
         public List<ExhibitionViewModel> GetExhibitions()
         {
