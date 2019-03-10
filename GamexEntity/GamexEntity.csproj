@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Constant\CustomClaimTypes.cs" />
     <Compile Include="Constant\AccountRole.cs" />
+    <Compile Include="Constant\ExhibitionTypes.cs" />
     <Compile Include="Enumeration\AccountStatusEnum.cs" />
     <Compile Include="Enumeration\CompanyStatusEnum.cs" />
     <Compile Include="Enumeration\QuestionTypeEnum.cs" />

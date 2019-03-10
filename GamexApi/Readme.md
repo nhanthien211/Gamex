@@ -104,3 +104,14 @@ User now has registered a local account
 	`GET api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44319%2F	
 *Note: Send with `.AspNet.Cookies` cookie*
 We will get a url as step 2 above, which contains an `access_token`. Use this token to access authorized resources.
+
+## 2. Exhibition
+`GET /api/exhibition?id=<id>`
+
+`GET /api/exhibitions?type=<type>&take=<take>&skip=<skip>`
+
+    `type` = "ongoing", "upcoming", "near-you". Default to "ongoing". "near-you" not implemented yet.
+    
+    `take` default to 5
+
+    `skip` default to 0
