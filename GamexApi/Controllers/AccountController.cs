@@ -16,6 +16,9 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using GamexApi.Utilities;
+using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 
 namespace GamexApi.Controllers
 {
@@ -56,10 +59,11 @@ namespace GamexApi.Controllers
         public UserInfoViewModel GetUserInfo()
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
             return new UserInfoViewModel
             {
-                Email = User.Identity.GetUserName(),
+                Email = User.Identity.GetEmail(),
+                FirstName = User.Identity.GetFirstName(),
+                LastName = User.Identity.GetLastName(),
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
@@ -69,7 +73,7 @@ namespace GamexApi.Controllers
         [Route("Logout")]
         public IHttpActionResult Logout()
         {
-            _authenticationManager.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+            _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
             return Ok();
         }
 
@@ -148,7 +152,6 @@ namespace GamexApi.Controllers
             {
                 return GetErrorResult(result);
             }
-
             return Ok();
         }
 
@@ -215,7 +218,6 @@ namespace GamexApi.Controllers
             {
                 return GetErrorResult(result);
             }
-
             return Ok();
         }
 
@@ -241,36 +243,26 @@ namespace GamexApi.Controllers
             if (!string.IsNullOrWhiteSpace(redirectUriValidationResult)) {
                 return BadRequest(redirectUriValidationResult);
             }
-
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
             if (externalLogin == null)
             {
                 return InternalServerError();
             }
-
             if (externalLogin.LoginProvider != provider)
             {
-                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalBearer);
                 return new ChallengeResult(provider, this);
             }
 
-            ApplicationUser user = await _userManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
-                externalLogin.ProviderKey));
-
+            var externalLoginInfo = new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey);
+            ApplicationUser user = await _userManager.FindAsync(externalLoginInfo);
             bool hasRegistered = user != null;
-
             if (hasRegistered)
             {
-                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(_userManager,
+                _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(_userManager,
                     OAuthDefaults.AuthenticationType);
-                ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(_userManager,
-                    CookieAuthenticationDefaults.AuthenticationType);
-
-                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
-                _authenticationManager.SignIn(properties, oAuthIdentity, cookieIdentity);
+                _authenticationManager.SignIn(oAuthIdentity);
             }
             else
             {
@@ -318,7 +310,6 @@ namespace GamexApi.Controllers
                 };
                 logins.Add(login);
             }
-
             return logins;
         }
 
@@ -331,24 +322,26 @@ namespace GamexApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var user = new ApplicationUser() {
                 UserName = model.Email, 
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Point = model.Point,
-                TotalPointEarned = model.TotalPointEarned
+                Point = 0,
+                TotalPointEarned = 0,
+                StatusId = (int) AccountStatusEnum.Active
             };
-            user.StatusId = 2;
-
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
-
+            result = _userManager.AddToRole(user.Id, AccountRole.User);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
             return Ok();
         }
 
@@ -356,28 +349,34 @@ namespace GamexApi.Controllers
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
+        public async Task<IHttpActionResult> RegisterExternal()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var info = await _authenticationManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return InternalServerError();
             }
-
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await _userManager.CreateAsync(user);
-            if (!result.Succeeded)
+            var user = _userManager.FindByEmail(info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email));
+            if (user == null)
             {
-                return GetErrorResult(result);
+                user = new ApplicationUser
+                {
+                    FirstName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.FirstName),
+                    LastName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.LastName),
+                    Email = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email),
+                    UserName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email),
+                    Point = 0,
+                    TotalPointEarned = 0,
+                    StatusId = (int) AccountStatusEnum.Active
+                };
+                var addResult = await _userManager.CreateAsync(user);
+                if (!addResult.Succeeded)
+                {
+                    return GetErrorResult(addResult);
+                }
+                _userManager.AddToRole(user.Id, AccountRole.User);
             }
-
-            result = await _userManager.AddLoginAsync(user.Id, info.Login);
+            var result = await _userManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result); 
@@ -470,16 +469,23 @@ namespace GamexApi.Controllers
             public string ProviderKey { get; set; }
             public string UserName { get; set; }
             public string ExternalAccessToken { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
 
             public IList<Claim> GetClaims()
             {
                 IList<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, ProviderKey, null, LoginProvider));
+//                if (UserName != null)
+//                {
+//                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
+//                }
+                claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.FirstName, FirstName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.LastName, LastName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.Email, Email, null, LoginProvider));
 
-                if (UserName != null)
-                {
-                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
-                }
 
                 return claims;
             }
@@ -508,7 +514,10 @@ namespace GamexApi.Controllers
                 {
                     LoginProvider = providerKeyClaim.Issuer,
                     ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name),
+                    UserName = identity.FindFirstValue(CustomClaimTypes.Email),
+                    Email = identity.FindFirstValue(CustomClaimTypes.Email),
+                    FirstName = identity.FindFirstValue(CustomClaimTypes.FirstName),
+                    LastName = identity.FindFirstValue(CustomClaimTypes.LastName),
                     ExternalAccessToken = identity.FindFirstValue("ExternalAccessToken")
                 };
             }

@@ -276,6 +276,7 @@
     <Compile Include="Services\ContactRepository.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\IdentityExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
