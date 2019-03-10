@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Providers
@@ -25,31 +27,39 @@ namespace GamexApi.Providers
             _publicClientId = publicClientId;
         }
 
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context) {
+        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        {
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] {""});
 
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
-
-            ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
-
-            if (user == null) {
-                // client may passed an email instead of username to get token
-                user = await userManager.FindByEmailAsync(context.UserName);
-                if (user == null) {
+            ApplicationUser user = await userManager.FindByEmailAsync(context.UserName);
+            if (user == null)
+            {
+                user = await userManager.FindByNameAsync(context.UserName);
+                if (user == null || !userManager.CheckPassword(user, context.Password))
+                {
                     context.SetError("invalid_grant", "The user name or password is incorrect.");
                     return;
                 }
-            } 
-            // TODO: if user.role != "user" -> deny access
+                if (!userManager.IsInRole(user.Id, AccountRole.User))
+                {
+                    context.SetError("invalid_grant", "The account is not for attendee.");
+                    return;
+                }
+                if (user.StatusId != (int) AccountStatusEnum.Active)
+                {
+                    context.SetError("invalid_grant", "The account is disabled.");
+                    return;
+                }
+            }
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                 OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-                CookieAuthenticationDefaults.AuthenticationType);
-
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+//            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
+//                CookieAuthenticationDefaults.AuthenticationType);
+            AuthenticationProperties properties = CreateProperties(user.LastName + " " + user.FirstName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
-            context.Request.Context.Authentication.SignIn(cookiesIdentity);
+//            context.Request.Context.Authentication.SignIn(oAuthIdentity);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
@@ -88,11 +98,11 @@ namespace GamexApi.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(string fullName)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "fullName", fullName }
             };
             return new AuthenticationProperties(data);
         }

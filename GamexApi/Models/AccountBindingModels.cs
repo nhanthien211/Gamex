@@ -34,7 +34,7 @@ namespace GamexApi.Models
 
     public class RegisterBindingModel
     {
-        //[Required]
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -49,15 +49,12 @@ namespace GamexApi.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required] 
-        [Display(Name = "Username")]
-        public string Username { get; set; }
-
         [Required]
         public string FirstName { get; set; }
 
         [Required]
         public string LastName { get; set; }
+
     }
 
     public class RegisterExternalBindingModel
@@ -66,21 +63,11 @@ namespace GamexApi.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Display(Name = "Username")] 
-        public string Username { get; set; }
-
         [Required]
         public string FirstName { get; set; }
 
         [Required]
         public string LastName { get; set; }
-
-        [Required]
-        public int Point { get; set; }
-
-        [Required]
-        public int TotalPointEarned { get; set; }
-
     }
 
     public class RemoveLoginBindingModel
