@@ -47,7 +47,7 @@ namespace GamexApi
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(10),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
@@ -78,6 +78,21 @@ namespace GamexApi
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+//            ()
+//            {
+//                OnAuthenticated = async context =>
+//                {
+//                    context.Identity.AddClaim(new System.Security.Claims.Claim("ExternalAccessToken", context.AccessToken));
+//                    foreach (var claim in context.User)
+//                    {
+//                        var claimType = string.Format("urn:facebook:{0}", claim.Key);
+//                        string claimValue = claim.Value.ToString();
+//                        if (!context.Identity.HasClaim(claimType, claimValue))
+//                            context.Identity.AddClaim(new System.Security.Claims.Claim(claimType, claimValue, "XmlSchemaString", "Facebook"));
+//                    }
+//
+//                }
+//            }
         }
     }
 }

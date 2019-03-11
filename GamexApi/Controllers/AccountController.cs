@@ -16,16 +16,19 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using GamexApi.Utilities;
 using GamexEntity;
 using GamexEntity.Constant;
 using GamexEntity.Enumeration;
 using Microsoft.Ajax.Utilities;
 
-namespace GamexApi.Controllers {
+namespace GamexApi.Controllers
+{
     [Authorize]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController {
+    public class AccountController : ApiController
+    {
         //Example setup for Identity resource
         private const string LocalLoginProvider = "Local";
         private readonly ApplicationUserManager _userManager;
@@ -33,13 +36,15 @@ namespace GamexApi.Controllers {
         private readonly IAuthenticationManager _authenticationManager;
         private readonly ApplicationRoleManager _roleManager;
 
-        public AccountController() {
+        public AccountController()
+        {
         }
 
-        public AccountController(ApplicationUserManager userManager,
-            ApplicationSignInManager signInManager,
-            IAuthenticationManager authenticationManager,
-            ApplicationRoleManager roleManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat) {
+        public AccountController(ApplicationUserManager userManager, 
+            ApplicationSignInManager signInManager, 
+            IAuthenticationManager authenticationManager, 
+            ApplicationRoleManager roleManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _authenticationManager = authenticationManager;
@@ -65,11 +70,15 @@ namespace GamexApi.Controllers {
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo() {
+        public UserInfoViewModel GetUserInfo()
+        {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-            return new UserInfoViewModel {
-                Email = User.Identity.GetUserName(),
+            return new UserInfoViewModel
+            {
+                Email = User.Identity.GetEmail(),
+                FirstName = User.Identity.GetFirstName(),
+                LastName = User.Identity.GetLastName(),
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
@@ -77,37 +86,45 @@ namespace GamexApi.Controllers {
 
         // POST api/Account/Logout
         [Route("Logout")]
-        public IHttpActionResult Logout() {
-            _authenticationManager.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+        public IHttpActionResult Logout()
+        {
+            _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
             return Ok();
         }
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
         [Route("ManageInfo")]
-        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false) {
+        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
+        {
             IdentityUser user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
 
-            if (user == null) {
+            if (user == null)
+            {
                 return null;
             }
 
             List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-            foreach (IdentityUserLogin linkedAccount in user.Logins) {
-                logins.Add(new UserLoginInfoViewModel {
+            foreach (IdentityUserLogin linkedAccount in user.Logins)
+            {
+                logins.Add(new UserLoginInfoViewModel
+                {
                     LoginProvider = linkedAccount.LoginProvider,
                     ProviderKey = linkedAccount.ProviderKey
                 });
             }
 
-            if (user.PasswordHash != null) {
-                logins.Add(new UserLoginInfoViewModel {
+            if (user.PasswordHash != null)
+            {
+                logins.Add(new UserLoginInfoViewModel
+                {
                     LoginProvider = LocalLoginProvider,
                     ProviderKey = user.UserName,
                 });
             }
 
-            return new ManageInfoViewModel {
+            return new ManageInfoViewModel
+            {
                 LocalLoginProvider = LocalLoginProvider,
                 Email = user.UserName,
                 Logins = logins,
@@ -117,15 +134,18 @@ namespace GamexApi.Controllers {
 
         // POST api/Account/ChangePassword
         [Route("ChangePassword")]
-        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             IdentityResult result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-
-            if (!result.Succeeded) {
+            
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
 
@@ -134,14 +154,17 @@ namespace GamexApi.Controllers {
 
         // POST api/Account/SetPassword
         [Route("SetPassword")]
-        public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             IdentityResult result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
 
-            if (!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
 
@@ -150,8 +173,10 @@ namespace GamexApi.Controllers {
 
         // POST api/Account/AddExternalLogin
         [Route("AddExternalLogin")]
-        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
@@ -161,20 +186,23 @@ namespace GamexApi.Controllers {
 
             if (ticket == null || ticket.Identity == null || (ticket.Properties != null
                 && ticket.Properties.ExpiresUtc.HasValue
-                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow)) {
+                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
+            {
                 return BadRequest("External login failure.");
             }
 
             ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
 
-            if (externalData == null) {
+            if (externalData == null)
+            {
                 return BadRequest("The external login is already associated with an account.");
             }
 
             IdentityResult result = await _userManager.AddLoginAsync(User.Identity.GetUserId(),
                 new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
 
-            if (!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
 
@@ -183,21 +211,27 @@ namespace GamexApi.Controllers {
 
         // POST api/Account/RemoveLogin
         [Route("RemoveLogin")]
-        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             IdentityResult result;
 
-            if (model.LoginProvider == LocalLoginProvider) {
+            if (model.LoginProvider == LocalLoginProvider)
+            {
                 result = await _userManager.RemovePasswordAsync(User.Identity.GetUserId());
-            } else {
+            }
+            else
+            {
                 result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId(),
                     new UserLoginInfo(model.LoginProvider, model.ProviderKey));
             }
 
-            if (!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
 
@@ -212,11 +246,13 @@ namespace GamexApi.Controllers {
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null) {
             string redirectUri = string.Empty;
 
-            if (error != null) {
+            if (error != null)
+            {
                 return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
             }
 
-            if (!User.Identity.IsAuthenticated) {
+            if (!User.Identity.IsAuthenticated)
+            {
                 return new ChallengeResult(provider, this);
             }
 
@@ -227,31 +263,30 @@ namespace GamexApi.Controllers {
 
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-            if (externalLogin == null) {
+            if (externalLogin == null)
+            {
                 return InternalServerError();
             }
 
-            if (externalLogin.LoginProvider != provider) {
-                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            if (externalLogin.LoginProvider != provider)
+            {
+                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalBearer);
                 return new ChallengeResult(provider, this);
             }
 
-            ApplicationUser user = await _userManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
-                externalLogin.ProviderKey));
-
+            var externalLoginInfo = new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey);
+            ApplicationUser user = await _userManager.FindAsync(externalLoginInfo);
             bool hasRegistered = user != null;
 
-            if (hasRegistered) {
-                _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
+            if (hasRegistered)
+            {
+                _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(_userManager,
-                   OAuthDefaults.AuthenticationType);
-                ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(_userManager,
-                    CookieAuthenticationDefaults.AuthenticationType);
-
-                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
-                _authenticationManager.SignIn(properties, oAuthIdentity, cookieIdentity);
-            } else {
+                    OAuthDefaults.AuthenticationType);
+                _authenticationManager.SignIn(oAuthIdentity);
+            }
+            else
+            {
                 IEnumerable<Claim> claims = externalLogin.GetClaims();
                 ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
                 _authenticationManager.SignIn(identity);
@@ -262,23 +297,30 @@ namespace GamexApi.Controllers {
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
         [AllowAnonymous]
         [Route("ExternalLogins")]
-        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false) {
+        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
+        {
             IEnumerable<AuthenticationDescription> descriptions = _authenticationManager.GetExternalAuthenticationTypes();
             List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
 
             string state;
 
-            if (generateState) {
+            if (generateState)
+            {
                 const int strengthInBits = 256;
                 state = RandomOAuthStateGenerator.Generate(strengthInBits);
-            } else {
+            }
+            else
+            {
                 state = null;
             }
 
-            foreach (AuthenticationDescription description in descriptions) {
-                ExternalLoginViewModel login = new ExternalLoginViewModel {
+            foreach (AuthenticationDescription description in descriptions)
+            {
+                ExternalLoginViewModel login = new ExternalLoginViewModel
+                {
                     Name = description.Caption,
-                    Url = Url.Route("ExternalLogin", new {
+                    Url = Url.Route("ExternalLogin", new
+                    {
                         provider = description.AuthenticationType,
                         response_type = "token",
                         client_id = Startup.PublicClientId,
@@ -301,29 +343,26 @@ namespace GamexApi.Controllers {
                 return BadRequest(ModelState);
             }
 
-            ApplicationUser user = null;
-            user = new ApplicationUser() {
-                UserName = model.Username,
+            var user = new ApplicationUser() {
+                UserName = model.Username, 
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Point = 0,
                 TotalPointEarned = 0,
-                StatusId = (int)AccountStatusEnum.Active
+                StatusId = (int) AccountStatusEnum.Active
             };
-
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
-
-            var currentUser = await _userManager.FindAsync(model.Username, model.Password);
-            var addRoleResult = await _userManager.AddToRoleAsync(currentUser.Id, AccountRole.User);
-            if (!addRoleResult.Succeeded) {
+            result = _userManager.AddToRole(user.Id, AccountRole.User);
+            if (!result.Succeeded)
+            {
                 return GetErrorResult(result);
             }
-
             return Ok();
         }
 
@@ -331,43 +370,43 @@ namespace GamexApi.Controllers {
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             var info = await _authenticationManager.GetExternalLoginInfoAsync();
-            if (info == null) {
+            if (info == null)
+            {
                 return InternalServerError();
             }
-
-            var user = new ApplicationUser() {
-                UserName = model.Username,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Point = 0,
-                TotalPointEarned = 0,
-                StatusId = (int)AccountStatusEnum.Active
-            };
-
-            IdentityResult result = await _userManager.CreateAsync(user);
-            if (!result.Succeeded) {
-                return GetErrorResult(result);
-
+            var user = _userManager.FindByEmail(info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email));
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    FirstName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.FirstName),
+                    LastName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.LastName),
+                    Email = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email),
+                    UserName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email),
+                    Point = 0,
+                    TotalPointEarned = 0,
+                    StatusId = (int) AccountStatusEnum.Active
+                };
+                var addResult = await _userManager.CreateAsync(user);
+                if (!addResult.Succeeded)
+                {
+                    return GetErrorResult(addResult);
+                }
+                _userManager.AddToRole(user.Id, AccountRole.User);
             }
-
-            result = await _userManager.AddLoginAsync(user.Id, info.Login);
-            if (!result.Succeeded) {
-                return GetErrorResult(result);
+            var result = await _userManager.AddLoginAsync(user.Id, info.Login);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result); 
             }
-
-            var currentUser = await _userManager.FindAsync(info.Login);
-            var addRoleResult = await _userManager.AddToRoleAsync(currentUser.Id, AccountRole.User);
-            if (!addRoleResult.Succeeded) {
-                return GetErrorResult(result);
-            }
-
             return Ok();
         }
 
@@ -421,19 +460,25 @@ namespace GamexApi.Controllers {
         }
 
 
-        private IHttpActionResult GetErrorResult(IdentityResult result) {
-            if (result == null) {
+        private IHttpActionResult GetErrorResult(IdentityResult result)
+        {
+            if (result == null)
+            {
                 return InternalServerError();
             }
 
-            if (!result.Succeeded) {
-                if (result.Errors != null) {
-                    foreach (string error in result.Errors) {
+            if (!result.Succeeded)
+            {
+                if (result.Errors != null)
+                {
+                    foreach (string error in result.Errors)
+                    {
                         ModelState.AddModelError("RegisterError", error);
                     }
                 }
 
-                if (ModelState.IsValid) {
+                if (ModelState.IsValid)
+                {
                     // No ModelState errors are available to send, so just return an empty BadRequest.
                     return BadRequest();
                 }
@@ -444,55 +489,76 @@ namespace GamexApi.Controllers {
             return null;
         }
 
-        private class ExternalLoginData {
+        private class ExternalLoginData
+        {
             public string LoginProvider { get; set; }
             public string ProviderKey { get; set; }
             public string UserName { get; set; }
             public string ExternalAccessToken { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
 
-            public IList<Claim> GetClaims() {
+            public IList<Claim> GetClaims()
+            {
                 IList<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, ProviderKey, null, LoginProvider));
+//                if (UserName != null)
+//                {
+//                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
+//                }
+                claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.FirstName, FirstName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.LastName, LastName, null, LoginProvider));
+                claims.Add(new Claim(CustomClaimTypes.Email, Email, null, LoginProvider));
 
-                if (UserName != null) {
-                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
-                }
 
                 return claims;
             }
 
-            public static ExternalLoginData FromIdentity(ClaimsIdentity identity) {
-                if (identity == null) {
+            public static ExternalLoginData FromIdentity(ClaimsIdentity identity)
+            {
+                if (identity == null)
+                {
                     return null;
                 }
 
                 Claim providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
 
                 if (providerKeyClaim == null || String.IsNullOrEmpty(providerKeyClaim.Issuer)
-                    || String.IsNullOrEmpty(providerKeyClaim.Value)) {
+                    || String.IsNullOrEmpty(providerKeyClaim.Value))
+                {
                     return null;
                 }
 
-                if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer) {
+                if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
+                {
                     return null;
                 }
 
-                return new ExternalLoginData {
+                return new ExternalLoginData
+                {
                     LoginProvider = providerKeyClaim.Issuer,
                     ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name),
+                    UserName = identity.FindFirstValue(CustomClaimTypes.Email),
+                    Email = identity.FindFirstValue(CustomClaimTypes.Email),
+                    FirstName = identity.FindFirstValue(CustomClaimTypes.FirstName),
+                    LastName = identity.FindFirstValue(CustomClaimTypes.LastName),
                     ExternalAccessToken = identity.FindFirstValue("ExternalAccessToken")
                 };
             }
         }
 
-        private static class RandomOAuthStateGenerator {
+        private static class RandomOAuthStateGenerator
+        {
             private static RandomNumberGenerator _random = new RNGCryptoServiceProvider();
 
-            public static string Generate(int strengthInBits) {
+            public static string Generate(int strengthInBits)
+            {
                 const int bitsPerByte = 8;
 
-                if (strengthInBits % bitsPerByte != 0) {
+                if (strengthInBits % bitsPerByte != 0)
+                {
                     throw new ArgumentException("strengthInBits must be evenly divisible by 8.", "strengthInBits");
                 }
 

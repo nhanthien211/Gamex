@@ -1,5 +1,4 @@
-﻿using System;
-using GamexApiService.Interface;
+﻿using GamexApiService.Interface;
 using GamexApiService.ViewModel;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -7,19 +6,24 @@ using System.Web.Http.Results;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;
 
-namespace GamexApi.Controllers {
-    //    [Authorize]
+namespace GamexApi.Controllers
+{
+//    [Authorize]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api")]
-    public class ExhibitionController : ApiController {
+    public class ExhibitionController : ApiController
+    {
 
         private readonly IExhibitionService _exhibitionService;
 
-        public ExhibitionController(IExhibitionService exhibitionService) {
+        public ExhibitionController(IExhibitionService exhibitionService)
+        {
             _exhibitionService = exhibitionService;
         }
 
         // GET /exhibitions
+	[OverrideAuthentication]
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [HttpGet]
         [Route("exhibitions")]
         public List<ExhibitionShortViewModel> GetExhibitions(string type = ExhibitionTypes.Ongoing,
