@@ -60,9 +60,6 @@ namespace GamexApi.Models
         public string LastName { get; set; }
     }
 
-    }
-
-
     public class RemoveLoginBindingModel
     {
         [Required]

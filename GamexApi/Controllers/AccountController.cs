@@ -1,11 +1,12 @@
 ﻿using GamexApi.Identity;
 using GamexApi.Models;
-using GamexApi.Providers;
 using GamexApi.Results;
+using GamexApi.Utilities;
+using GamexEntity.Constant;
+using GamexEntity.Enumeration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using GamexApi.Utilities;
-using GamexEntity;
-using GamexEntity.Constant;
-using GamexEntity.Enumeration;
-using Microsoft.Ajax.Utilities;
 
 namespace GamexApi.Controllers
 {
@@ -370,13 +366,8 @@ namespace GamexApi.Controllers
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
+        public async Task<IHttpActionResult> RegisterExternal()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var info = await _authenticationManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
