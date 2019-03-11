@@ -98,17 +98,25 @@ namespace GamexApiService.Implement {
             if (exhibition == null) {
                 return null;
             }
+
+            var companies = exhibition.Booth.Select(b => b.Company);
+
             return new ExhibitionViewModel {
                 ExhibitionId = exhibition.ExhibitionId,
                 Name = exhibition.Name,
                 Description = exhibition.Description,
                 Address = exhibition.Address,
-                OrganizerId = exhibition.OrganizerId,
+                //OrganizerId = exhibition.OrganizerId,
                 StartDate = exhibition.StartDate.ToLongDateString(),
                 EndDate = exhibition.EndDate.ToLongDateString(),
-                Lat = exhibition.Location.Latitude?.ToString(),
-                Lng = exhibition.Location.Longitude?.ToString(),
-                Logo = exhibition.Logo
+                //Lat = exhibition.Location.Latitude?.ToString(),
+                //Lng = exhibition.Location.Longitude?.ToString(),
+                Logo = exhibition.Logo,
+                ListCompany = companies.Select(c => new CompanyShortViewModel() {
+                    CompanyId = c.CompanyId,
+                    Name = c.Name,
+                    Logo = c.Logo
+                }).ToList()
             };
         }
     }
