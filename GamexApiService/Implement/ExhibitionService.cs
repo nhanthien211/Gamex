@@ -4,6 +4,7 @@ using GamexApiService.ViewModel;
 using GamexEntity;
 using GamexRepository;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,11 +31,14 @@ namespace GamexApiService.Implement {
             return checkedIn.Select(e => e.ExhibitionId).ToList();
         }
 
-        public List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip, string accountId) {
+        public List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip,
+            string lat, string lng, string accountId) {
+
             Expression<Func<Exhibition, bool>> filter;
             Expression<Func<Exhibition, DateTime>> sort = e => e.StartDate;
             var queryTake = take;
             var querySkip = skip;
+
             switch (type) {
                 case ExhibitionTypes.Ongoing:
                     filter = e =>
@@ -47,7 +51,9 @@ namespace GamexApiService.Implement {
                     filter = e => e.IsActive && e.StartDate > DateTime.Now;
                     break;
                 case ExhibitionTypes.NearYou:
-                    filter = e => e.IsActive;
+                    const double range = 5000; // meters
+                    filter = e =>
+                        e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= range;
                     break;
                 default:
                     filter = e => e.IsActive;

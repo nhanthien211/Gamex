@@ -23,10 +23,10 @@ namespace GamexApi.Controllers {
         [HttpGet]
         [Route("exhibitions")]
         public List<ExhibitionShortViewModel> GetExhibitions(string type = ExhibitionTypes.Ongoing,
-            int take = 5, int skip = 0) {
-
+            int take = 5, int skip = 0, string lat = "0", string lng = "0") {
+            
             var accountId = User.Identity.GetUserId();
-            var exhibitionList = _exhibitionService.GetExhibitions(type, take, skip, accountId);
+            var exhibitionList = _exhibitionService.GetExhibitions(type, take, skip, lat, lng, accountId);
             return exhibitionList;
         }
         

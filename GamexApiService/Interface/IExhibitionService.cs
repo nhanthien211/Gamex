@@ -9,7 +9,7 @@ namespace GamexApiService.Interface
 {
     public interface IExhibitionService
     {
-        List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip, string accountId);
+        List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip, string lat, string lng, string accountId);
         ExhibitionViewModel GetExhibition(string exhibitionId);
     }
 }

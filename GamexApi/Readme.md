@@ -108,10 +108,12 @@ We will get a url as step 2 above, which contains an `access_token`. Use this to
 ## 2. Exhibition
 `GET /api/exhibition?id=<id>`
 
-`GET /api/exhibitions?type=<type>&take=<take>&skip=<skip>`
+`GET /api/exhibitions?type=<type>&take=<take>&skip=<skip>&lat=<lat>&lng=<lng>`
 
-    `type` = "ongoing", "upcoming", "near-you". Default to "ongoing". "near-you" not implemented yet.
+    `type` = "ongoing", "upcoming", "near-you". Default to "ongoing". "near-you" default distance is 5000 meters.
     
     `take` default to 5
 
     `skip` default to 0
+
+    `lat` and `lng` is of your location. 
