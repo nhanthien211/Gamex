@@ -13,9 +13,14 @@ namespace GamexApi.Controllers {
     public class ExhibitionController : ApiController {
 
         private readonly IExhibitionService _exhibitionService;
+        private readonly IActivityHistoryService _activityHistoryService;
 
-        public ExhibitionController(IExhibitionService exhibitionService) {
+        public ExhibitionController(
+            IExhibitionService exhibitionService,
+            IActivityHistoryService activityHistoryService
+            ) {
             _exhibitionService = exhibitionService;
+            _activityHistoryService = activityHistoryService;
         }
 
         // GET /exhibitions
@@ -40,12 +45,17 @@ namespace GamexApi.Controllers {
         public IHttpActionResult CheckInExhibition(ExhibitionCheckInBindingModel model) {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
+            var exhibition = _exhibitionService.GetExhibition(model.Id);
 
             if (result) {
-                // TODO: add account activity for checking in event
+                RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
                 return Ok();
             }
             return BadRequest("Check-in failed! Please ensure the parameters have been passed correctly!");
+        }
+
+        private bool RecordActivity(string accountId, string activity) {
+            return _activityHistoryService.AddActivity(accountId, activity);
         }
     }
 }

@@ -79,6 +79,7 @@ namespace GamexApi
             //End of :Repo + UoW + DBContext registration
 
             container.RegisterType<IExhibitionService, ExhibitionService>();
+            container.RegisterType<IActivityHistoryService, ActivityHistoryService>();
 
             container.RegisterType(typeof(ISecureDataFormat<>), typeof(SecureDataFormat<>));
             container.RegisterType<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>();
