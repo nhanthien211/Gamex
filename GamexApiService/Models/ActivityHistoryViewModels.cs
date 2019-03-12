@@ -1,4 +1,4 @@
-﻿namespace GamexApiService.ViewModel {
+﻿namespace GamexApiService.Models {
     public class ActivityHistoryViewModel {
         public string AccountId { get; set; }
         public string Activity { get; set; }

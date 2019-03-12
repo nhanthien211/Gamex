@@ -1,4 +1,5 @@
 ﻿using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexApiService.ViewModel;
 using GamexEntity;
 using GamexRepository;

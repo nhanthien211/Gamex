@@ -51,12 +51,17 @@
     <Compile Include="Implement\ActivityHistoryService.cs" />
     <Compile Include="Implement\CompanyService.cs" />
     <Compile Include="Implement\ExhibitionService.cs" />
+    <Compile Include="Implement\SurveyService.cs" />
     <Compile Include="Interface\IActivityHistoryService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Interface\IExhibitionService.cs" />
+    <Compile Include="Interface\ISurveyService.cs" />
     <Compile Include="Models\ActivityHistoryViewModels.cs" />
     <Compile Include="Models\CompanyViewModels.cs" />
     <Compile Include="Models\ExhibitionBindingModels.cs" />
+    <Compile Include="Models\ProposedAnswerViewModels.cs" />
+    <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\SurveyViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ExhibitionViewModels.cs" />
   </ItemGroup>

@@ -1,10 +1,10 @@
 ﻿using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexApiService.ViewModel;
-using System.Collections.Generic;
-using System.Web.Http;
-using System.Web.Http.Results;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
+using System.Web.Http;
 
 namespace GamexApi.Controllers {
     [Authorize(Roles = AccountRole.User)]

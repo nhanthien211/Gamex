@@ -8,6 +8,7 @@ using System.Data.Entity.Spatial;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using GamexApiService.Models;
 using GamexEntity.Constant;
 
 namespace GamexApiService.Implement {

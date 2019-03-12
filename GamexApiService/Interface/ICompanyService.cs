@@ -1,4 +1,4 @@
-﻿using GamexApiService.ViewModel;
+﻿using GamexApiService.Models;
 
 namespace GamexApiService.Interface {
     public interface ICompanyService {

@@ -1,4 +1,4 @@
-﻿namespace GamexApiService.ViewModel {
+﻿namespace GamexApiService.Models {
     public class CompanyShortViewModel {
         public string CompanyId { get; set; }
         public string Name { get; set; }

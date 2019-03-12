@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GamexApiService.Interface;
 using System.Web.Http;
+using GamexApiService.Models;
 using GamexApiService.ViewModel;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;

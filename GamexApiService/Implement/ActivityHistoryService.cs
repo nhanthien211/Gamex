@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexApiService.ViewModel;
 using GamexEntity;
 using GamexRepository;
