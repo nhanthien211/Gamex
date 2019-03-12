@@ -3,6 +3,7 @@ using GamexApiService.Models;
 
 namespace GamexApiService.Interface {
     public interface ISurveyService {
-        List<SurveyViewModel> GetSurveys(string exhibitionId, string companyId);
+        List<SurveyShortViewModel> GetSurveys(string exhibitionId, string companyId);
+        SurveyDetailViewModel GetSurvey(int id);
     }
 }

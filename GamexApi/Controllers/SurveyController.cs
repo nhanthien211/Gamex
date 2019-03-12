@@ -16,9 +16,15 @@ namespace GamexApi.Controllers {
         }
 
         [HttpGet]
-        [Route("survey")]
-        public List<SurveyViewModel> GetSurveys(string exhibitionId, string companyId) {
+        [Route("surveys")]
+        public List<SurveyShortViewModel> GetSurveys(string exhibitionId, string companyId) {
             return _surveyService.GetSurveys(exhibitionId, companyId);
+        }
+
+        [HttpGet]
+        [Route("survey")]
+        public SurveyDetailViewModel GetSurvey(int id) {
+            return _surveyService.GetSurvey(id);
         }
     }
 }
