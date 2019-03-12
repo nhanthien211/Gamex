@@ -41,6 +41,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarQuestion">
                         @Html.ActionLink("Create Question", "CreateQuestion", "Company", new { id = Model.SurveyId, exhibitionId = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Manage Question", "UpcomingSurveyQuestion", "Company", new { id = Model.SurveyId, exhibitionId = Model.ExhibitionId }, new { @class = "dropdown-item" })
                     </div>
                 </li>
             </ul>
@@ -50,7 +51,16 @@
     <!-- DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-fw fa-sliders-h menu-icon" style="display: inline;"></i> Survey Detail
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="display: inline; float: left"></i> Survey Detail
+            @using (Html.BeginForm("DeleteSurvey", "Company", FormMethod.Post, new
+            {
+                @style = "float: right;"
+            }))
+            {
+                @Html.HiddenFor(m => m.SurveyId)
+                @Html.HiddenFor(m => m.ExhibitionId)
+                <button type="submit" class="btn btn-outline-danger">Delete</button>
+            }
         </div>
         <div class="card-body">
             @using (Html.BeginForm("UpdateSurveyInformation", "Company", FormMethod.Post))

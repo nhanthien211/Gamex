@@ -70,7 +70,9 @@
     <Compile Include="ViewModel\OrganizerTableViewModel.cs" />
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SelectCompanyViewModel.cs" />
+    <Compile Include="ViewModel\SurveyQuestionDetailViewModel.cs" />
     <Compile Include="ViewModel\UpcomingSurveyDetailViewModel.cs" />
+    <Compile Include="ViewModel\UpcomingSurveyQuestionViewModel.cs" />
     <Compile Include="ViewModel\UpcomingSurveyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

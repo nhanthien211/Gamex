@@ -1,0 +1,176 @@
+﻿@using GamexEntity.Enumeration
+@model GamexService.ViewModel.SurveyQuestionDetailViewModel
+
+@{
+    ViewBag.Title = "Question Detail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+
+     @if (Model.IsSuccessful.HasValue)
+     {
+         if (Model.IsSuccessful.Value)
+         {
+             <script type="text/javascript">
+                 $('#successModal').modal();
+             </script>
+         }
+         else
+         {
+             <script type="text/javascript">
+                 $('#failModal').modal();
+             </script>
+         }
+     }
+    @if (Model.QuestionType != (int) QuestionTypeEnum.Text)
+    {
+        <script type="text/javascript">
+            var answer = @Model.Answers.Count;
+        </script>
+        <script type="text/javascript" src="~/Scripts/update.question.util.js"></script>
+    }
+
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Survey Detail", "UpcomingSurveyDetail", "Company", new { id = Model.SurveyId, exhibitionId = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarQuestion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Question
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarQuestion">
+                        @* id = Model.SurveyId, exhibitionId = Model.ExhibitionId *@
+                        @Html.ActionLink("Create Question", "CreateQuestion", "Company", new { id = Model.SurveyId, exhibitionId = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Manage Question", "UpcomingSurveyQuestion", "Company", new { id = Model.SurveyId, exhibitionId = Model.ExhibitionId }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-question-circle fa-fw menu-icon" style="display: inline; float: left"></i> Question Detail
+            @using (Html.BeginForm("DeleteQuestion", "Company", FormMethod.Post, new { style = "float: right;" }))
+            {
+                @Html.HiddenFor(m => m.SurveyId)
+                @Html.HiddenFor(m => m.ExhibitionId)
+                @Html.HiddenFor(m => m.QuestionId)
+                <button type="submit" class="btn btn-outline-danger">Delete</button>
+            }
+
+        </div>
+        <div class="card-body">
+            @{ Html.EnableClientValidation(false); }
+            @using (Html.BeginForm("UpdateQuestionDetail", "Company", FormMethod.Post, new { id = "update-question-form" }))
+            {
+                @Html.HiddenFor(m => m.QuestionId)
+                @Html.HiddenFor(m => m.QuestionType)
+                @Html.AntiForgeryToken()
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12">
+                        @Html.LabelFor(m => m.Question)
+                        @Html.TextBoxFor(m => m.Question, new
+                   {
+                       @class = "form-control form-control-sm",
+                       @placeholder = "Required field"
+                   })
+                        @Html.ValidationMessageFor(m => m.Question)
+                    </div>
+                </div>
+                if (Model.QuestionType != (int)QuestionTypeEnum.Text)
+                {
+                    <div class="row for-exhibition-form">
+                        <div class="col-sm-12 col-md-8 col-lg-8" id="proposed-answer-list">
+                            <label for="answer">Answers </label>
+                            @for (int i = 0; i < Model.Answers.Count; i++)
+                            {
+                            <div class="entry input-group row">
+                                <span class="input-group-btn">
+                                    @if (i == 0)
+                                    {
+                                        <button class="btn btn-success btn-add" type="button">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-danger btn-remove" type="button">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    }
+                                </span>
+                                @Html.TextBoxFor(m => m.Answers[i].Content, new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "Required field"
+                                })
+                                @Html.ValidationMessageFor(m => m.Answers[i].Content)
+                            </div>
+                            }
+                        </div>
+                    </div>
+                }
+                <hr />
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-outline-success" style="float: left;">Update</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit unsuccessfully</p>
+                <p class="text-center">Please try again later</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

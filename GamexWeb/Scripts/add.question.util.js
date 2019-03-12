@@ -95,6 +95,14 @@
         });
     }).on('click', '.btn-remove', function (e) {
         $(this).parents('.entry:first').remove();
+        var i = 0;
+        $('.entry').each(function () {
+            $(this).find('input').attr('name', 'Answers[' + i + ']');
+            $(this).find('input').attr('id', 'Answers[' + i + ']');
+            $(this).find('input').attr('aria-describedby', 'Answers[' + i + ']-error');
+            $(this).find('span.field-validation-error').attr('id', 'Answers[' + i + ']-error');
+            i++;
+        });
         proposedAnswer--;
         e.preventDefault();
         return false;

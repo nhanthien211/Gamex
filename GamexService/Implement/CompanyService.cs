@@ -389,5 +389,186 @@ namespace GamexService.Implement
             }
             return addQuestion > 0;
         }
+
+        public List<UpcomingSurveyQuestionViewModel> LoadUpcomingSurveyQuestionDataTable(string sortColumnDirection,
+            string searchValue, int skip, int take, string surveyId)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(surveyId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            var questionList = _questionRepository.GetPagingProjection(
+                q => new
+                {
+                    Question = q.Content,
+                    Type = q.QuestionType,
+                    QuestionId = q.QuestionId
+                },
+                q => q.SurveyId == id, 
+                q => q.QuestionType, sortColumnDirection, take, skip
+                );
+            var list = questionList.Select(q => new UpcomingSurveyQuestionViewModel
+            {
+                Question = q.Question,
+                QuestionId = q.QuestionId,
+                QuestionType = q.Type == (int) QuestionTypeEnum.Text ? "Text question" 
+                    : q.Type == (int)  QuestionTypeEnum.SelectOne ? "Select one" : "Select Multiple",
+                Type = q.Type
+            });
+            return list.ToList();
+        }
+
+        public SurveyQuestionDetailViewModel GetSurveyQuestionDetail(string questionId, string questionType)
+        {
+            int question, type;
+            try
+            {
+                question = Convert.ToInt32(questionId);
+                type = Convert.ToInt32(questionType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            switch (type)
+            {
+                case (int)QuestionTypeEnum.Text:
+
+                    return _questionRepository.GetSingleProjection(
+                        q => new SurveyQuestionDetailViewModel
+                        {
+                            QuestionType = q.QuestionType,
+                            Question = q.Content,
+                            QuestionId = q.QuestionId
+                        },
+                        q => q.QuestionId == question
+                        );
+                case (int)QuestionTypeEnum.SelectOne:
+                case (int)QuestionTypeEnum.SelectMultiple:
+                    return _questionRepository.GetSingleProjection(
+                        q => new SurveyQuestionDetailViewModel
+                        {
+                            QuestionType = q.QuestionType,
+                            Question = q.Content,
+                            QuestionId = q.QuestionId,
+                            Answers = q.ProposedAnswer.Select(p => new ProposedAnswerViewModel
+                            {
+                                Content = p.Content,
+                            }).ToList()
+                        },
+                        q => q.QuestionId == question
+                    );
+                default:
+                    return null;
+            }
+        }
+
+        public bool UpdateSurveyQuestionDetail(SurveyQuestionDetailViewModel model)
+        {
+            var question = _questionRepository.GetById(model.QuestionId);
+            if (question == null)
+            {
+                return false;
+            }
+            _questionRepository.Update(question);
+            question.Content = model.Question;
+            if (question.QuestionType != (int) QuestionTypeEnum.Text)
+            {
+                var answersList = _proposedAnswerRepository.GetList(p => p.QuestionId == question.QuestionId);
+                if (answersList != null)
+                {
+                    foreach (var answer in answersList)
+                    {
+                        _proposedAnswerRepository.Delete(answer);
+                    }
+                }
+                foreach (var answer in model.Answers)
+                {
+                    var proposedAnswer = new ProposedAnswer
+                    {
+                        Content = answer.Content,
+                        QuestionId = question.QuestionId
+                    };
+                    _proposedAnswerRepository.Insert(proposedAnswer);
+                }
+            }
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result >= 0;
+        }
+
+        public bool RemoveQuestion(string questionId)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(questionId);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            var question = _questionRepository.GetById(id);
+            if (question == null)
+            {
+                return false;
+            }
+            _questionRepository.Delete(question);
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
+
+        public bool RemoveSurvey(string surveyId)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(surveyId);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            var survey = _surveyRepository.GetById(id);
+            if (survey == null)
+            {
+                return false;
+            }
+            _surveyRepository.Delete(survey);
+            int result;
+            try
+            {
+                result = _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return result > 0;
+        }
     }
+
+    
 }

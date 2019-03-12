@@ -392,7 +392,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [Route("Company/Exhibition/{id}/Survey/Upcoming/Manage")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult UpcomingSurvey(string id)
@@ -401,7 +401,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Company/Exhibition/{id}/Survey/Manage")]
+        [Route("Company/Exhibition/{id}/Survey/Upcoming/Manage")]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult LoadUpcomingSurveyList(string id)
         {
@@ -453,12 +453,22 @@ namespace GamexWeb.Controllers
             return View("~/Views/Company/UpcomingSurveyDetail.cshtml", model);
         }
 
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult DeleteSurvey(string surveyId, string exhibitionId)
+        {
+            _companyService.RemoveSurvey(surveyId);
+            return RedirectToAction("UpcomingSurvey", "Company", new { id = exhibitionId});
+        }
+
         [HttpGet]
         [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
-        public ActionResult CreateQuestion(object id)
+        public ActionResult CreateQuestion(string id, string exhibitionId)
         {
+            ViewBag.SurveyId = id;
+            ViewBag.ExhibitionId = exhibitionId;
             return View();
         }
 
@@ -466,9 +476,10 @@ namespace GamexWeb.Controllers
         [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
-        public ActionResult CreateQuestion(string questionTitle, string[] answers, string id, string questionType)
+        public ActionResult CreateQuestion(string questionTitle, string[] answers, string id, string questionType, string exhibitionId)
         {
-            
+            ViewBag.SurveyId = id;
+            ViewBag.ExhibitionId = exhibitionId;
             var isValidParams = _companyService.ValidateQuestionCreateField(questionType, id, questionTitle, answers);
             if (!isValidParams)
             {
@@ -494,6 +505,73 @@ namespace GamexWeb.Controllers
         public ActionResult MultipleChoicePartialView()
         {
             return PartialView("~/Views/Partial/_MultipleChoice.cshtml");
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Manage")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult UpcomingSurveyQuestion(string id, string exhibitionId)
+        {
+            ViewBag.SurveyId = id;
+            ViewBag.ExhibitionId = exhibitionId;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/Survey/{surveyId}/Question/Upcoming")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadUpcomingSurveyQuestion(string surveyId)
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadUpcomingSurveyQuestionDataTable(sortColumnDirection, searchValue, skip, take, surveyId);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/{surveyId}/Upcoming/Question/{questionId}/Type/{questionType}")]
+        public ActionResult UpcomingSurveyQuestionDetail(string exhibitionId, string surveyId, string questionId, string questionType)
+        {
+            var question = _companyService.GetSurveyQuestionDetail(questionId, questionType);
+            if (question == null)
+            {
+                return RedirectToAction("UpcomingSurveyQuestion", "Company",
+                    new {exhibitionId = exhibitionId, id = surveyId});
+            }
+            question.ExhibitionId = exhibitionId;
+            question.SurveyId = surveyId;
+            return View(question);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/{exhibitionId}/Survey/{surveyId}/Upcoming/Question/{questionId}/Update")]
+        public ActionResult UpdateQuestionDetail(SurveyQuestionDetailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Company/UpcomingSurveyQuestionDetail.cshtml", model);
+            }
+            model.IsSuccessful = _companyService.UpdateSurveyQuestionDetail(model);
+            return View("~/Views/Company/UpcomingSurveyQuestionDetail.cshtml", model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult DeleteQuestion(string questionId, string surveyId, string exhibitionId)
+        {
+            _companyService.RemoveQuestion(questionId);
+            return RedirectToAction("UpcomingSurveyQuestion", "Company", 
+                new { exhibitionId = exhibitionId, id = surveyId});
         }
     }
 }

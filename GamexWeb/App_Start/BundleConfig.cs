@@ -71,6 +71,12 @@ namespace GamexWeb
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.company.datatables.view.upcoming.survey.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatableCompanyManageUpcomingSurveyQuestion").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.view.upcoming.survey.question.js"));
+            
+
             //CKEditor script
             bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(
                 "~/Scripts/ckeditor/ckeditor.js"));
