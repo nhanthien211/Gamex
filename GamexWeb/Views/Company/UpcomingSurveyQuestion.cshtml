@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Survey Question";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var surveyId = "@ViewBag.SurveyId";
+        var exhibitionId = "@ViewBag.ExhibitionId";
+    </script>
+    @Scripts.Render("~/bundles/datatableCompanyManageUpcomingSurveyQuestion")
+}
+
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Survey Detail", "UpcomingSurveyDetail", "Company", new { id = ViewBag.SurveyId, exhibitionId = ViewBag.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarQuestion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Question
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarQuestion">
+                        @* id = Model.SurveyId, exhibitionId = Model.ExhibitionId *@
+                        @Html.ActionLink("Create Question", "CreateQuestion", "Company", new { id = ViewBag.SurveyId, exhibitionId = ViewBag.ExhibitionId }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Manage Question", "UpcomingSurveyQuestion", "Company", new { id = ViewBag.SurveyId, exhibitionId = ViewBag.ExhibitionId }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-poll-h menu-icon" style="display: inline;"></i> Survey List
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Question Type</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

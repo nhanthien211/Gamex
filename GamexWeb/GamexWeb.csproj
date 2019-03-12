@@ -271,6 +271,7 @@
     <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
+    <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.question.js" />
     <Content Include="Scripts\tempusdominus-datetimepicker.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -545,6 +546,7 @@
     <Content Include="Scripts\sb.admin.datatables.organizer.list.js" />
     <Content Include="Scripts\sb.admin.js" />
     <Content Include="Scripts\sb.company.datatables.view.new.exhibition.js" />
+    <Content Include="Scripts\update.question.util.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -653,6 +655,8 @@
     <Content Include="Views\Company\CreateQuestion.cshtml" />
     <Content Include="Views\Partial\_TextQuestion.cshtml" />
     <Content Include="Views\Partial\_MultipleChoice.cshtml" />
+    <Content Include="Views\Company\UpcomingSurveyQuestion.cshtml" />
+    <Content Include="Views\Company\UpcomingSurveyQuestionDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

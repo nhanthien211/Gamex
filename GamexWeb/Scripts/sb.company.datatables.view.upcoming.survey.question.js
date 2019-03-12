@@ -5,9 +5,9 @@
         "orderMulti": false, // for disable multiple column at once  
         "pageLength": 10,
         "pagingType": "full_numbers",
-        
+        order: [[1, "asc"]],
         "ajax": {
-            "url": "/Company/Exhibition/" + id + "/Survey/Upcoming/Manage",
+            "url": "/Company/Survey/" + surveyId + "/Question/Upcoming",
             "type": "POST",
             "datatype": "json"
         },
@@ -15,30 +15,39 @@
         "columnDefs": [
             {
                 "targets": [0],
-                "searchable": true,
+                "searchable": false,
                 "orderable": false
             },
             {
                 "targets": [1],
+                "searchable": true,
+                "orderable": true
+            },
+            {
+                "targets": [2],
                 "searchable": false,
                 "orderable": false
             }
         ],
-
         "columns": [
             {
-                "data": "SurveyTitle",
-                "name": "Survey Title",
+                "data": "Question",
+                "name": "Question",
+                "autoWidth": true
+            },
+            {
+                "data": "QuestionType",
+                "name": "Question Type",
                 "autoWidth": true
             },
             {
                 "render": function (data, type, full, meta) {
                     return '<a href="/Company/Exhibition/' +
-                        full.ExhibitionId +
-                        '/Survey/Upcoming/' + full.SurveyId +'"><i class="fas fa-edit"></i>View Detail</a>';
+                        exhibitionId +
+                        '/Survey/' + surveyId + '/Upcoming/Question/' +
+                        full.QuestionId + '/Type/' + full.Type + '"><i class="fas fa-edit"></i>View Detail</a>';
                 }
             }
         ]
     });
 });
-//Company / Exhibition / { exhibitionId } / Survey / { id }
