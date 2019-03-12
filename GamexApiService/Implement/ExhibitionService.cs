@@ -64,6 +64,7 @@ namespace GamexApiService.Implement {
                 e => new {
                     e.ExhibitionId,
                     e.Name,
+                    e.Address,
                     e.StartDate,
                     e.EndDate,
                     e.Logo
@@ -86,6 +87,7 @@ namespace GamexApiService.Implement {
             return exhibitionList.Select(e => new ExhibitionShortViewModel() {
                 ExhibitionId = e.ExhibitionId,
                 Name = e.Name,
+                Address = e.Address,
                 StartDate = e.StartDate.ToLongDateString(),
                 EndDate = e.EndDate.ToLongDateString(),
                 Logo = e.Logo
@@ -118,6 +120,25 @@ namespace GamexApiService.Implement {
                     Logo = c.Logo
                 }).ToList()
             };
+        }
+
+        public bool CheckInExhibition(string accountId, string exhibitionId) {
+            _exhibitionAttendeeRepo.Insert(new ExhibitionAttendee() {
+                ExhibitionId = exhibitionId,
+                AccountId = accountId,
+                CheckinTime = DateTime.Now
+            });
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    return true;
+                }
+            }
+            catch (Exception ex) {
+                return false;
+            }
+
+            return false;
         }
     }
 }

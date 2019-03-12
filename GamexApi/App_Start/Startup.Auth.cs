@@ -51,7 +51,6 @@ namespace GamexApi
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
-
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
 

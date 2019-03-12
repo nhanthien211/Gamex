@@ -59,7 +59,7 @@ namespace GamexApi.Providers
             AuthenticationProperties properties = CreateProperties(user.LastName + " " + user.FirstName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
-//            context.Request.Context.Authentication.SignIn(oAuthIdentity);
+            context.Request.Context.Authentication.SignIn(oAuthIdentity);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
