@@ -1,0 +1,251 @@
+﻿@model GamexService.ViewModel.ExhibitionDetailViewModel
+
+@{
+    ViewBag.UpcomingExhibition = "active";
+    ViewBag.Exhibition = "active";
+    ViewBag.ViewExhibitionDropDownShow = "show";
+    ViewBag.Title = "View Detail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section customCss
+{
+    <link rel="stylesheet" href="~/Content/tempusdominus-datetimepicker.css" />
+}
+
+@section datepicker
+{
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/tempusdominus-datetimepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/datepicker.util.js"></script>
+}
+
+@section mapapi
+{
+    <script>
+        var originalAddress = "@Html.Raw(Ajax.JavaScriptStringEncode(Model.Address))";
+    </script>
+    <script type="text/javascript" src="~/Scripts/map.helper.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIoukIzC-C6u_3Ww5G-M2fbnYX5-24ZfA&libraries=places&callback=initAutocomplete">
+    </script>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/validateFile")
+    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "@Model.ExhibitionId",
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+    @if (Model != null)
+    {
+        if (Model.IsSuccessful != null)
+        {
+            if (Model.IsSuccessful.Value)
+            {
+                <script type="text/javascript">
+                    $('#successModal').modal();
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    $('#failModal').modal();
+                </script>
+            }
+        }
+    }
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+
+                <li class="nav-item">
+                    @Html.ActionLink("Company", "UpcomingExhibitionDetail", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left"></i> Exhibition Detail
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
+                Show QR
+            </button>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("CreateExhibition", "Organizer", FormMethod.Post, new
+            {
+                @id = "CreateExhibitionForm",
+                @enctype = "multipart/form-data"
+            }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-8 col-lg-8 custom-file">
+                        @Html.LabelFor(m => m.Logo)
+                        <div class="custom-file" lang="es">
+                            @Html.TextBoxFor(m => m.Logo, new
+                            {
+                                @class = "custom-file-input",
+                                @type = "file",
+                                accept = "image/*"
+                            })
+                            <label style="border-color: #ccc !important" class="custom-file-label" for="Logo">Choose file</label>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Logo)
+                        <div id="fileUploadResult" class="text-danger"></div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <img alt="" id="imagePreview" src="@Model.ImageUrl" />
+                    </div>
+                </div>
+                <br />
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate)
+                            <div class="input-group date" id="startDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.StartDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#startDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#startDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.StartDate)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate)
+                            <div class="input-group date" id="endDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.EndDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#endDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#endDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EndDate)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Address)
+                        @Html.TextBoxFor(m => m.Address, new
+                        {
+                            @class = "form-control form-control-sm",
+                        })
+                        @Html.ValidationMessageFor(m => m.Address)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.TextAreaFor(m => m.Description, new
+                       {
+                           @class = "form-control",
+                           @rows = "10",
+                           @cols = "80"
+                       })
+                        @Html.ValidationMessageFor(m => m.Description)
+                    </div>
+                </div>
+                @Html.TextBoxFor(m => m.Latitude, new
+                {
+                    @type = "hidden"
+                })
+                @Html.TextBoxFor(m => m.Longitude, new
+                {
+                    @type = "hidden"
+                })
+                @Html.HiddenFor(m => m.ImageUrl)
+                <hr />
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-lg-12">
+                        <button type="submit" class="btn btn-outline-success" onclick="clearFileError()">Update</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="field-validation-error">
+                    <p class="text-center">Submit unsuccessfully</p>
+                    <p class="text-center">Please try again later</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="qrModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Check-in QR Code</h4>
+                
+            </div>
+            <div class="modal-body">
+                <div id="qrcode"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

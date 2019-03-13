@@ -94,7 +94,7 @@ namespace GamexService.Implement
             _unitOfWork.SaveChanges();
         }
 
-        public List<CompanyViewExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        public List<UpcomingExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
         {
             var newExhibitionList = _exhibitionRepository.GetPagingProjection(
                 e => new
@@ -109,7 +109,7 @@ namespace GamexService.Implement
                             && e.Name.Contains(searchValue), 
                 e => e.StartDate, sortColumnDirection, take, skip
                 );
-            var result = newExhibitionList.Select(e => new CompanyViewExhibitionViewModel
+            var result = newExhibitionList.Select(e => new UpcomingExhibitionViewModel
             {
                 ExhibitionId = e.ExhibitionId,
                 ExhibitionName = e.ExhibitionName,
@@ -138,7 +138,9 @@ namespace GamexService.Implement
         public bool IsCompanyHasJoinExhibition(string exhibitionId, string companyId)
         {
             return  _boothRepository.GetSingleProjection(b => b.Id,
-                b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId) != 0;
+                b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId 
+                     && b.Exhibition.StartDate > DateTime.Now
+                     ) != 0;
         }
 
         public bool JoinExhibition(string exhibitionId, string companyId)
@@ -161,7 +163,7 @@ namespace GamexService.Implement
             return result > 0;
         }
 
-        public List<CompanyViewExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        public List<UpcomingExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
         {
             var newExhibitionList = _exhibitionRepository.GetPagingProjection(
                 e => new
@@ -176,7 +178,7 @@ namespace GamexService.Implement
                      && e.Name.Contains(searchValue),
                 e => e.StartDate, sortColumnDirection, take, skip
             );
-            var result = newExhibitionList.Select(e => new CompanyViewExhibitionViewModel
+            var result = newExhibitionList.Select(e => new UpcomingExhibitionViewModel
             {
                 ExhibitionId = e.ExhibitionId,
                 ExhibitionName = e.ExhibitionName,
@@ -533,7 +535,7 @@ namespace GamexService.Implement
             {
                 result = _unitOfWork.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }
@@ -562,7 +564,7 @@ namespace GamexService.Implement
             {
                 result = _unitOfWork.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }
