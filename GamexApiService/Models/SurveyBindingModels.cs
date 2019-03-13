@@ -8,6 +8,7 @@ namespace GamexApiService.Models {
         public int QuestionId { get; set; }
 
         public int? ProposedAnswerId { get; set; }
+        public List<int> ProposedAnswerIds { get; set; }
         public string Other { get; set; }
     }
 
