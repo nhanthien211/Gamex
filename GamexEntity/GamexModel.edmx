@@ -378,7 +378,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Booth_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">
@@ -550,7 +552,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Survey_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">
@@ -1285,7 +1289,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Booth_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">
@@ -1345,7 +1351,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Survey_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">

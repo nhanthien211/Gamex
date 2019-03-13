@@ -1,4 +1,5 @@
-﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
+﻿@using GamexWeb.Utilities
+@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
 
 @{
     ViewBag.UpcomingExhibition = "active";
@@ -11,7 +12,15 @@
 
 @section scripts
 {
-
+    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "?exhibitionId=@Model.ExhibitionId&companyId=@User.Identity.GetCompanyId()",
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
     @if (Model != null && Model.IsSuccessful.HasValue)
     {
         if (!Model.IsSuccessful.Value)
@@ -49,7 +58,10 @@
     <!-- DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-fw fa-sliders-h menu-icon" style="display: inline;"></i> Exhibition Detail
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left;"></i> Exhibition Detail
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
+                Show QR
+            </button>
         </div>
         <div class="card-body">
 
@@ -147,6 +159,23 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="qrModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Your company QR Code for this exhibition</h4>
+
+            </div>
+            <div class="modal-body">
+                <div id="qrcode"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>

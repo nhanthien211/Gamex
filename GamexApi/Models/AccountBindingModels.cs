@@ -15,7 +15,7 @@ namespace GamexApi.Models
 
     public class ChangePasswordBindingModel
     {
-        [Required]
+        
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
         public string OldPassword { get; set; }
