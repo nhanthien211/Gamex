@@ -46,7 +46,6 @@ namespace GamexApi.Controllers {
             var result = _surveyService.SubmitSurvey(accountId, surveyAnswerModel);
 
             if (result) {
-                //  save to SurveyParticipation
                 var survey = _surveyService.GetSurvey(surveyAnswerModel.SurveyId);
                 _activityService.AddActivity(accountId, "Completed survey " + survey.Title);
                 _accountService.EarnPoint(accountId, survey.Point);

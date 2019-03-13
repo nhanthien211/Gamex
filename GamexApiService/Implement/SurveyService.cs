@@ -5,6 +5,7 @@ using GamexEntity;
 using GamexRepository;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace GamexApiService.Implement {
     public class SurveyService : ISurveyService {
@@ -43,7 +44,9 @@ namespace GamexApiService.Implement {
         }
 
         public SurveyDetailViewModel GetSurvey(int surveyId) {
-            var survey = _surveyRepo.GetById(surveyId);
+            var survey = _surveyRepo.GetSingle(
+                s => s.SurveyId == surveyId,
+                q => q.Question.Select(a => a.ProposedAnswer));
             return new SurveyDetailViewModel() {
                 SurveyId = survey.SurveyId,
                 Title = survey.Title,
@@ -62,24 +65,48 @@ namespace GamexApiService.Implement {
 
         public bool SubmitSurvey(string accountId, SurveyAnswerBindingModel surveyAnswerModel) {
             var surveyId = surveyAnswerModel.SurveyId;
+            var insertedRowCount = 0;
+
             surveyAnswerModel.SurveyAnswers.ForEach(surveyAnswer => {
                 var surveyAnswerRecord = new SurveyAnswer {
                     AccountId = accountId,
                     SurveyId = surveyId,
-                    QuestionId = surveyAnswer.QuestionId,
-                    ProposedAnswerId = surveyAnswer.ProposedAnswerId,
-                    Other = surveyAnswer.Other
+                    QuestionId = surveyAnswer.QuestionId
                 };
-                _surveyAnswerRepo.Insert(surveyAnswerRecord);
+                if (surveyAnswer.ProposedAnswerId != null) {
+                    // question that has only one answer
+                    surveyAnswerRecord.ProposedAnswerId = surveyAnswer.ProposedAnswerId;
+                    _surveyAnswerRepo.Insert(surveyAnswerRecord);
+                    ++insertedRowCount;
+                } else if (surveyAnswer.ProposedAnswerIds != null) {
+                    // question that has many answers
+                    surveyAnswer.ProposedAnswerIds.ForEach(proposedAnswerId => {
+                        var surveyAnswerRecordMultiple = surveyAnswerRecord.Clone();
+                        surveyAnswerRecordMultiple.ProposedAnswerId = proposedAnswerId;
+                        _surveyAnswerRepo.Insert(surveyAnswerRecordMultiple);
+                        ++insertedRowCount;
+                    });
+                } else {
+                    // question type: text
+                    surveyAnswerRecord.Other = surveyAnswer.Other;
+                    _surveyAnswerRepo.Insert(surveyAnswerRecord);
+                    ++insertedRowCount;
+                }
             });
 
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
-                return affectedRows == surveyAnswerModel.SurveyAnswers.Count;
-            }
-            catch (Exception ex) {
+                return affectedRows == insertedRowCount;
+            } catch (Exception ex) {
                 return false;
             }
+        }
+    }
+
+    static class SystemExtension {
+        public static T Clone<T>(this T source) {
+            var serialized = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(serialized);
         }
     }
 }
