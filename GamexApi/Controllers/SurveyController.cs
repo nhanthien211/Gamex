@@ -3,6 +3,7 @@ using System.Web.Http;
 using GamexApiService.Interface;
 using GamexApiService.Models;
 using GamexEntity.Constant;
+using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Controllers {
     [Authorize(Roles = AccountRole.User)]
@@ -25,6 +26,18 @@ namespace GamexApi.Controllers {
         [Route("survey")]
         public SurveyDetailViewModel GetSurvey(int id) {
             return _surveyService.GetSurvey(id);
+        }
+
+        [HttpPost]
+        [Route("survey")]
+        public IHttpActionResult SubmitSurvey(SurveyAnswerBindingModel surveyAnswerModel) {
+            var accountId = User.Identity.GetUserId();
+            var result = _surveyService.SubmitSurvey(accountId, surveyAnswerModel);
+            if (result) {
+                return Ok();
+            }
+
+            return BadRequest("Submit survey answer failed!");
         }
     }
 }

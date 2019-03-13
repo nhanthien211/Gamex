@@ -1,4 +1,5 @@
-﻿using GamexApiService.Interface;
+﻿using System;
+using GamexApiService.Interface;
 using GamexApiService.Models;
 using GamexEntity;
 using GamexRepository;
@@ -8,12 +9,15 @@ using System.Linq;
 namespace GamexApiService.Implement {
     public class SurveyService : ISurveyService {
         private IRepository<Survey> _surveyRepo;
+        private IRepository<SurveyAnswer> _surveyAnswerRepo;
         private IUnitOfWork _unitOfWork;
 
         public SurveyService(
             IRepository<Survey> surveyRepo,
+            IRepository<SurveyAnswer> surveyAnswerRepo,
             IUnitOfWork unitOfWork) {
             _surveyRepo = surveyRepo;
+            _surveyAnswerRepo = surveyAnswerRepo;
             _unitOfWork = unitOfWork;
         }
 
@@ -46,6 +50,28 @@ namespace GamexApiService.Implement {
                     }).ToList()
                 }).ToList()
             };
+        }
+
+        public bool SubmitSurvey(string accountId, SurveyAnswerBindingModel surveyAnswerModel) {
+            var surveyId = surveyAnswerModel.SurveyId;
+            surveyAnswerModel.SurveyAnswers.ForEach(surveyAnswer => {
+                var surveyAnswerRecord = new SurveyAnswer {
+                    AccountId = accountId,
+                    SurveyId = surveyId,
+                    QuestionId = surveyAnswer.QuestionId,
+                    ProposedAnswerId = surveyAnswer.ProposedAnswerId,
+                    Other = surveyAnswer.Other
+                };
+                _surveyAnswerRepo.Insert(surveyAnswerRecord);
+            });
+
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                return affectedRows == surveyAnswerModel.SurveyAnswers.Count;
+            }
+            catch (Exception ex) {
+                return false;
+            }
         }
     }
 }

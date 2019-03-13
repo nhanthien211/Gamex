@@ -61,6 +61,7 @@
     <Compile Include="Models\ExhibitionBindingModels.cs" />
     <Compile Include="Models\ProposedAnswerViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\SurveyBindingModels.cs" />
     <Compile Include="Models\SurveyViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ExhibitionViewModels.cs" />

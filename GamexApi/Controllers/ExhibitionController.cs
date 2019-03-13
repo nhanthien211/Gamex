@@ -41,7 +41,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpPost]
-        [Route("exhibition/check-in")]
+        [Route("user/exhibition")]
         public IHttpActionResult CheckInExhibition(ExhibitionCheckInBindingModel model) {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
