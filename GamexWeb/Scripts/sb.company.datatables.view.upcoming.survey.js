@@ -7,7 +7,7 @@
         "pagingType": "full_numbers",
         
         "ajax": {
-            "url": "/Company/Exhibition/" + id + "/Survey/Upcoming/Manage",
+            "url": "/Company/Exhibition/Upcoming/" + id + "/Survey/Manage",
             "type": "POST",
             "datatype": "json"
         },
@@ -33,9 +33,9 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="/Company/Exhibition/' +
+                    return '<a href="/Company/Exhibition/Upcoming/' +
                         full.ExhibitionId +
-                        '/Survey/Upcoming/' + full.SurveyId +'"><i class="fas fa-edit"></i>View Detail</a>';
+                        '/Survey/' + full.SurveyId +'"><i class="fas fa-edit"></i>View Detail</a>';
                 }
             }
         ]

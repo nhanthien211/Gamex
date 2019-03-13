@@ -7,7 +7,7 @@
         "pagingType": "full_numbers",
         order: [[1, "asc"]],
         "ajax": {
-            "url": "/Company/Survey/" + surveyId + "/Question/Upcoming",
+            "url": "../LoadUpcomingExhibitionList",
             "type": "POST",
             "datatype": "json"
         },
@@ -15,12 +15,12 @@
         "columnDefs": [
             {
                 "targets": [0],
-                "searchable": false,
+                "searchable": true,
                 "orderable": false
             },
             {
                 "targets": [1],
-                "searchable": true,
+                "searchable": false,
                 "orderable": true
             },
             {
@@ -29,23 +29,23 @@
                 "orderable": false
             }
         ],
+
         "columns": [
             {
-                "data": "Question",
-                "name": "Question",
+                "data": "ExhibitionName",
+                "name": "Exhibition",
                 "autoWidth": true
             },
             {
-                "data": "QuestionType",
-                "name": "Question Type",
+                "data": "Time",
+                "name": "Time",
                 "autoWidth": true
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="/Company/Exhibition/Upcoming/' +
-                        exhibitionId +
-                        '/Survey/' + surveyId + '/Question/' +
-                        full.QuestionId + '/Type/' + full.Type + '"><i class="fas fa-edit"></i>View Detail</a>';
+                    return '<a href="/Organizer/Exhibition/Upcoming/' +
+                        full.ExhibitionId +
+                        '"><i class="fas fa-edit"></i>View Detail</a>';
                 }
             }
         ]
