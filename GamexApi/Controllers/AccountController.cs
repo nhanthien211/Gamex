@@ -48,7 +48,6 @@ namespace GamexApi.Controllers
             AccessTokenFormat = accessTokenFormat;
         }
 
-
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // Get api/Account
@@ -128,25 +127,25 @@ namespace GamexApi.Controllers
             };
         }
 
-        // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
-        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            IdentityResult result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-                model.NewPassword);
-            
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
+//        // POST api/Account/ChangePassword
+//        [Route("ChangePassword")]
+//        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                return BadRequest(ModelState);
+//            }
+//
+//            IdentityResult result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+//                model.NewPassword);
+//            
+//            if (!result.Succeeded)
+//            {
+//                return GetErrorResult(result);
+//            }
+//
+//            return Ok();
+//        }
 
         // POST api/Account/SetPassword
         [Route("SetPassword")]
@@ -401,6 +400,43 @@ namespace GamexApi.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Authorize(Roles = AccountRole.User)]
+        [Route("Password")]
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        {
+            var hasPassword = await _userManager.HasPasswordAsync(User.Identity.GetUserId());
+            if ((hasPassword &&
+                string.IsNullOrEmpty(model.OldPassword)))
+            {   
+                ModelState.AddModelError("ErrorMessage", "Please submit your current password");
+                return BadRequest(ModelState);
+            }
+            //start change password
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (hasPassword)
+            {
+                var result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            else
+            {
+                var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            return Ok();
+        }
+
+
         #region Helpers
 
         private string ValidateClientAndRedirectUri(HttpRequestMessage request, ref string redirectUriOutput) {
@@ -464,7 +500,7 @@ namespace GamexApi.Controllers
                 {
                     foreach (string error in result.Errors)
                     {
-                        ModelState.AddModelError("RegisterError", error);
+                        ModelState.AddModelError("ErrorMessage", error);
                     }
                 }
 

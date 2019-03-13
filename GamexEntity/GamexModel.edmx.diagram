@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="19e284d192764bf8bdb6561b78b2cef7" Name="Diagram1">
+      <Diagram DiagramId="36cd31e4194245fbac879784a83394a1" Name="Diagram1">
         <EntityTypeShape EntityType="GamexModel.AccountBookmark" Width="1.5" PointX="7.5" PointY="9" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.AccountStatus" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GamexModel.ActivityHistory" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
