@@ -11,15 +11,26 @@ namespace GamexApi.Controllers {
     [RoutePrefix("api")]
     public class SurveyController : ApiController {
         private ISurveyService _surveyService;
+        private IActivityHistoryService _activityService;
+        private IAccountService _accountService;
+        private ISurveyParticipationService _surveyParticipationService;
 
-        public SurveyController(ISurveyService surveyService) {
+        public SurveyController(
+            ISurveyService surveyService,
+            IActivityHistoryService activityService,
+            IAccountService accountService,
+            ISurveyParticipationService surveyParticipationService) {
             _surveyService = surveyService;
+            _accountService = accountService;
+            _activityService = activityService;
+            _surveyParticipationService = surveyParticipationService;
         }
 
         [HttpGet]
         [Route("surveys")]
         public List<SurveyShortViewModel> GetSurveys(string exhibitionId, string companyId) {
-            return _surveyService.GetSurveys(exhibitionId, companyId);
+            var accountId = User.Identity.GetUserId();
+            return _surveyService.GetSurveys(accountId, exhibitionId, companyId);
         }
 
         [HttpGet]
@@ -33,8 +44,14 @@ namespace GamexApi.Controllers {
         public IHttpActionResult SubmitSurvey(SurveyAnswerBindingModel surveyAnswerModel) {
             var accountId = User.Identity.GetUserId();
             var result = _surveyService.SubmitSurvey(accountId, surveyAnswerModel);
+
             if (result) {
-                return Ok();
+                //  save to SurveyParticipation
+                var survey = _surveyService.GetSurvey(surveyAnswerModel.SurveyId);
+                _activityService.AddActivity(accountId, "Completed survey " + survey.Title);
+                _accountService.EarnPoint(accountId, survey.Point);
+                _surveyParticipationService.CompleteSurvey(accountId, survey.SurveyId);
+                return Ok(new { point = survey.Point});
             }
 
             return BadRequest("Submit survey answer failed!");

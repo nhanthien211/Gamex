@@ -48,13 +48,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implement\AccountService.cs" />
     <Compile Include="Implement\ActivityHistoryService.cs" />
     <Compile Include="Implement\CompanyService.cs" />
     <Compile Include="Implement\ExhibitionService.cs" />
+    <Compile Include="Implement\SurveyParticipationService.cs" />
     <Compile Include="Implement\SurveyService.cs" />
+    <Compile Include="Interface\IAccountService.cs" />
     <Compile Include="Interface\IActivityHistoryService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Interface\IExhibitionService.cs" />
+    <Compile Include="Interface\ISurveyParticipationService.cs" />
     <Compile Include="Interface\ISurveyService.cs" />
     <Compile Include="Models\ActivityHistoryViewModels.cs" />
     <Compile Include="Models\CompanyViewModels.cs" />

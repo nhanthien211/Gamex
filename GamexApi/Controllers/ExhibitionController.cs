@@ -14,13 +14,18 @@ namespace GamexApi.Controllers {
 
         private readonly IExhibitionService _exhibitionService;
         private readonly IActivityHistoryService _activityHistoryService;
+        private readonly IAccountService _accountService;
+
+        private const int CheckInExhibitionPoint = 100;
 
         public ExhibitionController(
             IExhibitionService exhibitionService,
-            IActivityHistoryService activityHistoryService
+            IActivityHistoryService activityHistoryService,
+            IAccountService accountService
             ) {
             _exhibitionService = exhibitionService;
             _activityHistoryService = activityHistoryService;
+            _accountService = accountService;
         }
 
         // GET /exhibitions
@@ -45,17 +50,22 @@ namespace GamexApi.Controllers {
         public IHttpActionResult CheckInExhibition(ExhibitionCheckInBindingModel model) {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
-            var exhibition = _exhibitionService.GetExhibition(model.Id);
 
             if (result) {
+                var exhibition = _exhibitionService.GetExhibition(model.Id);
                 RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
-                return Ok();
+                EarnPoint(accountId, CheckInExhibitionPoint);
+                return Ok(new { point = CheckInExhibitionPoint });
             }
             return BadRequest("Check-in failed! Please ensure the parameters have been passed correctly!");
         }
 
         private bool RecordActivity(string accountId, string activity) {
             return _activityHistoryService.AddActivity(accountId, activity);
+        }
+
+        private bool EarnPoint(string accountId, int point) {
+            return _accountService.EarnPoint(accountId, point);
         }
     }
 }
