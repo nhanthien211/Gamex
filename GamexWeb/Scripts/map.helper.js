@@ -28,7 +28,9 @@ function initAutocomplete() {
     });
 
     google.maps.event.addDomListener(document.getElementById("Address"), 'blur', function () {
-
+        if (originalAddress != null && originalAddress == document.getElementById("Address").value) {
+            return;
+        }
         // Find the pac-container element
         if (jQuery('.pac-item:hover').length === 0) {
             google.maps.event.trigger(this, 'focus', {});

@@ -309,7 +309,7 @@ namespace GamexWeb.Controllers
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [FilterConfig.NoDirectAccess]
-        [Route("Company/Exhibition/{id}")]
+        [Route("Company/Exhibition/Upcoming/{id}")]
         public ActionResult UpcomingExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
@@ -356,7 +356,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{id}/Survey/Create")]
+        [Route("Company/Exhibition/Upcoming/{id}/Survey/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult CreateSurvey(string id)
@@ -368,7 +368,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Company/Exhibition/{id}/Survey/Create")]
+        [Route("Company/Exhibition/Upcoming/{id}/Survey/Create")]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult CreateSurvey(CreateSurveyViewModel model)
         {
@@ -392,7 +392,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{id}/Survey/Upcoming/Manage")]
+        [Route("Company/Exhibition/Upcoming/{id}/Survey/Manage")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult UpcomingSurvey(string id)
@@ -401,7 +401,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Company/Exhibition/{id}/Survey/Upcoming/Manage")]
+        [Route("Company/Exhibition/Upcoming/{id}/Survey/Manage")]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult LoadUpcomingSurveyList(string id)
         {
@@ -418,7 +418,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{id}")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult UpcomingSurveyDetail(string id, string exhibitionId)
@@ -433,7 +433,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{id}")]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult UpdateSurveyInformation(UpcomingSurveyDetailViewModel model)
         {
@@ -462,7 +462,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{id}/Question/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult CreateQuestion(string id, string exhibitionId)
@@ -473,7 +473,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpPost]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Create")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{id}/Question/Create")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult CreateQuestion(string questionTitle, string[] answers, string id, string questionType, string exhibitionId)
@@ -508,7 +508,7 @@ namespace GamexWeb.Controllers
         }
 
         [HttpGet]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/Upcoming/{id}/Question/Manage")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{id}/Question/Manage")]
         [FilterConfig.NoDirectAccess]
         [Authorize(Roles = AccountRole.Company)]
         public ActionResult UpcomingSurveyQuestion(string id, string exhibitionId)
@@ -538,7 +538,7 @@ namespace GamexWeb.Controllers
         [HttpGet]
         [Authorize(Roles = AccountRole.Company)]
         [FilterConfig.NoDirectAccess]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/{surveyId}/Upcoming/Question/{questionId}/Type/{questionType}")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{surveyId}/Question/{questionId}/Type/{questionType}")]
         public ActionResult UpcomingSurveyQuestionDetail(string exhibitionId, string surveyId, string questionId, string questionType)
         {
             var question = _companyService.GetSurveyQuestionDetail(questionId, questionType);
@@ -554,7 +554,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [Authorize(Roles = AccountRole.Company)]
-        [Route("Company/Exhibition/{exhibitionId}/Survey/{surveyId}/Upcoming/Question/{questionId}/Update")]
+        [Route("Company/Exhibition/Upcoming/{exhibitionId}/Survey/{surveyId}/Question/{questionId}/Update")]
         public ActionResult UpdateQuestionDetail(SurveyQuestionDetailViewModel model)
         {
             if (!ModelState.IsValid)

@@ -2,6 +2,7 @@
 using GamexService.ViewModel;
 using GamexWeb.Utilities;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using GamexService.Interface;
@@ -60,5 +61,44 @@ namespace GamexWeb.Controllers
             return View(model); ;
         }
 
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Upcoming")]
+        public ActionResult UpcomingExhibition()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("LoadUpcomingExhibitionList")]
+        [Authorize(Roles = AccountRole.Organizer)]
+        public ActionResult LoadUpcomingExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _organizerService.LoadUpcomingExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetUserId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Exhibition/Upcoming/{id}")]
+        public ActionResult UpcomingExhibitionDetail(string id)
+        {
+            var detail = _organizerService.GetExhibitionDetail(id);
+            if (detail == null)
+            {
+                return RedirectToAction("UpcomingExhibition", "Organizer");
+            }
+            return View(detail);
+
+        }
     }
 }
