@@ -31,6 +31,7 @@ namespace GamexApi.Controllers
         private readonly ApplicationSignInManager _signInManager;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly ApplicationRoleManager _roleManager;
+        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         public AccountController()
         {
@@ -46,9 +47,7 @@ namespace GamexApi.Controllers
             _authenticationManager = authenticationManager;
             _roleManager = roleManager;
             AccessTokenFormat = accessTokenFormat;
-        }
-
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+        }       
 
         // Get api/Account
         public async Task<AccountViewModel> GetAccount() {
@@ -61,6 +60,52 @@ namespace GamexApi.Controllers
                 Roles = user.Roles.ToList().Select(r => r.RoleId.ToString()) as IList<string>
             };
         }
+
+        [HttpPut]
+        [Authorize(Roles = AccountRole.User)]
+        [Route("Password")]
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        {
+            var hasPassword = await _userManager.HasPasswordAsync(User.Identity.GetUserId());
+            if ((hasPassword &&
+                 string.IsNullOrEmpty(model.OldPassword)))
+            {
+                ModelState.AddModelError("ErrorMessage", "Please submit your current password");
+                return BadRequest(ModelState);
+            }
+            //start change password
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (hasPassword)
+            {
+                var result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            else
+            {
+                var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            return Ok();
+        }
+
+        // POST api/Account/Logout
+        [Route("Logout")]
+        public IHttpActionResult Logout()
+        {
+            _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
+            return Ok();
+        }
+
+        #region external
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -79,166 +124,13 @@ namespace GamexApi.Controllers
             };
         }
 
-        // POST api/Account/Logout
-        [Route("Logout")]
-        public IHttpActionResult Logout()
-        {
-            _authenticationManager.SignOut(OAuthDefaults.AuthenticationType);
-            return Ok();
-        }
-
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
-        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-        {
-            IdentityUser user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
-
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
-            {
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = linkedAccount.LoginProvider,
-                    ProviderKey = linkedAccount.ProviderKey
-                });
-            }
-
-            if (user.PasswordHash != null)
-            {
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = LocalLoginProvider,
-                    ProviderKey = user.UserName,
-                });
-            }
-
-            return new ManageInfoViewModel
-            {
-                LocalLoginProvider = LocalLoginProvider,
-                Email = user.UserName,
-                Logins = logins,
-                ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-            };
-        }
-
-//        // POST api/Account/ChangePassword
-//        [Route("ChangePassword")]
-//        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return BadRequest(ModelState);
-//            }
-//
-//            IdentityResult result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-//                model.NewPassword);
-//            
-//            if (!result.Succeeded)
-//            {
-//                return GetErrorResult(result);
-//            }
-//
-//            return Ok();
-//        }
-
-        // POST api/Account/SetPassword
-        [Route("SetPassword")]
-        public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            IdentityResult result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
-
-        // POST api/Account/AddExternalLogin
-        [Route("AddExternalLogin")]
-        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
-            AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
-
-            if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-                && ticket.Properties.ExpiresUtc.HasValue
-                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-            {
-                return BadRequest("External login failure.");
-            }
-
-            ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
-
-            if (externalData == null)
-            {
-                return BadRequest("The external login is already associated with an account.");
-            }
-
-            IdentityResult result = await _userManager.AddLoginAsync(User.Identity.GetUserId(),
-                new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
-
-        // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
-        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            IdentityResult result;
-
-            if (model.LoginProvider == LocalLoginProvider)
-            {
-                result = await _userManager.RemovePasswordAsync(User.Identity.GetUserId());
-            }
-            else
-            {
-                result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId(),
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
-            }
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
-
         // GET api/Account/ExternalLogin
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null) {
+        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
+        {
             string redirectUri = string.Empty;
 
             if (error != null)
@@ -252,7 +144,8 @@ namespace GamexApi.Controllers
             }
 
             var redirectUriValidationResult = ValidateClientAndRedirectUri(this.Request, ref redirectUri);
-            if (!string.IsNullOrWhiteSpace(redirectUriValidationResult)) {
+            if (!string.IsNullOrWhiteSpace(redirectUriValidationResult))
+            {
                 return BadRequest(redirectUriValidationResult);
             }
 
@@ -333,19 +226,22 @@ namespace GamexApi.Controllers
         // POST api/Account/
         [AllowAnonymous]
         //[Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model) {
-            if (!ModelState.IsValid) {
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() {
-                UserName = model.Username, 
+            var user = new ApplicationUser()
+            {
+                UserName = model.Username,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Point = 0,
                 TotalPointEarned = 0,
-                StatusId = (int) AccountStatusEnum.Active
+                StatusId = (int)AccountStatusEnum.Active
             };
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
@@ -383,7 +279,7 @@ namespace GamexApi.Controllers
                     UserName = info.ExternalIdentity.FindFirstValue(CustomClaimTypes.Email),
                     Point = 0,
                     TotalPointEarned = 0,
-                    StatusId = (int) AccountStatusEnum.Active
+                    StatusId = (int)AccountStatusEnum.Active
                 };
                 var addResult = await _userManager.CreateAsync(user);
                 if (!addResult.Succeeded)
@@ -395,47 +291,162 @@ namespace GamexApi.Controllers
             var result = await _userManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
 
-        [HttpPut]
-        [Authorize(Roles = AccountRole.User)]
-        [Route("Password")]
-        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-        {
-            var hasPassword = await _userManager.HasPasswordAsync(User.Identity.GetUserId());
-            if ((hasPassword &&
-                string.IsNullOrEmpty(model.OldPassword)))
-            {   
-                ModelState.AddModelError("ErrorMessage", "Please submit your current password");
-                return BadRequest(ModelState);
-            }
-            //start change password
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (hasPassword)
-            {
-                var result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
-            }
-            else
-            {
-                var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
-            }
-            return Ok();
-        }
+        #endregion
 
+        #region otherUnusedExternal
+
+        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
+        //        [Route("ManageInfo")]
+        //        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
+        //        {
+        //            IdentityUser user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+        //
+        //            if (user == null)
+        //            {
+        //                return null;
+        //            }
+        //
+        //            List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
+        //
+        //            foreach (IdentityUserLogin linkedAccount in user.Logins)
+        //            {
+        //                logins.Add(new UserLoginInfoViewModel
+        //                {
+        //                    LoginProvider = linkedAccount.LoginProvider,
+        //                    ProviderKey = linkedAccount.ProviderKey
+        //                });
+        //            }
+        //
+        //            if (user.PasswordHash != null)
+        //            {
+        //                logins.Add(new UserLoginInfoViewModel
+        //                {
+        //                    LoginProvider = LocalLoginProvider,
+        //                    ProviderKey = user.UserName,
+        //                });
+        //            }
+        //
+        //            return new ManageInfoViewModel
+        //            {
+        //                LocalLoginProvider = LocalLoginProvider,
+        //                Email = user.UserName,
+        //                Logins = logins,
+        //                ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+        //            };
+        //        }
+
+        //        // POST api/Account/ChangePassword
+        //        [Route("ChangePassword")]
+        //        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        //        {
+        //            if (!ModelState.IsValid)
+        //            {
+        //                return BadRequest(ModelState);
+        //            }
+        //
+        //            IdentityResult result = await _userManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+        //                model.NewPassword);
+        //            
+        //            if (!result.Succeeded)
+        //            {
+        //                return GetErrorResult(result);
+        //            }
+        //
+        //            return Ok();
+        //        }
+
+        // POST api/Account/SetPassword
+        //        [Route("SetPassword")]
+        //        public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
+        //        {
+        //            if (!ModelState.IsValid)
+        //            {
+        //                return BadRequest(ModelState);
+        //            }
+        //
+        //            IdentityResult result = await _userManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+        //
+        //            if (!result.Succeeded)
+        //            {
+        //                return GetErrorResult(result);
+        //            }
+        //
+        //            return Ok();
+        //        }
+
+        // POST api/Account/AddExternalLogin
+        //        [Route("AddExternalLogin")]
+        //        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
+        //        {
+        //            if (!ModelState.IsValid)
+        //            {
+        //                return BadRequest(ModelState);
+        //            }
+        //
+        //            _authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+        //
+        //            AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
+        //
+        //            if (ticket == null || ticket.Identity == null || (ticket.Properties != null
+        //                && ticket.Properties.ExpiresUtc.HasValue
+        //                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
+        //            {
+        //                return BadRequest("External login failure.");
+        //            }
+        //
+        //            ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
+        //
+        //            if (externalData == null)
+        //            {
+        //                return BadRequest("The external login is already associated with an account.");
+        //            }
+        //
+        //            IdentityResult result = await _userManager.AddLoginAsync(User.Identity.GetUserId(),
+        //                new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
+        //
+        //            if (!result.Succeeded)
+        //            {
+        //                return GetErrorResult(result);
+        //            }
+        //
+        //            return Ok();
+        //        }
+
+        // POST api/Account/RemoveLogin
+        //        [Route("RemoveLogin")]
+        //        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
+        //        {
+        //            if (!ModelState.IsValid)
+        //            {
+        //                return BadRequest(ModelState);
+        //            }
+        //
+        //            IdentityResult result;
+        //
+        //            if (model.LoginProvider == LocalLoginProvider)
+        //            {
+        //                result = await _userManager.RemovePasswordAsync(User.Identity.GetUserId());
+        //            }
+        //            else
+        //            {
+        //                result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId(),
+        //                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+        //            }
+        //
+        //            if (!result.Succeeded)
+        //            {
+        //                return GetErrorResult(result);
+        //            }
+        //
+        //            return Ok();
+        //        }
+
+        #endregion
 
         #region Helpers
 
