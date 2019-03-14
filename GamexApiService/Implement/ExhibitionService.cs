@@ -97,13 +97,11 @@ namespace GamexApiService.Implement {
 
         public ExhibitionViewModel GetExhibition(string exhibitionId) {
             var exhibition = _exhibitionRepo.GetSingle(
-                e => e.IsActive && e.ExhibitionId.Equals(exhibitionId));
+                e => e.IsActive && e.ExhibitionId.Equals(exhibitionId), e => e.Booth.Select(b => b.Company));
             if (exhibition == null) {
                 return null;
             }
-
             var companies = exhibition.Booth.Select(b => b.Company);
-
             return new ExhibitionViewModel {
                 ExhibitionId = exhibition.ExhibitionId,
                 Name = exhibition.Name,

@@ -43,7 +43,7 @@ namespace GamexApiService.Implement {
         }
 
         public SurveyDetailViewModel GetSurvey(int surveyId) {
-            var survey = _surveyRepo.GetById(surveyId);
+            var survey = _surveyRepo.GetSingle(s => s.SurveyId == surveyId, s => s.Question.Select(q => q.ProposedAnswer));
             return new SurveyDetailViewModel() {
                 SurveyId = survey.SurveyId,
                 Title = survey.Title,
