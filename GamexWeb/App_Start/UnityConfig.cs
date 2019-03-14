@@ -10,6 +10,7 @@ using System;
 using System.Data.Entity;
 using System.Web;
 using Unity;
+using Unity.AspNet.Mvc;
 using Unity.Injection;
 using Unity.Lifetime;
 
@@ -62,7 +63,7 @@ namespace GamexWeb
 
             container.RegisterType<IIdentityMessageService, SendGridEmailService>();
 
-            container.RegisterType<DbContext, ApplicationDbContext>(new ContainerControlledLifetimeManager());
+            container.RegisterType<DbContext, ApplicationDbContext>(new PerRequestLifetimeManager());
 
             container.RegisterType<IAuthenticationManager>(
                 new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
@@ -74,7 +75,7 @@ namespace GamexWeb
             ////End of: ASP.NET Identity registration
 
             //Repo + UoW + DBContext registration
-            container.RegisterType<GamexContext>(new ContainerControlledLifetimeManager());
+            container.RegisterType<GamexContext>(new PerRequestLifetimeManager());
             container.RegisterType<IUnitOfWork, UnitOfWork>();
             container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
             //End of :Repo + UoW + DBContext registration

@@ -5,7 +5,6 @@ using GamexEntity;
 using GamexRepository;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace GamexApiService.Implement {
     public class SurveyService : ISurveyService {

@@ -166,6 +166,10 @@ namespace GamexRepository
 
         public void Delete(T entity)
         {
+            if (context.Entry(entity).State == EntityState.Detached)
+            {
+                dbSet.Attach(entity);
+            }
             dbSet.Remove(entity);
         }
 
