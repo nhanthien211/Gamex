@@ -1,7 +1,7 @@
-﻿using System;
+﻿using GamexService.Utilities;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
-using GamexService.Utilities;
 
 namespace GamexService.ViewModel
 {

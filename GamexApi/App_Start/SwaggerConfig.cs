@@ -1,10 +1,10 @@
+using GamexApi;
+using Swashbuckle.Application;
+using Swashbuckle.Swagger;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebActivatorEx;
-using GamexApi;
-using Swashbuckle.Application;
-using Swashbuckle.Swagger;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 

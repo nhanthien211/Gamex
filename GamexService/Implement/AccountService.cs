@@ -1,13 +1,10 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using GamexEntity;
 using GamexEntity.Enumeration;
 using GamexRepository;
-using System.Linq;
 using GamexService.Interface;
 using GamexService.ViewModel;
+using System;
 
 namespace GamexService.Implement
 {

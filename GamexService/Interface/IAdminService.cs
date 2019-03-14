@@ -1,9 +1,5 @@
-﻿using System;
+﻿using GamexService.ViewModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexService.ViewModel;
 
 namespace GamexService.Interface
 {

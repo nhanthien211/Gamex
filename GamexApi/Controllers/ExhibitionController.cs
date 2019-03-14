@@ -50,7 +50,6 @@ namespace GamexApi.Controllers {
         public IHttpActionResult CheckInExhibition(ExhibitionCheckInBindingModel model) {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
-
             if (result) {
                 var exhibition = _exhibitionService.GetExhibition(model.Id);
                 RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);

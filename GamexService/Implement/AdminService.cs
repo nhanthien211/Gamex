@@ -1,4 +1,5 @@
 ﻿using GamexEntity;
+using GamexEntity.Constant;
 using GamexEntity.Enumeration;
 using GamexRepository;
 using GamexService.Interface;
@@ -6,7 +7,6 @@ using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GamexEntity.Constant;
 
 namespace GamexService.Implement
 {

@@ -121,12 +121,15 @@ namespace GamexApiService.Implement {
             };
         }
 
-        public bool CheckInExhibition(string accountId, string exhibitionId) {
-            _exhibitionAttendeeRepo.Insert(new ExhibitionAttendee() {
+        public bool CheckInExhibition(string accountId, string exhibitionId)
+        {
+            var checkin = new ExhibitionAttendee
+            {
                 ExhibitionId = exhibitionId,
                 AccountId = accountId,
                 CheckinTime = DateTime.Now
-            });
+            };
+            _exhibitionAttendeeRepo.Insert(checkin);
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {

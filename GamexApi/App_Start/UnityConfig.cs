@@ -6,14 +6,13 @@ using GamexRepository;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using System;
-using System.Data.Entity;
-using System.Web;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataHandler.Serializer;
 using Microsoft.Owin.Security.DataProtection;
+using System;
+using System.Data.Entity;
+using System.Web;
 using Unity;
-using Unity.AspNet.WebApi;
 using Unity.Injection;
 using Unity.Lifetime;
 
@@ -65,7 +64,7 @@ namespace GamexApi
             container.RegisterType<ApplicationRoleManager>();
             container.RegisterType<IIdentityMessageService, SendGridEmailService>();
 
-            container.RegisterType<DbContext, ApplicationDbContext>(new PerResolveLifetimeManager());
+            container.RegisterType<DbContext, ApplicationDbContext>(new HierarchicalLifetimeManager());
             container.RegisterType<IAuthenticationManager>(
                 new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
             container.RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>();
@@ -74,7 +73,7 @@ namespace GamexApi
             ////End of: ASP.NET Identity registration
 
             //Repo + UoW + DBContext registration
-            container.RegisterType<GamexContext>(new PerResolveLifetimeManager());
+            container.RegisterType<GamexContext>(new HierarchicalLifetimeManager());
             container.RegisterType<IUnitOfWork, UnitOfWork>();
             container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
             //End of :Repo + UoW + DBContext registration

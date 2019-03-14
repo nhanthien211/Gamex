@@ -281,6 +281,7 @@
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\IdentityExtensions.cs" />
+    <Compile Include="Utilities\UsernameAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

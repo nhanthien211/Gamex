@@ -13,6 +13,7 @@ namespace GamexApiService.Implement {
             _unitOfWork = unitOfWork;
         }
 
+
         public bool EarnPoint(string accountId, int point) {
             var user = _accountRepo.GetById(accountId);
             user.Point += point;

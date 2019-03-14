@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using GamexService.Utilities;
 
 namespace GamexService.ViewModel
 {

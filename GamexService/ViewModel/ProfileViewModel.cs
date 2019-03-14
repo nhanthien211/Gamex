@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GamexService.Utilities;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexService.Utilities;
 
 namespace GamexService.ViewModel
 {

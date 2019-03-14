@@ -47,18 +47,46 @@ namespace GamexApi.Controllers
             _authenticationManager = authenticationManager;
             _roleManager = roleManager;
             AccessTokenFormat = accessTokenFormat;
-        }       
+        }
 
-        // Get api/Account
-        public async Task<AccountViewModel> GetAccount() {
+        [HttpGet]
+        [Authorize(Roles = AccountRole.User)]
+        public async Task<AccountProfileViewModel> GetAccount() {
             var userId = User.Identity.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
-            return new AccountViewModel {
+            return new AccountProfileViewModel
+            {
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Roles = user.Roles.ToList().Select(r => r.RoleId.ToString()) as IList<string>
+                Username = user.UserName
             };
+        }
+
+        [HttpPut]
+        [Authorize(Roles = AccountRole.User)]
+        public async Task<IHttpActionResult> UpdateAccount(UpdateProfileBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var id = User.Identity.GetUserId();
+            var user = await _userManager.FindByEmailAsync(model.Username);
+            if (user != null && user.Id != id)
+            {
+                return BadRequest("Username '" + model.Username + "' is taken");
+            }
+            user = _userManager.FindById(User.Identity.GetUserId());
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.UserName = model.Username;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+            return Ok();
         }
 
         [HttpPut]

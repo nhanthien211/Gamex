@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using GamexService.ViewModel;
+﻿using GamexService.ViewModel;
+using System.Collections.Generic;
 
 namespace GamexService.Interface
 {

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using GamexApiService.Interface;
+﻿using GamexApiService.Interface;
 using GamexApiService.Models;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
+using System.Web.Http;
 
-namespace GamexApi.Controllers {
+namespace GamexApi.Controllers
+{
     [Authorize(Roles = AccountRole.User)]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api")]
