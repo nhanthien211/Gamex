@@ -98,7 +98,33 @@ namespace GamexWeb.Controllers
                 return RedirectToAction("UpcomingExhibition", "Organizer");
             }
             return View(detail);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Upcoming/{id}/Upcoming")]
+        public async Task<ActionResult> UpdateUpcomingExhibitionDetail(ExhibitionDetailViewModel model) 
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Organizer/UpcomingExhibitionDetail.cshtml", model);
+            }
+
+            if (model.Logo != null)
+            {
+                model.ImageUrl =
+                    await FirebaseUploadUtility.UploadImageToFirebase(model.Logo.InputStream, model.ExhibitionId);
+            }
+
+            if (!string.IsNullOrEmpty(model.ImageUrl))
+            {
+                model.IsSuccessful = _organizerService.UpdateExhibitionDetail(model);
+            }
+            else
+            {
+                model.IsSuccessful = false;
+            }
+            return View("~/Views/Organizer/UpcomingExhibitionDetail.cshtml", model);
         }
     }
 }

@@ -89,7 +89,7 @@
             </button>
         </div>
         <div class="card-body">
-            @using (Html.BeginForm("CreateExhibition", "Organizer", FormMethod.Post, new
+            @using (Html.BeginForm("UpdateUpcomingExhibitionDetail", "Organizer", FormMethod.Post, new
             {
                 @id = "CreateExhibitionForm",
                 @enctype = "multipart/form-data"
@@ -200,6 +200,7 @@
                     @type = "hidden"
                 })
                 @Html.HiddenFor(m => m.ImageUrl)
+                @Html.HiddenFor(m => m.ExhibitionId)
                 <hr />
                 <div class="row for-exhibition-form">
                     <div class="col-sm-12 col-lg-12">
@@ -242,6 +243,25 @@
             </div>
             <div class="modal-body">
                 <div id="qrcode"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Update successfully</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>

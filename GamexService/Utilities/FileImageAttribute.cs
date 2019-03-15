@@ -12,7 +12,11 @@ namespace GamexService.Utilities
         public override bool IsValid(object value)
         {
             var file = value as HttpPostedFileBase;
-            if (file == null || file.ContentLength > 10 * 1024 * 1024)
+            if (file == null)
+            {
+                return true;
+            }
+            if (file.ContentLength > 10 * 1024 * 1024)
             {
                 return false;
             }

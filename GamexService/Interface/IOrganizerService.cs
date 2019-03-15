@@ -12,5 +12,6 @@ namespace GamexService.Interface
             string searchValue, int skip, int take, string organizerId);
 
         ExhibitionDetailViewModel GetExhibitionDetail(string exhibitionId);
+        bool UpdateExhibitionDetail(ExhibitionDetailViewModel model);
     }
 }

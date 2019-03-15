@@ -94,5 +94,42 @@ namespace GamexService.Implement
                 e => e.ExhibitionId == exhibitionId && e.StartDate > DateTime.Now
             );
         }
+
+        public bool UpdateExhibitionDetail(ExhibitionDetailViewModel model)
+        {
+            var exhibition = _exhibitionRepository.GetById(model.ExhibitionId);
+            if (exhibition != null)
+            {
+                _exhibitionRepository.Update(exhibition);
+                exhibition.Description = model.Description;
+                exhibition.Address = model.Address;
+                exhibition.EndDate = model.EndDate;
+                exhibition.Logo = model.ImageUrl;
+                exhibition.StartDate = model.StartDate;
+                exhibition.Name = model.Name;
+                if (model.Latitude.HasValue && model.Longitude.HasValue)
+                {
+                    exhibition.Location = MyUtilities.CreateDbGeography(model.Longitude.Value, model.Latitude.Value);
+                }
+                else
+                {
+                    exhibition.Location = null;
+                }
+                int result;
+                try
+                {
+                    result = _unitOfWork.SaveChanges();
+                    if (result >= 0)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 }
