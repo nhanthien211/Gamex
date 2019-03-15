@@ -15,7 +15,7 @@
     <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
     <script>
         var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "?exhibitionId=@Model.ExhibitionId&companyId=@User.Identity.GetCompanyId()",
+            text: "exhibitionId=@Model.ExhibitionId&companyId=@User.Identity.GetCompanyId()",
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H

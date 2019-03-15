@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Company List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var exhibitionId = "@ViewBag.ExhibitionId";
+    </script>
+    @Scripts.Render("~/bundles/datatableUpcomingEventCompany")
+}
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Organizer", new { id = ViewBag.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+
+                <li class="nav-item">
+                    @Html.ActionLink("Company", "UpcomingExhibitionDetail", "Organizer", new { id = ViewBag.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+                <i class="menu-icon fas fa-building fa-fw"></i> Company List
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

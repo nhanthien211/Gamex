@@ -57,6 +57,7 @@
     <Compile Include="Utilities\FileLength.cs" />
     <Compile Include="Utilities\MyUtilities.cs" />
     <Compile Include="Utilities\UsernameAttribute.cs" />
+    <Compile Include="ViewModel\AttendedCompanyViewModel.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />

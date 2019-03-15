@@ -13,5 +13,8 @@ namespace GamexService.Interface
 
         ExhibitionDetailViewModel GetExhibitionDetail(string exhibitionId);
         bool UpdateExhibitionDetail(ExhibitionDetailViewModel model);
+
+        List<AttendedCompanyViewModel> LoadAttendedCompanyList(string sortColumnDirection, string searchValue, int skip,
+            int take, string exhibitionId);
     }
 }
