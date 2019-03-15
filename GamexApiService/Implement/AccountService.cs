@@ -1,5 +1,6 @@
 ﻿using System;
 using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexEntity;
 using GamexRepository;
 
@@ -44,6 +45,14 @@ namespace GamexApiService.Implement {
             catch (Exception e) {
                 return false;
             }
+        }
+
+        public RewardPointViewModel GetPoint(string accountId) {
+            var user = _accountRepo.GetById(accountId);
+            return new RewardPointViewModel {
+                Point = user.Point,
+                TotalPointEarned = user.TotalPointEarned
+            };
         }
     }
 }

@@ -19,4 +19,9 @@
         public int PointCost { get; set; }
         public string Content { get; set; }
     }
+
+    public class RewardPointViewModel {
+        public int Point { get; set; }
+        public int TotalPointEarned { get; set; }
+    }
 }

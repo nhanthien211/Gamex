@@ -70,5 +70,13 @@ namespace GamexApi.Controllers {
         private bool RecordExchangeActivity(string accountId, int rewardId) {
             return _rewardHistoryService.RecordExchangeHistory(accountId, rewardId);
         }
+
+        [HttpGet]
+        [Route("reward/point")]
+        public RewardPointViewModel GetAccountRewardPoint() {
+            var accountId = User.Identity.GetUserId();
+            var point = _accountService.GetPoint(accountId);
+            return point;
+        }
     }
 }
