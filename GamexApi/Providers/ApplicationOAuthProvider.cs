@@ -32,25 +32,21 @@ namespace GamexApi.Providers
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] {""});
 
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
-            ApplicationUser user = await userManager.FindByEmailAsync(context.UserName);
-            if (user == null)
+            var user = await userManager.FindByEmailAsync(context.UserName) ?? await userManager.FindByNameAsync(context.UserName);
+            if (user == null || !userManager.CheckPassword(user, context.Password))
             {
-                user = await userManager.FindByNameAsync(context.UserName);
-                if (user == null || !userManager.CheckPassword(user, context.Password))
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
-                if (!userManager.IsInRole(user.Id, AccountRole.User))
-                {
-                    context.SetError("invalid_grant", "The account is not for attendee.");
-                    return;
-                }
-                if (user.StatusId != (int) AccountStatusEnum.Active)
-                {
-                    context.SetError("invalid_grant", "The account is disabled.");
-                    return;
-                }
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
+            }
+            if (!userManager.IsInRole(user.Id, AccountRole.User))
+            {
+                context.SetError("invalid_grant", "The account is not for attendee.");
+                return;
+            }
+            if (user.StatusId != (int)AccountStatusEnum.Active)
+            {
+                context.SetError("invalid_grant", "The account is disabled.");
+                return;
             }
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                 OAuthDefaults.AuthenticationType);

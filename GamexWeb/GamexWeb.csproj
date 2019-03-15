@@ -274,6 +274,7 @@
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.question.js" />
     <Content Include="Scripts\sb.organizer.datatables.view.upcoming.exhibition.js" />
+    <Content Include="Scripts\sb.organizer.datatable.upcoming.event.company.js" />
     <Content Include="Scripts\tempusdominus-datetimepicker.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -661,6 +662,8 @@
     <Content Include="Views\Company\UpcomingSurveyQuestionDetail.cshtml" />
     <Content Include="Views\Organizer\UpcomingExhibition.cshtml" />
     <Content Include="Views\Organizer\UpcomingExhibitionDetail.cshtml" />
+    <Content Include="Views\Organizer\UpcomingExhibitionCompanyList.cshtml" />
+    <Content Include="Views\Organizer\AttendedCompanyDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

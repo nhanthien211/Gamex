@@ -126,5 +126,41 @@ namespace GamexWeb.Controllers
             }
             return View("~/Views/Organizer/UpcomingExhibitionDetail.cshtml", model);
         }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Exhibition/Upcoming/{id}/Company")]
+        public ActionResult UpcomingExhibitionCompanyList(string id)
+        {
+            ViewBag.ExhibitionId = id;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("LoadAttendedCompanyList/{id}")]
+        public ActionResult LoadAttendedCompany(string id)
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _organizerService.LoadAttendedCompanyList(sortColumnDirection, searchValue, skip, take, id);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Upcoming/{exhibitionId}/Company/{companyId}")]
+        public ActionResult AttendedCompanyDetail(string exhibitionId, string companyId)
+        {
+
+            return View();
+        }
     }
 }

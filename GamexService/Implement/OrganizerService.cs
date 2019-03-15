@@ -12,11 +12,15 @@ namespace GamexService.Implement
     public class OrganizerService : IOrganizerService
     {
         private readonly IRepository<Exhibition> _exhibitionRepository;
+        private readonly IRepository<Booth> _boothRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public OrganizerService(IRepository<Exhibition> exhibitionRepository, IUnitOfWork unitOfWork)
+        public OrganizerService(IRepository<Exhibition> exhibitionRepository, 
+            IRepository<Booth> boothRepository, 
+            IUnitOfWork unitOfWork)
         {
             _exhibitionRepository = exhibitionRepository;
+            _boothRepository = boothRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -130,6 +134,20 @@ namespace GamexService.Implement
                 }
             }
             return false;
+        }
+
+        public List<AttendedCompanyViewModel> LoadAttendedCompanyList(string sortColumnDirection, string searchValue, int skip, int take, string exhibitionId)
+        {
+            return _boothRepository.GetPagingProjection(
+                b => new AttendedCompanyViewModel
+                {
+                    CompanyId = b.CompanyId,
+                    ExhibitionId = b.ExhibitionId,
+                    CompanyName = b.Company.Name
+                },
+                b => b.ExhibitionId == exhibitionId && b.Company.Name.Contains(searchValue),
+                b => b.Company.Name, sortColumnDirection, take, skip
+            ).ToList();
         }
     }
 }
