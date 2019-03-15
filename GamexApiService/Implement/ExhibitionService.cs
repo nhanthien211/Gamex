@@ -130,16 +130,23 @@ namespace GamexApiService.Implement {
             };
             var exhibition = _exhibitionRepo.GetById(exhibitionId);
 
+            if (exhibition == null) {
+                return new ServiceActionResult {
+                    Ok = false,
+                    Message = "Check in failed: exhibition not existed!"
+                };
+            }
+
             if (checkin.CheckinTime < exhibition.StartDate) {
                 return new ServiceActionResult() {
                     Ok = false,
-                    Message = "Checked in failed: the exhibition hasn't started yet!"
+                    Message = "Check in failed: the exhibition hasn't started yet!"
                 };
             } 
             if (checkin.CheckinTime > exhibition.EndDate) {
                 return new ServiceActionResult() {
                     Ok = false,
-                    Message = "Checked in failed: the exhibition has ended!"
+                    Message = "Check in failed: the exhibition has ended!"
                 };
             }
 
@@ -169,6 +176,12 @@ namespace GamexApiService.Implement {
                                                      && ea.CheckinTime != null
             );
             return exhibitionAttendee != null;
+        }
+
+        public bool IsOnGoing(string exhibitionId) {
+            var exhibition = _exhibitionRepo.GetById(exhibitionId);
+            var now = DateTime.Now;
+            return exhibition.StartDate <= now && now <= exhibition.EndDate;
         }
     }
 }
