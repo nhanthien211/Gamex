@@ -32,25 +32,22 @@ namespace GamexApi.Controllers
 
         [HttpGet]
         [Route("surveys")]
-        public List<SurveyShortViewModel> GetSurveys(string exhibitionId, string companyId) {
+        public IHttpActionResult GetSurveys(string exhibitionId, string companyId) {
             var accountId = User.Identity.GetUserId();
             var isExhibitionOnGoing = _exhibitionService.IsOnGoing(exhibitionId);
             if (!isExhibitionOnGoing) {
-                return null;
+                return BadRequest("Exhibition is not ongoing!");
             }
-            return _surveyService.GetSurveys(accountId, exhibitionId, companyId);
+            var hasCheckedIn = _exhibitionService.HasCheckedIn(accountId, exhibitionId);
+            if (!hasCheckedIn) {
+                return BadRequest("You haven't checked in the exhibition!");
+            }
+            return Ok(_surveyService.GetSurveys(accountId, exhibitionId, companyId));
         }
 
         [HttpGet]
         [Route("survey")]
         public SurveyDetailViewModel GetSurvey(int id) {
-            // only return survey if user has checked in
-            var accountId = User.Identity.GetUserId();
-            var survey = _surveyService.GetSurvey(id);
-            var hasCheckedIn = _exhibitionService.HasCheckedIn(accountId, survey.ExhibitionId);
-            if (!hasCheckedIn) {
-                return null;
-            }
             return _surveyService.GetSurvey(id);
         }
 

@@ -16,8 +16,7 @@ using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
 
-namespace GamexApi
-{
+namespace GamexApi {
     /// <summary>
     /// Specifies the Unity configuration for the main container.
     /// </summary>
@@ -85,6 +84,7 @@ namespace GamexApi
             container.RegisterType<IAccountService, AccountService>();
             container.RegisterType<ISurveyParticipationService, SurveyParticipationService>();
             container.RegisterType<IRewardService, RewardService>();
+            container.RegisterType<IRewardHistoryService, RewardHistoryService>();
 
             container.RegisterType(typeof(ISecureDataFormat<>), typeof(SecureDataFormat<>));
             container.RegisterType<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>();

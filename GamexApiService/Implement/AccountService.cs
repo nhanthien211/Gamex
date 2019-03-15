@@ -17,6 +17,25 @@ namespace GamexApiService.Implement {
         public bool EarnPoint(string accountId, int point) {
             var user = _accountRepo.GetById(accountId);
             user.Point += point;
+            user.TotalPointEarned += point;
+
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                return affectedRows == 1;
+            }
+            catch (Exception e) {
+                return false;
+            }
+        }
+
+        public bool UsePoint(string accountId, int point) {
+            var user = _accountRepo.GetById(accountId);
+
+            if (user.Point < point) {
+                return false;
+            }
+
+            user.Point -= point;
 
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
