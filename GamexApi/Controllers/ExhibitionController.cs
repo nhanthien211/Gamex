@@ -54,7 +54,7 @@ namespace GamexApi.Controllers {
                 var exhibition = _exhibitionService.GetExhibition(model.Id);
                 RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
                 EarnPoint(accountId, CheckInExhibitionPoint);
-                return Ok(new { point = CheckInExhibitionPoint });
+                return Ok(new { point = CheckInExhibitionPoint, message = result.Message });
             }
             return BadRequest(result.Message);
         }

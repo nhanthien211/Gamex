@@ -116,8 +116,9 @@ namespace GamexApiService.Implement {
                 ListCompany = companies.Select(c => new CompanyShortViewModel() {
                     CompanyId = c.CompanyId,
                     Name = c.Name,
-                    Logo = c.Logo
-                }).ToList()
+                    Logo = c.Logo,
+                    Booths = c.Booth.Select(b => b.BoothNumber).ToArray()
+                }).ToList().RemoveRedundancies()
             };
         }
 

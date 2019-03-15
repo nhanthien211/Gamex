@@ -78,6 +78,7 @@
     <Compile Include="Implement\ExhibitionService.cs" />
     <Compile Include="Implement\SurveyParticipationService.cs" />
     <Compile Include="Implement\SurveyService.cs" />
+    <Compile Include="Implement\SystemExtension.cs" />
     <Compile Include="Interface\IAccountService.cs" />
     <Compile Include="Interface\IActivityHistoryService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
