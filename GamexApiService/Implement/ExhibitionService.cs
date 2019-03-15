@@ -28,7 +28,7 @@ namespace GamexApiService.Implement {
 
         private List<string> GetCheckedInExhibitionIds(string accountId) {
             var checkedIn = _exhibitionAttendeeRepo.GetList(ea =>
-                ea.AccountId.Equals(accountId));
+                ea.AccountId.Equals(accountId) && ea.CheckinTime != null);
             return checkedIn.Select(e => e.ExhibitionId).ToList();
         }
 
@@ -121,26 +121,53 @@ namespace GamexApiService.Implement {
             };
         }
 
-        public bool CheckInExhibition(string accountId, string exhibitionId)
-        {
-            var checkin = new ExhibitionAttendee
-            {
+        public ServiceActionResult CheckInExhibition(string accountId, string exhibitionId) {
+            var checkin = new ExhibitionAttendee {
                 ExhibitionId = exhibitionId,
                 AccountId = accountId,
                 CheckinTime = DateTime.Now
             };
+            var exhibition = _exhibitionRepo.GetById(exhibitionId);
+
+            if (checkin.CheckinTime < exhibition.StartDate) {
+                return new ServiceActionResult() {
+                    Ok = false,
+                    Message = "Checked in failed: the exhibition hasn't started yet!"
+                };
+            } 
+            if (checkin.CheckinTime > exhibition.EndDate) {
+                return new ServiceActionResult() {
+                    Ok = false,
+                    Message = "Checked in failed: the exhibition has ended!"
+                };
+            }
+
+            if (HasCheckedIn(accountId, exhibitionId)) {
+                return new ServiceActionResult() {
+                    Ok = false,
+                    Message = "You has already checked in this exhibition!"
+                };
+            }
+
             _exhibitionAttendeeRepo.Insert(checkin);
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {
-                    return true;
+                    return new ServiceActionResult() { Ok = true, Message = "Checked success!"};
                 }
-            }
-            catch (Exception ex) {
-                return false;
+            } catch (Exception ex) {
+                return new ServiceActionResult() {Ok = false, Message = "Oops, something went wrong!"};
             }
 
-            return false;
+            return new ServiceActionResult() {Ok = false, Message = "Oops, something went wrong!" };
+        }
+
+        public bool HasCheckedIn(string accountId, string exhibitionId) {
+            var exhibitionAttendee = _exhibitionAttendeeRepo.GetSingle(
+                ea => ea.AccountId.Equals(accountId) && ea.ExhibitionId.Equals(exhibitionId)
+                                                     && ea.CheckinTime != null
+            );
+            return exhibitionAttendee != null;
         }
     }
 }

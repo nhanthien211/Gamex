@@ -1,16 +1,13 @@
-﻿using System;
+﻿using GamexApiService.ViewModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GamexApiService.ViewModel;
+using GamexApiService.Models;
 
-namespace GamexApiService.Interface
-{
-    public interface IExhibitionService
-    {
+namespace GamexApiService.Interface {
+
+    public interface IExhibitionService {
         List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip, string lat, string lng, string accountId);
         ExhibitionViewModel GetExhibition(string exhibitionId);
-        bool CheckInExhibition(string accountId, string exhibitionId);
+        ServiceActionResult CheckInExhibition(string accountId, string exhibitionId);
+        bool HasCheckedIn(string accountId, string exhibitionId);
     }
 }

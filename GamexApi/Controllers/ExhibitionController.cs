@@ -50,13 +50,13 @@ namespace GamexApi.Controllers {
         public IHttpActionResult CheckInExhibition(ExhibitionCheckInBindingModel model) {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
-            if (result) {
+            if (result.Ok) {
                 var exhibition = _exhibitionService.GetExhibition(model.Id);
                 RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
                 EarnPoint(accountId, CheckInExhibitionPoint);
                 return Ok(new { point = CheckInExhibitionPoint });
             }
-            return BadRequest("Check-in failed! Please ensure the parameters have been passed correctly!");
+            return BadRequest(result.Message);
         }
 
         private bool RecordActivity(string accountId, string activity) {

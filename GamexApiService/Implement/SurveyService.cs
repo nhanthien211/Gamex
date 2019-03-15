@@ -51,6 +51,7 @@ namespace GamexApiService.Implement {
                 SurveyId = survey.SurveyId,
                 Title = survey.Title,
                 Point = survey.Point,
+                ExhibitionId = survey.ExhibitionId,
                 Questions = survey.Question.Select(q => new QuestionViewModel {
                     QuestionId = q.QuestionId,
                     QuestionType = q.QuestionType,

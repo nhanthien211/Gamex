@@ -15,16 +15,19 @@ namespace GamexApi.Controllers
         private IActivityHistoryService _activityService;
         private IAccountService _accountService;
         private ISurveyParticipationService _surveyParticipationService;
+        private IExhibitionService _exhibitionService;
 
         public SurveyController(
             ISurveyService surveyService,
             IActivityHistoryService activityService,
             IAccountService accountService,
-            ISurveyParticipationService surveyParticipationService) {
+            ISurveyParticipationService surveyParticipationService,
+            IExhibitionService exhibitionService) {
             _surveyService = surveyService;
             _accountService = accountService;
             _activityService = activityService;
             _surveyParticipationService = surveyParticipationService;
+            _exhibitionService = exhibitionService;
         }
 
         [HttpGet]
@@ -37,6 +40,13 @@ namespace GamexApi.Controllers
         [HttpGet]
         [Route("survey")]
         public SurveyDetailViewModel GetSurvey(int id) {
+            // only return survey if user has checked in
+            var accountId = User.Identity.GetUserId();
+            var survey = _surveyService.GetSurvey(id);
+            var hasCheckedIn = _exhibitionService.HasCheckedIn(accountId, survey.ExhibitionId);
+            if (!hasCheckedIn) {
+                return null;
+            }
             return _surveyService.GetSurvey(id);
         }
 
