@@ -161,13 +161,13 @@ namespace GamexApiService.Implement {
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {
-                    return new ServiceActionResult() { Ok = true, Message = "Checked success!"};
+                    return new ServiceActionResult() { Ok = true, Message = "Check in success!"};
                 }
             } catch (Exception ex) {
-                return new ServiceActionResult() {Ok = false, Message = "Oops, something went wrong!"};
+                return ServiceActionResult.ErrorResult;
             }
 
-            return new ServiceActionResult() {Ok = false, Message = "Oops, something went wrong!" };
+            return ServiceActionResult.ErrorResult;
         }
 
         public bool HasCheckedIn(string accountId, string exhibitionId) {

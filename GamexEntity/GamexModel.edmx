@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GamexModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountBookmark">
           <Key>
             <PropertyRef Name="AccountId" />
@@ -103,9 +103,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BoothNumber" Type="nvarchar" MaxLength="5" />
           <Property Name="CompanyId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="BoothNumber" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -193,7 +193,7 @@
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="StartDate" Type="datetime" Nullable="false" />
-          <Property Name="EndtDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="RewardHistory">
           <Key>
@@ -221,12 +221,12 @@
           <Key>
             <PropertyRef Name="SurveyAnswerId" />
           </Key>
+          <Property Name="SurveyAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="QuestionId" Type="int" Nullable="false" />
           <Property Name="ProposedAnswerId" Type="int" />
           <Property Name="AccountId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="SurveyId" Type="int" Nullable="false" />
           <Property Name="Other" Type="nvarchar" MaxLength="100" />
-          <Property Name="SurveyAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="SurveyParticipation">
           <Key>
@@ -378,9 +378,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Booth_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
           <End Role="Booth" Type="Self.Booth" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">
@@ -464,9 +462,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProposedAnswer_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
           <End Role="ProposedAnswer" Type="Self.ProposedAnswer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Question">
@@ -478,9 +474,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Question_Survey">
-          <End Role="Survey" Type="Self.Survey" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Survey" Type="Self.Survey" Multiplicity="1" />
           <End Role="Question" Type="Self.Question" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Survey">
@@ -552,9 +546,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Survey_Exhibition">
-          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Exhibition" Type="Self.Exhibition" Multiplicity="1" />
           <End Role="Survey" Type="Self.Survey" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Exhibition">
@@ -789,8 +781,7 @@
             <End Role="SurveyParticipation" EntitySet="SurveyParticipation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GamexModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1020,9 +1011,9 @@
           <Property Name="CreatedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndtDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Reward_AspNetUsers" FromRole="Reward" ToRole="AspNetUsers" />
           <NavigationProperty Name="RewardHistory" Relationship="Self.FK_RewardHistory_Reward" FromRole="Reward" ToRole="RewardHistory" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="RewardHistory">
           <Key>
@@ -1791,6 +1782,7 @@
           <EntitySetMapping Name="Reward">
             <EntityTypeMapping TypeName="GamexModel.Reward">
               <MappingFragment StoreEntitySet="Reward">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="RewardId" ColumnName="RewardId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
@@ -1799,7 +1791,6 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndtDate" ColumnName="EndtDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

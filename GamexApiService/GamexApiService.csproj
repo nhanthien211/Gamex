@@ -76,6 +76,8 @@
     <Compile Include="Implement\ActivityHistoryService.cs" />
     <Compile Include="Implement\CompanyService.cs" />
     <Compile Include="Implement\ExhibitionService.cs" />
+    <Compile Include="Implement\RewardHistoryService.cs" />
+    <Compile Include="Implement\RewardService.cs" />
     <Compile Include="Implement\SurveyParticipationService.cs" />
     <Compile Include="Implement\SurveyService.cs" />
     <Compile Include="Implement\SystemExtension.cs" />
@@ -83,6 +85,8 @@
     <Compile Include="Interface\IActivityHistoryService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Interface\IExhibitionService.cs" />
+    <Compile Include="Interface\IRewardHistoryService.cs" />
+    <Compile Include="Interface\IRewardService.cs" />
     <Compile Include="Interface\ISurveyParticipationService.cs" />
     <Compile Include="Interface\ISurveyService.cs" />
     <Compile Include="Models\ActivityHistoryViewModels.cs" />
@@ -90,6 +94,9 @@
     <Compile Include="Models\ExhibitionBindingModels.cs" />
     <Compile Include="Models\ProposedAnswerViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\RewardBindingModels.cs" />
+    <Compile Include="Models\RewardHistoryViewModels.cs" />
+    <Compile Include="Models\RewardViewModels.cs" />
     <Compile Include="Models\ServiceActionResult.cs" />
     <Compile Include="Models\SurveyBindingModels.cs" />
     <Compile Include="Models\SurveyViewModels.cs" />
