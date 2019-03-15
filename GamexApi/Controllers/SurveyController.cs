@@ -34,6 +34,10 @@ namespace GamexApi.Controllers
         [Route("surveys")]
         public List<SurveyShortViewModel> GetSurveys(string exhibitionId, string companyId) {
             var accountId = User.Identity.GetUserId();
+            var isExhibitionOnGoing = _exhibitionService.IsOnGoing(exhibitionId);
+            if (!isExhibitionOnGoing) {
+                return null;
+            }
             return _surveyService.GetSurveys(accountId, exhibitionId, companyId);
         }
 
@@ -53,6 +57,10 @@ namespace GamexApi.Controllers
         [HttpPost]
         [Route("survey")]
         public IHttpActionResult SubmitSurvey(SurveyAnswerBindingModel surveyAnswerModel) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
             var accountId = User.Identity.GetUserId();
             var result = _surveyService.SubmitSurvey(accountId, surveyAnswerModel);
 

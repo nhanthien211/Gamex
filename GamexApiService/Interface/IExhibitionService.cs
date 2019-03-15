@@ -9,5 +9,6 @@ namespace GamexApiService.Interface {
         ExhibitionViewModel GetExhibition(string exhibitionId);
         ServiceActionResult CheckInExhibition(string accountId, string exhibitionId);
         bool HasCheckedIn(string accountId, string exhibitionId);
+        bool IsOnGoing(string exhibitionId);
     }
 }
