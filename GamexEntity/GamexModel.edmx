@@ -103,9 +103,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Booth" Type="int" />
           <Property Name="CompanyId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ExhibitionId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BoothNumber" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -908,9 +908,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Booth1" Type="Int32" />
           <Property Name="CompanyId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ExhibitionId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BoothNumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Company" Relationship="Self.FK_Booth_Company" FromRole="Booth" ToRole="Company" />
           <NavigationProperty Name="Exhibition" Relationship="Self.FK_Booth_Exhibition" FromRole="Booth" ToRole="Exhibition" />
         </EntityType>
@@ -1703,9 +1703,9 @@
             <EntityTypeMapping TypeName="GamexModel.Booth">
               <MappingFragment StoreEntitySet="Booth">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Booth1" ColumnName="Booth" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+                <ScalarProperty Name="BoothNumber" ColumnName="BoothNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
