@@ -84,6 +84,7 @@ namespace GamexApi
             container.RegisterType<ISurveyService, SurveyService>();
             container.RegisterType<IAccountService, AccountService>();
             container.RegisterType<ISurveyParticipationService, SurveyParticipationService>();
+            container.RegisterType<IRewardService, RewardService>();
 
             container.RegisterType(typeof(ISecureDataFormat<>), typeof(SecureDataFormat<>));
             container.RegisterType<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>();
