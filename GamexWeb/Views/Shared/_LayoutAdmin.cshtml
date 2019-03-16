@@ -90,12 +90,23 @@
                             <span class="nav-link-text">Profile</span>
                         </a>
                     </li>
-                    <li class="nav-item @ViewBag.ManagerUser">
-                        <a class="nav-link" href="#">
-                            <i class="menu-icon fas fa-user fa-fw"></i>
-                            <span class="nav-link-text">Employee</span>
+
+                    <!--Manage Company-->
+                    <li class="nav-item @ViewBag.Company">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuManageCompany" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fas fa-building fa-fw"></i>
+                            <span class="arrow">Company</span>
                         </a>
                     </li>
+                    <ul class="sidenav-second-level collapse @ViewBag.ViewCompanyDropDownShow" id="navbarDropdownMenuManageCompany">
+                        <li class="@ViewBag.CompanyInfo">
+                            @Html.ActionLink("Company Info", "CompanyInfo", "Company")
+                        </li>
+                        <li class="@ViewBag.EmployeeList">
+                            @Html.ActionLink("Employee Request", "EmployeeJoinList", "Company")
+                        </li>
+                    </ul>
+                    <!--End of Manage Company-->
 
                     <!--Manage Exhibition-->
                     <li class="nav-item @ViewBag.Exhibition">

@@ -31,10 +31,6 @@ namespace GamexService.ViewModel
         [RegularExpression("^((https?):[/][/])?([\\da-z.-]+)[.]([a-z.]{2,6})([/\\w.-]*)*[/]?$", ErrorMessage = "Invalid website format")]
         public string Website { get; set; }
 
-        [Display(Name = "Address")]
-        [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters")]
-        public string Address { get; set; }
-
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         [StringLength(256, ErrorMessage = "Email cannot exceed 256 characters")]

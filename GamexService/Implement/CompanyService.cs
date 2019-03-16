@@ -6,6 +6,7 @@ using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GamexService.Utilities;
 
 namespace GamexService.Implement
 {
@@ -56,7 +57,6 @@ namespace GamexService.Implement
                 Name =  model.Name,
                 Email = model.Email,
                 Phone =  model.Phone,
-                Address = model.Address,
                 Website = model.Website,
                 TaxNumber = model.TaxNumber,
                 StatusId = (int) CompanyStatusEnum.Pending
@@ -569,6 +569,61 @@ namespace GamexService.Implement
                 return false;
             }
             return result > 0;
+        }
+
+        public CompanyProfileViewModel GetCompanyProfile(string companyId)
+        {
+            return _companyRepository.GetSingleProjection(
+                c => new CompanyProfileViewModel
+            {
+                    Description = c.Description,
+                    Email = c.Email,
+                    TaxNumber = c.TaxNumber,
+                    ImageUrl = c.Logo,
+                    Address = c.Address,
+                    CompanyName = c.Name,
+                    Phone = c.Phone,
+                    Website = c.Website,
+                    Latitude = c.Location.Latitude,
+                    Longitude = c.Location.Longitude
+            },
+                c => c.CompanyId == companyId
+            );
+        }
+
+        public bool UpdateCompanyProfile(CompanyProfileViewModel model, string companyId)
+        {
+            var company = _companyRepository.GetById(companyId);
+            if (company != null)
+            {
+                company.Description = model.Description;
+                company.Address = model.Address;
+                company.Email = model.Email;
+                company.Logo = model.ImageUrl;
+                company.Phone = model.Phone;
+                company.Website = model.Website;
+                if (model.Latitude.HasValue && model.Longitude.HasValue)
+                {
+                    company.Location = MyUtilities.CreateDbGeography(model.Longitude.Value, model.Latitude.Value);
+                }
+                else
+                {
+                    company.Location = null;
+                }
+                try
+                {
+                    var result = _unitOfWork.SaveChanges();
+                    if (result >= 0)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
         }
     }
 

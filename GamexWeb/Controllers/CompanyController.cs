@@ -7,6 +7,7 @@ using GamexWeb.Utilities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace GamexWeb.Controllers
@@ -572,6 +573,50 @@ namespace GamexWeb.Controllers
             _companyService.RemoveQuestion(questionId);
             return RedirectToAction("UpcomingSurveyQuestion", "Company", 
                 new { exhibitionId = exhibitionId, id = surveyId});
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Info")]
+        public ActionResult CompanyInfo()
+        {
+            string companyId = User.Identity.GetCompanyId();
+            var profile = _companyService.GetCompanyProfile(companyId);
+            return View(profile);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Info")]
+        public async Task<ActionResult> CompanyInfo(CompanyProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            string companyId = User.Identity.GetCompanyId();
+            if (model.Logo != null)
+            {
+                model.ImageUrl =
+                    await FirebaseUploadUtility.UploadImageToFirebase(model.Logo.InputStream, companyId);
+            }
+            if (!string.IsNullOrEmpty(model.ImageUrl))
+            {
+                model.IsSuccessful = _companyService.UpdateCompanyProfile(model, companyId);
+            }
+            else
+            {
+                model.IsSuccessful = false;
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Employee/Join")]
+        public ActionResult EmployeeJoinList()
+        {
+            return View();
         }
     }
 }

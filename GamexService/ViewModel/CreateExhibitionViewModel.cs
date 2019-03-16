@@ -18,6 +18,7 @@ namespace GamexService.ViewModel
         
         [Required(ErrorMessage = "Address is required")]
         [Display(Name = "Address")]
+        [StringLength(500, ErrorMessage = "Cannot exceed 500 characters")]
         public string Address { get; set; }
 
         [Required(ErrorMessage = "Start date required")]

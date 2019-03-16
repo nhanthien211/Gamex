@@ -29,5 +29,7 @@ namespace GamexService.Interface
         bool UpdateSurveyQuestionDetail(SurveyQuestionDetailViewModel model);
         bool RemoveQuestion(string questionId);
         bool RemoveSurvey(string surveyId);
+        CompanyProfileViewModel GetCompanyProfile(string companyId);
+        bool UpdateCompanyProfile(CompanyProfileViewModel model, string companyId);
     }
 }
