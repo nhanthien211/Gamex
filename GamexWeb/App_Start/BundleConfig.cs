@@ -88,9 +88,6 @@ namespace GamexWeb
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.organizer.datatable.upcoming.event.company.js"));
 
-            //CKEditor script
-            bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(
-                "~/Scripts/ckeditor/ckeditor.js"));
 
             //Validate File Upload
             bundles.Add(new ScriptBundle("~/bundles/validateFile").Include(
