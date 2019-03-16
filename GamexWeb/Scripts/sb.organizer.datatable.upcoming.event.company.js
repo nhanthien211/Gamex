@@ -34,7 +34,7 @@
             {
                 "render": function (data, type, full, meta) {
                     return '<a href="/Organizer/Exhibition/Upcoming/'
-                        + full.ExhibitionId + 'Company' + full.CompanyId +
+                        + full.ExhibitionId + '/Company/' + full.CompanyId +
                         '"><i class="fas fa-edit"></i>View Detail</a>';
                 }
             }

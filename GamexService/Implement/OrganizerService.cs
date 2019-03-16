@@ -13,14 +13,17 @@ namespace GamexService.Implement
     {
         private readonly IRepository<Exhibition> _exhibitionRepository;
         private readonly IRepository<Booth> _boothRepository;
+        private readonly IRepository<Company> _companyRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public OrganizerService(IRepository<Exhibition> exhibitionRepository, 
             IRepository<Booth> boothRepository, 
+            IRepository<Company> companyRepository,
             IUnitOfWork unitOfWork)
         {
             _exhibitionRepository = exhibitionRepository;
             _boothRepository = boothRepository;
+            _companyRepository = companyRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -148,6 +151,69 @@ namespace GamexService.Implement
                 b => b.ExhibitionId == exhibitionId && b.Company.Name.Contains(searchValue),
                 b => b.Company.Name, sortColumnDirection, take, skip
             ).ToList();
+        }
+
+        public AttendedCompanyDetailViewModel GetAttendedCompanyDetail(string exhibitionId, string companyId)
+        {
+            var company = _companyRepository.GetSingleProjection(
+                c => new AttendedCompanyDetailViewModel
+                {
+                    Description = c.Description,
+                    Email = c.Email,
+                    CompanyId = c.CompanyId,
+                    Address = c.Address,
+                    Phone = c.Phone,
+                    Website = c.Website,
+                    CompanyName = c.Name,
+                },
+                c => c.CompanyId == companyId
+            );
+            var booth = _boothRepository.GetList(b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId && !string.IsNullOrEmpty(b.BoothNumber));
+            company.ExhibitionId = exhibitionId;
+            if (booth != null)
+            {
+                company.Booth = booth.Select(b => new BootViewModel
+                {
+                    BoothNumber = b.BoothNumber
+                }).ToList();
+            }
+            
+            return company;
+        }
+
+        public bool AssignBoothToCompany(AttendedCompanyDetailViewModel model, string exhibitionId, string companyId)
+        {
+            var currentBoothList =
+                _boothRepository.GetList(b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId);
+            foreach (var booth in currentBoothList)
+            {
+                _boothRepository.Delete(booth);
+            }
+
+            foreach (var boothNumber in model.Booth)
+            {
+                var booth = new Booth
+                {
+                    CompanyId = companyId,
+                    ExhibitionId = exhibitionId,
+                    BoothNumber = boothNumber.BoothNumber
+                };
+                _boothRepository.Insert(booth);
+            }
+
+            try
+            {
+                var result = _unitOfWork.SaveChanges();
+                if (result >= 0)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
         }
     }
 }

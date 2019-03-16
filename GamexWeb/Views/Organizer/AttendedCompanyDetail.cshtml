@@ -1,106 +1,215 @@
-﻿
+﻿@model GamexService.ViewModel.AttendedCompanyDetailViewModel
 @{
     ViewBag.Title = "Company Detail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@* <div class="container-fluid"> *@
-@*     <!-- Breadcrumbs--> *@
-@* *@
-@*     <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;"> *@
-@*         <div class="collapse navbar-collapse" id="navbarSupportedContent"> *@
-@*             <ul class="navbar-nav mr-auto"> *@
-@*                 <li class="nav-item active"> *@
-@*                     @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" }) *@
-@*                 </li> *@
-@* *@
-@*                 <li class="nav-item"> *@
-@*                     @Html.ActionLink("Company", "UpcomingExhibitionCompanyList", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" }) *@
-@*                 </li> *@
-@*             </ul> *@
-@*         </div> *@
-@*     </nav> *@
-@* *@
-@*     <!-- DataTables Card--> *@
-@*     <div class="card mb-3"> *@
-@*         <div class="card-header"> *@
-@*             <i class="menu-icon fas fa-building fa-fw"></i> Company Detail *@
-@*         </div> *@
-@*         <div class="card-body"> *@
-@* *@
-@*             <div class="row for-exhibition-form"> *@
-@*                 <div class="col-sm-12 col-md-12 col-lg-12"> *@
-@*                     <img alt="" src="@Model.Logo" id="imagePreview" /> *@
-@*                 </div> *@
-@*             </div> *@
-@* *@
-@*             <div class="row for-exhibition-form"> *@
-@*                 <div class="col-sm-12 col-md-8 col-lg-8"> *@
-@*                     @Html.LabelFor(m => m.Name) *@
-@*                     @Html.TextBoxFor(m => m.Name, new *@
-@*                     { *@
-@*                         @class = "form-control", *@
-@*                         @readonly = true *@
-@*                     }) *@
-@*                 </div> *@
-@*             </div> *@
-@* *@
-@*             <div class="row for-exhibition-form"> *@
-@*                 <div class="col-sm-12 col-md-6 col-lg-6"> *@
-@*                     <div class="form-group"> *@
-@*                         @Html.LabelFor(m => m.StartDate) *@
-@*                         @Html.TextBoxFor(m => m.StartDate, new *@
-@*                        { *@
-@*                            @class = "form-control", *@
-@*                            @readonly = true *@
-@*                        }) *@
-@*                     </div> *@
-@*                 </div> *@
-@* *@
-@*                 <div class="col-sm-12 col-md-6 col-lg-6"> *@
-@*                     <div class="form-group"> *@
-@*                         @Html.LabelFor(m => m.EndDate) *@
-@*                         @Html.TextBoxFor(m => m.EndDate, new *@
-@*                         { *@
-@*                             @class = "form-control", *@
-@*                             @readonly = true *@
-@*                         }) *@
-@*                     </div> *@
-@*                 </div> *@
-@*             </div> *@
-@* *@
-@*             <div class="row for-exhibition-form"> *@
-@*                 <div class="col-sm-12 col-md-12 col-lg-12"> *@
-@*                     @Html.LabelFor(m => m.Address) *@
-@*                     @Html.TextBoxFor(m => m.Address, new *@
-@*                     { *@
-@*                         @class = "form-control form-control-sm", *@
-@*                         @readonly = true *@
-@*                     }) *@
-@*                 </div> *@
-@*             </div> *@
-@* *@
-@*             <div class="row for-exhibition-form"> *@
-@*                 <div class="col-sm-12 col-md-12 col-lg-12"> *@
-@*                     @Html.LabelFor(m => m.Description) *@
-@*                     @Html.TextAreaFor(m => m.Description, new *@
-@*                     { *@
-@*                         @class = "form-control", *@
-@*                         @readonly = true *@
-@*                     }) *@
-@*                 </div> *@
-@*             </div> *@
-@* *@
-@*             <hr /> *@
-@*             @using (Html.BeginForm("QuitExhibition", "Company", FormMethod.Post)) *@
-@*             { *@
-@*                 @Html.HiddenFor(m => m.ExhibitionId) *@
-@*                 <div class="row for-exhibition-form"> *@
-@*                     <div class="col-sm-12 col-lg-12"> *@
-@*                         <button type="submit" class="btn btn-outline-danger">Quit</button> *@
-@*                     </div> *@
-@*                 </div> *@
-@*             } *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
+@section scripts
+{
+    @if (Model != null && Model.IsSuccessful.HasValue)
+    {
+        if (Model.IsSuccessful.Value)
+        {
+            <script type="text/javascript">
+                $('#successModal').modal();
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                $('#failModal').modal();
+            </script>
+        }
+    }
+
+    @if (Model.Booth != null)
+    {
+        <script type="text/javascript">
+            var boothCount = @Model.Booth.Count;
+            if (boothCount === 0) {
+                boothCount++;
+            }
+        </script>
+    }
+    <script type="text/javascript" src="~/Scripts/assign.booth.util.js"></script>
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+
+    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item active">
+                    @Html.ActionLink("Company", "UpcomingExhibitionCompanyList", "Organizer", new { id = Model.ExhibitionId }, new { @class = "nav-link" })
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="display: inline; float: left"></i> Company Detail
+        </div>
+        <div class="card-body">
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12">
+                    @Html.LabelFor(m => m.CompanyName)
+                    @Html.TextBoxFor(m => m.CompanyName, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+
+            </div>
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12">
+                    @Html.LabelFor(m => m.Address)
+                    @Html.TextBoxFor(m => m.Address, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+
+            </div>
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    @Html.LabelFor(m => m.Phone)
+                    @Html.TextBoxFor(m => m.Phone, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    @Html.LabelFor(m => m.Website)
+                    @Html.TextBoxFor(m => m.Website, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new
+                    {
+                        @class = "form-control",
+                        @rows = "5",
+                        @cols = "80",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+            <hr />
+            @{ Html.EnableClientValidation(false); }
+            @using (Html.BeginForm("AssignBooth", "Organizer", FormMethod.Post))
+            {
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-8 col-lg-8" id="booth-list">
+                        <label for="booth">Booth </label>
+                        @if (Model.Booth != null && Model.Booth.Count > 0)
+                        {
+                            for (int i = 0; i < Model.Booth.Count; i++)
+                             {
+                                 <div class="entry input-group row">
+                                     <span class="input-group-btn">
+                                         @if (i == 0)
+                                         {
+                                             <button class="btn btn-success btn-add" type="button">
+                                                 <i class="fas fa-plus"></i>
+                                             </button>
+                                         }
+                                         else
+                                         {
+                                             <button class="btn btn-danger btn-remove" type="button">
+                                                 <i class="fas fa-times"></i>
+                                             </button>
+                                         }
+                                     </span>
+                                     @Html.TextBoxFor(m => m.Booth[i].BoothNumber, new
+                                     {
+                                         @class = "form-control",
+                                         @placeholder = "Required field"
+                                     })
+                                     @Html.ValidationMessageFor(m => m.Booth[i].BoothNumber)
+                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="entry input-group row">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success btn-add" type="button">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </span>
+                                <input id="Booth[0].BoothNumber" name="Booth[0].BoothNumber" type="text" class="form-control" placeholder="Required field" value=""/>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-outline-success" style="float: left;">Assign</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Submit unsuccessfully</p>
+                <p class="text-center">Please try again later</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

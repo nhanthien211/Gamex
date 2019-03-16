@@ -582,6 +582,10 @@ namespace GamexWeb.Controllers
         {
             string companyId = User.Identity.GetCompanyId();
             var profile = _companyService.GetCompanyProfile(companyId);
+            if (TempData["RESULT"] != null)
+            {
+                profile.IsSuccessful = (bool)TempData["RESULT"];
+            }
             return View(profile);
         }
 
@@ -602,13 +606,13 @@ namespace GamexWeb.Controllers
             }
             if (!string.IsNullOrEmpty(model.ImageUrl))
             {
-                model.IsSuccessful = _companyService.UpdateCompanyProfile(model, companyId);
+                TempData["RESULT"] = _companyService.UpdateCompanyProfile(model, companyId);
             }
             else
             {
-                model.IsSuccessful = false;
+                TempData["RESULT"] = false;
             }
-            return View(model);
+            return RedirectToAction("CompanyInfo", "Company");
         }
 
         [HttpGet]

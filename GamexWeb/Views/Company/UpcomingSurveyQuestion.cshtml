@@ -17,7 +17,7 @@
     <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     @Html.ActionLink("Survey Detail", "UpcomingSurveyDetail", "Company", new { id = ViewBag.SurveyId, exhibitionId = ViewBag.ExhibitionId }, new { @class = "nav-link" })
                 </li>
                 <li class="nav-item dropdown">
@@ -37,7 +37,7 @@
     <!-- Content-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fas fa-fw fa-poll-h menu-icon" style="display: inline;"></i> Survey List
+            <i class="fas fa-fw fa-question-circle menu-icon" style="display: inline;"></i> Question List
 
         </div>
         <div class="card-body">

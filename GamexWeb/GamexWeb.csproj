@@ -268,6 +268,7 @@
     <Content Include="fonts\montserrat\OFL.txt" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\add.question.util.js" />
+    <Content Include="Scripts\assign.booth.util.js" />
     <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\qrcode.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />

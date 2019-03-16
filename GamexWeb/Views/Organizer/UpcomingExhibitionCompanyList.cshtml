@@ -17,12 +17,12 @@
     <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Organizer", new { id = ViewBag.ExhibitionId }, new { @class = "nav-link" })
                 </li>
 
-                <li class="nav-item">
-                    @Html.ActionLink("Company", "UpcomingExhibitionDetail", "Organizer", new { id = ViewBag.ExhibitionId }, new { @class = "nav-link" })
+                <li class="nav-item active">
+                    @Html.ActionLink("Company", "UpcomingExhibitionCompanyList", "Organizer", new { id = ViewBag.ExhibitionId }, new { @class = "nav-link" })
                 </li>
             </ul>
         </div>

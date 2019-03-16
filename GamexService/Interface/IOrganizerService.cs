@@ -16,5 +16,7 @@ namespace GamexService.Interface
 
         List<AttendedCompanyViewModel> LoadAttendedCompanyList(string sortColumnDirection, string searchValue, int skip,
             int take, string exhibitionId);
+        AttendedCompanyDetailViewModel GetAttendedCompanyDetail(string exhibitionId, string companyId);
+        bool AssignBoothToCompany(AttendedCompanyDetailViewModel model, string exhibitionId, string companyId);
     }
 }

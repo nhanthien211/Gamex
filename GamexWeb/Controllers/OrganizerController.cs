@@ -156,11 +156,30 @@ namespace GamexWeb.Controllers
 
         [HttpGet]
         [Authorize(Roles = AccountRole.Organizer)]
+        [FilterConfig.NoDirectAccess]
         [Route("Exhibition/Upcoming/{exhibitionId}/Company/{companyId}")]
         public ActionResult AttendedCompanyDetail(string exhibitionId, string companyId)
         {
+            var company = _organizerService.GetAttendedCompanyDetail(exhibitionId, companyId);
+            if (TempData["RESULT"] != null)
+            {
+                company.IsSuccessful = (bool) TempData["RESULT"];
+            }
+            return View(company);
+        }
 
-            return View();
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Upcoming/{exhibitionId}/Company/{companyId}")]
+        public ActionResult AssignBooth(AttendedCompanyDetailViewModel model, string exhibitionId, string companyId)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["RESULT"] = false;
+                return RedirectToAction("AttendedCompanyDetail", "Organizer", new { exhibitionId = exhibitionId, companyId = companyId });
+            }
+            TempData["RESULT"] = _organizerService.AssignBoothToCompany(model, exhibitionId, companyId);
+            return RedirectToAction("AttendedCompanyDetail", "Organizer", new {exhibitionId = exhibitionId, companyId = companyId});
         }
     }
 }
