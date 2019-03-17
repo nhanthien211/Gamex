@@ -51,7 +51,7 @@ namespace GamexApiService.Implement {
                 0,
                 0);
             return history.Select(h => new RewardHistoryViewModel {
-                ExchangedDate = h.ExchangedDate.ToLongDateString(),
+                ExchangedDate = h.ExchangedDate.ToString("f"),
                 Content = h.Content,
                 Description = h.Description
             }).ToList();

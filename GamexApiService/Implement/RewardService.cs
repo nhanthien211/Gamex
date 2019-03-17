@@ -33,8 +33,8 @@ namespace GamexApiService.Implement {
                 RewardId = r.RewardId,
                 PointCost = r.PointCost,
                 Content = r.Content,
-                StartDate = r.StartDate.ToLongDateString(),
-                EndDate = r.EndDate.ToLongDateString(),
+                StartDate = r.StartDate.ToString("f"),
+                EndDate = r.EndDate.ToString("f"),
                 Description = r.Description,
                 Quantity = r.Quantity
             }).ToList();
@@ -47,8 +47,8 @@ namespace GamexApiService.Implement {
                 Description = reward.Description,
                 PointCost = reward.PointCost,
                 Quantity = reward.Quantity,
-                StartDate = reward.StartDate.ToLongDateString(),
-                EndDate = reward.EndDate.ToLongDateString()
+                StartDate = reward.StartDate.ToString("f"),
+                EndDate = reward.EndDate.ToString("f")
             };
         }
 

@@ -117,6 +117,7 @@
     <Compile Include="CompanyStatus.cs">
       <DependentUpon>GamexModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Constant\BookmarkTypes.cs" />
     <Compile Include="Constant\CustomClaimTypes.cs" />
     <Compile Include="Constant\AccountRole.cs" />
     <Compile Include="Constant\ExhibitionTypes.cs" />

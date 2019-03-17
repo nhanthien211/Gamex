@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GamexApiService.Interface;
 using GamexApiService.Models;
 using GamexEntity;
+using GamexEntity.Constant;
 using GamexRepository;
 
 namespace GamexApiService.Implement {
@@ -215,6 +218,48 @@ namespace GamexApiService.Implement {
             } catch (Exception e) {
                 return ServiceActionResult.ErrorResult;
             }
+        }
+
+        public List<BookmarkViewModel> GetBookmarkAccounts(string accountId) {
+            var bookmarks = _accountBookmarkRepo.GetList(ab =>
+                ab.AccountId.Equals(accountId));
+
+            return bookmarks.Select(bookmark => new BookmarkViewModel {
+                TargetType = BookmarkTypes.Attendee,
+                TargetId = bookmark.AccountBookmark1,
+                TargetName = bookmark.AspNetUsers1.UserName,
+                BookmarkDate = bookmark.BookmarkDate.ToString("f")
+            }).OrderBy(b => b.TargetName).ToList();
+        }
+
+        public List<BookmarkViewModel> GetBookmarkCompanies(string accountId) {
+            var bookmarks = _companyBookmarkRepo.GetList(cb =>
+                cb.AccountId.Equals(accountId));
+            return bookmarks.Select(b => new BookmarkViewModel {
+                TargetType = BookmarkTypes.Company,
+                TargetId = b.CompanyBookmark1,
+                TargetName = b.Company.Name,
+                BookmarkDate = b.BookmarkDate.ToString("f")
+            }).OrderBy(b => b.TargetName).ToList();
+        }
+
+        public List<BookmarkViewModel> GetBookmarkExhibitions(string accountId) {
+            var bookmarks = _exhibitionBookmarkRepo.GetList(eb =>
+                eb.AccountId.Equals(accountId) && eb.BookmarkDate != null);
+            return bookmarks.Select(b => new BookmarkViewModel {
+                TargetType = BookmarkTypes.Exhibition,
+                TargetId = b.ExhibitionId,
+                TargetName = b.Exhibition.Name,
+                BookmarkDate = b.BookmarkDate?.ToString("f")
+            }).OrderBy(b => b.TargetName).ToList();
+        }
+
+        public List<BookmarkViewModel> GetBookmarks(string accountId) {
+            var list = new List<BookmarkViewModel>();
+            list.AddRange(GetBookmarkAccounts(accountId));
+            list.AddRange(GetBookmarkCompanies(accountId));
+            list.AddRange(GetBookmarkExhibitions(accountId));
+            return list;
         }
     }
 }

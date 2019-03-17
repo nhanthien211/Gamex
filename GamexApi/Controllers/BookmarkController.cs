@@ -1,13 +1,15 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
 using GamexApiService.Interface;
 using GamexApiService.Models;
 using GamexEntity.Constant;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Controllers {
     [Authorize(Roles = AccountRole.User)]
     [System.Web.Mvc.RequireHttps]
-    [RoutePrefix("api/bookmark")]
+    [RoutePrefix("api")]
     public class BookmarkController : ApiController {
         private IBookmarkService _bookmarkService;
         private IActivityHistoryService _activityHistoryService;
@@ -20,7 +22,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpPost]
-        [Route("account")]
+        [Route("bookmark/account")]
         public IHttpActionResult AddBookmarkAccount(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -38,7 +40,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpDelete]
-        [Route("account")]
+        [Route("bookmark/account")]
         public IHttpActionResult RemoveBookmarkAccount(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -56,7 +58,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpPost]
-        [Route("company")]
+        [Route("bookmark/company")]
         public IHttpActionResult AddBookmarkCompany(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -74,7 +76,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpDelete]
-        [Route("company")]
+        [Route("bookmark/company")]
         public IHttpActionResult RemoveBookmarkCompany(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -92,7 +94,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpPost]
-        [Route("exhibition")]
+        [Route("bookmark/exhibition")]
         public IHttpActionResult AddBookmarkExhibition(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -110,7 +112,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpDelete]
-        [Route("exhibition")]
+        [Route("bookmark/exhibition")]
         public IHttpActionResult RemoveBookmarkExhibition(BookmarkBindingModel model) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -127,5 +129,20 @@ namespace GamexApi.Controllers {
             return Ok(new { message = result.Message });
         }
 
+        [HttpGet]
+        [Route("bookmarks")]
+        public List<BookmarkViewModel> GetBookmarks(string type = null) {
+            var accountId = User.Identity.GetUserId();
+            if (string.IsNullOrEmpty(type))
+                return _bookmarkService.GetBookmarks(accountId);
+            if (type.Equals(BookmarkTypes.Attendee))
+                return _bookmarkService.GetBookmarkAccounts(accountId);
+            if (type.Equals(BookmarkTypes.Company))
+                return _bookmarkService.GetBookmarkCompanies(accountId);
+            if (type.Equals(BookmarkTypes.Exhibition)) 
+                return _bookmarkService.GetBookmarkExhibitions(accountId);
+
+            return new List<BookmarkViewModel>();
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace GamexApiService.Implement {
             return activityHistories.Select(a => new ActivityHistoryViewModel {
                 AccountId = a.AccountId,
                 Activity = a.Activity,
-                Time = a.Time.ToLongDateString()
+                Time = a.Time.ToString("f")
             }).ToList();
         }
     }

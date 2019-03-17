@@ -87,8 +87,8 @@ namespace GamexApiService.Implement {
                 ExhibitionId = e.ExhibitionId,
                 Name = e.Name,
                 Address = e.Address,
-                StartDate = e.StartDate.ToLongDateString(),
-                EndDate = e.EndDate.ToLongDateString(),
+                StartDate = e.StartDate.ToString("f"),
+                EndDate = e.EndDate.ToString("f"),
                 Logo = e.Logo
             }).ToList();
         }
@@ -112,8 +112,8 @@ namespace GamexApiService.Implement {
                 Description = exhibition.Description,
                 Address = exhibition.Address,
                 //OrganizerId = exhibition.OrganizerId,
-                StartDate = exhibition.StartDate.ToLongDateString(),
-                EndDate = exhibition.EndDate.ToLongDateString(),
+                StartDate = exhibition.StartDate.ToString("f"),
+                EndDate = exhibition.EndDate.ToString("f"),
                 //Lat = exhibition.Location.Latitude?.ToString(),
                 //Lng = exhibition.Location.Longitude?.ToString(),
                 Logo = exhibition.Logo,
