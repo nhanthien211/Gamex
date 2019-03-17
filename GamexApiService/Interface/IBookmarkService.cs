@@ -1,10 +1,12 @@
-﻿namespace GamexApiService.Interface {
+﻿using GamexApiService.Models;
+
+namespace GamexApiService.Interface {
     public interface IBookmarkService {
-        bool AddBookmarkAccount(string srcAccountId, string tgtAccountId);
-        bool RemoveBookmarkAccount(string srcAccountId, string tgtAccountId);
-        bool AddBookmarkCompany(string accountId, string companyId);
-        bool RemoveBookmarkCompany(string accountId, string companyId);
-        bool AddBookmarkExhibition(string accountId, string exhibitionId);
-        bool RemoveBookmarkExhibition(string accountId, string exhibitionId);
+        ServiceActionResult AddBookmarkAccount(string srcAccountId, string tgtAccountId);
+        ServiceActionResult RemoveBookmarkAccount(string srcAccountId, string tgtAccountId);
+        ServiceActionResult AddBookmarkCompany(string accountId, string companyId);
+        ServiceActionResult RemoveBookmarkCompany(string accountId, string companyId);
+        ServiceActionResult AddBookmarkExhibition(string accountId, string exhibitionId);
+        ServiceActionResult RemoveBookmarkExhibition(string accountId, string exhibitionId);
     }
 }
