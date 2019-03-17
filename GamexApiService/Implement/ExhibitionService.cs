@@ -30,7 +30,7 @@ namespace GamexApiService.Implement {
             return checkedIn.Select(e => e.ExhibitionId).ToList();
         }
 
-        public List<ExhibitionShortViewModel> GetExhibitions(string type, int take, int skip,
+        public List<ExhibitionShortViewModel> GetExhibitions(string list, string type, int take, int skip,
             string lat, string lng, string accountId) {
 
             Expression<Func<Exhibition, bool>> filter;
@@ -54,6 +54,11 @@ namespace GamexApiService.Implement {
                     filter = e =>
                         e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= range;
                     break;
+                case ExhibitionTypes.Past:
+                    filter = e => e.IsActive && e.EndDate < DateTime.Now;
+                    queryTake = 0;
+                    querySkip = 0;
+                    break;
                 default:
                     filter = e => e.IsActive;
                     break;
@@ -74,13 +79,19 @@ namespace GamexApiService.Implement {
                 queryTake,
                 querySkip);
 
-            if (type.Equals(ExhibitionTypes.Ongoing)) {
+            var isCheckedInList = !string.IsNullOrEmpty(list) && list.Equals(ExhibitionLists.CheckedIn);
+            if (isCheckedInList) {
+                // list == "checked-in" && (type == "ongoing" || type == "past")
                 var checkedInExhibitionIds = GetCheckedInExhibitionIds(accountId);
-                if (!string.IsNullOrEmpty(accountId)) {
-                    // exclude checked in exhibitions
-                    exhibitionList = exhibitionList.Where(e => !checkedInExhibitionIds.Contains(e.ExhibitionId))
-                        .Skip(skip).Take(take);
-                }
+                exhibitionList = exhibitionList.Where(e => checkedInExhibitionIds.Contains(e.ExhibitionId))
+                    .Skip(skip).Take(take);
+            }
+
+            if (!isCheckedInList && type.Equals(ExhibitionTypes.Ongoing)) {
+                var checkedInExhibitionIds = GetCheckedInExhibitionIds(accountId);
+                // exclude checked in exhibitions
+                exhibitionList = exhibitionList.Where(e => !checkedInExhibitionIds.Contains(e.ExhibitionId))
+                    .Skip(skip).Take(take);
             }
 
             return exhibitionList.Select(e => new ExhibitionShortViewModel() {
@@ -147,7 +158,7 @@ namespace GamexApiService.Implement {
                     Ok = false,
                     Message = "Check in failed: the exhibition hasn't started yet!"
                 };
-            } 
+            }
             if (checkin.CheckinTime > exhibition.EndDate) {
                 return new ServiceActionResult() {
                     Ok = false,
@@ -166,7 +177,7 @@ namespace GamexApiService.Implement {
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {
-                    return new ServiceActionResult() { Ok = true, Message = "Check in success!"};
+                    return new ServiceActionResult() { Ok = true, Message = "Check in success!" };
                 }
             } catch (Exception ex) {
                 return ServiceActionResult.ErrorResult;
