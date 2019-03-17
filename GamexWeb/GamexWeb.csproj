@@ -271,7 +271,7 @@
     <Content Include="Scripts\assign.booth.util.js" />
     <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\qrcode.js" />
-    <Content Include="Scripts\reward.update.util.js" />
+    <Content Include="Scripts\reward.datetime.util.js" />
     <Content Include="Scripts\sb.admin.reward.list.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
