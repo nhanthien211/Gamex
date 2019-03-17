@@ -92,6 +92,7 @@
     <Compile Include="Interface\ISurveyParticipationService.cs" />
     <Compile Include="Interface\ISurveyService.cs" />
     <Compile Include="Models\ActivityHistoryViewModels.cs" />
+    <Compile Include="Models\BookmarkBindingModels.cs" />
     <Compile Include="Models\CompanyViewModels.cs" />
     <Compile Include="Models\ExhibitionBindingModels.cs" />
     <Compile Include="Models\ProposedAnswerViewModels.cs" />

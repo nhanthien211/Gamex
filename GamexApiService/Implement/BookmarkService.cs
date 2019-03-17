@@ -1,5 +1,6 @@
 ﻿using System;
 using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexEntity;
 using GamexRepository;
 
@@ -9,52 +10,211 @@ namespace GamexApiService.Implement {
         private IRepository<AccountBookmark> _accountBookmarkRepo;
         private IRepository<CompanyBookmark> _companyBookmarkRepo;
         private IRepository<ExhibitionAttendee> _exhibitionBookmarkRepo;
+        private IRepository<AspNetUsers> _accountRepo;
+        private IRepository<Company> _companyRepo;
+        private IRepository<Exhibition> _exhibtionRepo;
         private IUnitOfWork _unitOfWork;
 
         public BookmarkService(
             IRepository<AccountBookmark> accountBookmarkRepo,
             IRepository<CompanyBookmark> companyBookmarkRepo,
             IRepository<ExhibitionAttendee> exhibitionBookmarkRepo,
+            IRepository<Company> companyRepo,
+            IRepository<Exhibition> exhibitionRepo,
+            IRepository<AspNetUsers> accountRepo,
             IUnitOfWork unitOfWork) {
             _accountBookmarkRepo = accountBookmarkRepo;
             _companyBookmarkRepo = companyBookmarkRepo;
             _exhibitionBookmarkRepo = exhibitionBookmarkRepo;
+            _accountRepo = accountRepo;
+            _companyRepo = companyRepo;
+            _exhibtionRepo = exhibitionRepo;
             _unitOfWork = unitOfWork;
         }
 
-        public bool AddBookmarkAccount(string srcAccountId, string tgtAccountId) {
+        private bool HasBookmarkedAccount(string srcAccountId, string tgtAccountId) {
+            return _accountBookmarkRepo.GetSingle(
+                                    ab => ab.AccountId.Equals(srcAccountId) && ab.AccountBookmark1.Equals(tgtAccountId)
+                                                                            && ab.BookmarkDate != null) != null;
+        }
+
+        public ServiceActionResult AddBookmarkAccount(string srcAccountId, string tgtAccountId) {
             var bookmark = new AccountBookmark {
                 AccountId = srcAccountId,
                 AccountBookmark1 = tgtAccountId,
                 BookmarkDate = DateTime.Now
             };
+
+
+            if (HasBookmarkedAccount(srcAccountId, tgtAccountId)) {
+                return new ServiceActionResult() { Ok = false, Message = "Bookmark failed: You've already bookmarked this account!" };
+            }
+
             _accountBookmarkRepo.Insert(bookmark);
             try {
-                return true;
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var tgtAccount = _accountRepo.GetById(tgtAccountId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Bookmark account " + tgtAccount.UserName + " success!",
+                        TgtAccount = tgtAccount
+                    };
+                }
+
+                return ServiceActionResult.ErrorResult;
+            } catch (Exception e) {
+                return ServiceActionResult.ErrorResult;
+            }
+        }
+
+        public ServiceActionResult RemoveBookmarkAccount(string srcAccountId, string tgtAccountId) {
+            var bookmark = _accountBookmarkRepo.GetSingle(
+                ab => ab.AccountId.Equals(srcAccountId) && ab.AccountBookmark1.Equals(tgtAccountId)
+                                                        && ab.BookmarkDate != null);
+
+
+            if (bookmark == null) {
+                return new ServiceActionResult 
+                    { Ok = false, Message = "Remove bookmark failed: You haven't bookmarked this account yet!" };
+            }
+
+            _accountBookmarkRepo.Delete(bookmark);
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var tgtAccount = _accountRepo.GetById(tgtAccountId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Remove bookmark account " + tgtAccount.UserName + " success!",
+                        TgtAccount = tgtAccount
+                    };
+                }
+                return ServiceActionResult.ErrorResult;
             }
             catch (Exception e) {
-                return false;
+                return ServiceActionResult.ErrorResult;
             }
         }
 
-        public bool RemoveBookmarkAccount(string srcAccountId, string tgtAccountId) {
-            throw new System.NotImplementedException();
+        public ServiceActionResult AddBookmarkCompany(string accountId, string companyId) {
+            var bookmark = new CompanyBookmark() {
+                AccountId = accountId,
+                CompanyBookmark1 = companyId,
+                BookmarkDate = DateTime.Now
+            };
+
+            var hasBookmarkedCompany = _companyBookmarkRepo.GetSingle(cb =>
+                                           cb.AccountId.Equals(accountId) && cb.CompanyBookmark1.Equals(companyId)
+                                                                          && cb.BookmarkDate != null) != null;
+
+            if (hasBookmarkedCompany) {
+                return new ServiceActionResult { Ok = false, Message = "Bookmark failed: You've already bookmarked this company!" };
+            }
+
+            _companyBookmarkRepo.Insert(bookmark);
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var company = _companyRepo.GetById(companyId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Bookmark company " + company.Name + " success!",
+                        Company = company
+                    };
+                }
+
+                return ServiceActionResult.ErrorResult;
+            } catch (Exception e) {
+                return ServiceActionResult.ErrorResult;
+            }
         }
 
-        public bool AddBookmarkCompany(string accountId, string companyId) {
-            throw new System.NotImplementedException();
+        public ServiceActionResult RemoveBookmarkCompany(string accountId, string companyId) {
+            var bookmark = _companyBookmarkRepo.GetSingle(
+                cb => cb.AccountId.Equals(accountId) && cb.CompanyBookmark1.Equals(companyId)
+                                                        && cb.BookmarkDate != null);
+
+
+            if (bookmark == null) {
+                return new ServiceActionResult { Ok = false, Message = "Remove bookmark failed: You haven't bookmarked this company yet!" };
+            }
+
+            _companyBookmarkRepo.Delete(bookmark);
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var company = _companyRepo.GetById(companyId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Remove bookmark company " + company.Name + " success!",
+                        Company = company
+                    };
+                }
+                return ServiceActionResult.ErrorResult;
+            } catch (Exception e) {
+                return ServiceActionResult.ErrorResult;
+            }
         }
 
-        public bool RemoveBookmarkCompany(string accountId, string companyId) {
-            throw new System.NotImplementedException();
+        public ServiceActionResult AddBookmarkExhibition(string accountId, string exhibitionId) {
+            var bookmark = new ExhibitionAttendee {
+                AccountId = accountId,
+                ExhibitionId = exhibitionId,
+                BookmarkDate = DateTime.Now
+            };
+
+            var hasBookmarkedExhibition = _exhibitionBookmarkRepo.GetSingle(eb =>
+                                           eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId)
+                                                                          && eb.BookmarkDate != null) != null;
+
+            if (hasBookmarkedExhibition) {
+                return new ServiceActionResult { Ok = false, Message = "Bookmark failed: You've already bookmarked this exhibition!" };
+            }
+
+            _exhibitionBookmarkRepo.Insert(bookmark);
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var exhibition = _exhibtionRepo.GetById(exhibitionId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Bookmark exhibition " + exhibition.Name + " success!",
+                        Exhibition = exhibition
+                    };
+                }
+
+                return ServiceActionResult.ErrorResult;
+            } catch (Exception e) {
+                return ServiceActionResult.ErrorResult;
+            }
         }
 
-        public bool AddBookmarkExhibition(string accountId, string exhibitionId) {
-            throw new System.NotImplementedException();
-        }
+        public ServiceActionResult RemoveBookmarkExhibition(string accountId, string exhibitionId) {
+            var bookmark = _exhibitionBookmarkRepo.GetSingle(
+                eb => eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId)
+                                                     && eb.BookmarkDate != null);
 
-        public bool RemoveBookmarkExhibition(string accountId, string exhibitionId) {
-            throw new System.NotImplementedException();
+
+            if (bookmark == null) {
+                return new ServiceActionResult { Ok = false, Message = "Remove bookmark failed: You haven't bookmarked this exhibition yet!" };
+            }
+
+            _exhibitionBookmarkRepo.Delete(bookmark);
+            try {
+                var affectedRows = _unitOfWork.SaveChanges();
+                if (affectedRows == 1) {
+                    var exhibition = _exhibtionRepo.GetById(exhibitionId);
+                    return new BookmarkServiceActionResult {
+                        Ok = true,
+                        Message = "Remove bookmark exhibition " + exhibition.Name + " success!",
+                        Exhibition = exhibition
+                    };
+                }
+                return ServiceActionResult.ErrorResult;
+            } catch (Exception e) {
+                return ServiceActionResult.ErrorResult;
+            }
         }
     }
 }
