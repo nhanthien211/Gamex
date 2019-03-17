@@ -60,6 +60,8 @@
     <Compile Include="ViewModel\AttendedCompanyDetailViewModel.cs" />
     <Compile Include="ViewModel\AttendedCompanyViewModel.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\RewardDetailViewModel.cs" />
+    <Compile Include="ViewModel\RewardListViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyProfileViewModel.cs" />
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />

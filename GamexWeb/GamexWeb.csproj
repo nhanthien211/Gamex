@@ -271,6 +271,8 @@
     <Content Include="Scripts\assign.booth.util.js" />
     <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\qrcode.js" />
+    <Content Include="Scripts\reward.update.util.js" />
+    <Content Include="Scripts\sb.admin.reward.list.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.question.js" />
@@ -407,6 +409,8 @@
     <Content Include="Views\Company\CompanyInfo.cshtml" />
     <Content Include="Views\Company\EmployeeJoinList.cshtml" />
     <Content Include="Views\Admin\CreateReward.cshtml" />
+    <Content Include="Views\Admin\RewardList.cshtml" />
+    <Content Include="Views\Admin\RewardDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">
