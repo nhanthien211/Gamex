@@ -14,12 +14,14 @@ namespace GamexService.Implement
     {
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<AspNetUsers> _userRepository;
+        private readonly IRepository<Reward> _rewardRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AdminService(IRepository<Company> companyRepository, IRepository<AspNetUsers> userRepository, IUnitOfWork unitOfWork)
+        public AdminService(IRepository<Company> companyRepository, IRepository<AspNetUsers> userRepository, IRepository<Reward> rewardRepository, IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
+            _rewardRepository = rewardRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -121,6 +123,35 @@ namespace GamexService.Implement
                 a => a.FirstName, sortColumnDirection, take, skip
             );
             return organizerList.ToList();
+        }
+
+        public bool CreateReward(string userId, CreateRewardViewModel model)
+        {
+            var reward = new Reward
+            {
+                CreatedBy =  userId,
+                Content = model.Content,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                IsActive = true,
+                PointCost = model.PointCost,
+                Quantity = model.Quantity
+            };
+            _rewardRepository.Insert(reward);
+            try
+            {
+                var result = _unitOfWork.SaveChanges();
+                if (result > 0)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
         }
     }
 }
