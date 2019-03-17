@@ -80,6 +80,23 @@
                         </li>
                     </ul>
                     <!--End of Mange User-->
+
+                    <!--Mange Reward-->
+                    <li class="nav-item @ViewBag.ManageReward">
+                        <a class="nav-link" href="#" data-target="#navbarDropdownMenuReward" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fas fa-award fa-fw"></i>
+                            <span class="arrow">Reward</span>
+                        </a>
+                    </li>
+                    <ul class="sidenav-second-level collapse @ViewBag.ManageRewardDropDownShow" id="navbarDropdownMenuReward">
+                        <li class="@ViewBag.CreateReward">
+                            @Html.ActionLink("Create reward", "CreateReward", "Admin")
+                        </li>
+                        <li class="@ViewBag.RewardList">
+                            @Html.ActionLink("Reward List", "", "Admin")
+                        </li>
+                    </ul>
+                    <!--End of Mange Reward-->
                 }
 
                 @if (User.IsInRole(AccountRole.Company))

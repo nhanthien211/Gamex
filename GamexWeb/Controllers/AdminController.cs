@@ -237,5 +237,35 @@ namespace GamexWeb.Controllers
             }
             return RedirectToAction("OrganizerList", "Admin");
         }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Admin)]
+        [Route("Reward/Create")]
+        public ActionResult CreateReward()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Reward/Create")]
+        [Authorize(Roles = AccountRole.Admin)]
+        public ActionResult CreateReward(CreateRewardViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = _adminService.CreateReward(User.Identity.GetUserId(), model);
+            if (result)
+            {
+                model = new CreateRewardViewModel();
+                model.IsSuccessful = true;
+                ModelState.Clear();
+                return View(model);
+            }
+            model.IsSuccessful = false;
+            return View(model);
+        }
     }
 }

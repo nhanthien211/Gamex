@@ -667,6 +667,7 @@
     <Content Include="Views\Organizer\AttendedCompanyDetail.cshtml" />
     <Content Include="Views\Company\CompanyInfo.cshtml" />
     <Content Include="Views\Company\EmployeeJoinList.cshtml" />
+    <Content Include="Views\Admin\CreateReward.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

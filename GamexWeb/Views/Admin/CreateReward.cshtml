@@ -1,0 +1,191 @@
+﻿@model GamexService.ViewModel.CreateRewardViewModel
+@{
+    ViewBag.Title = "Create Reward";
+    ViewBag.CreateReward = "active";
+    ViewBag.ManageReward = "active";
+    ViewBag.ManageRewardDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+
+    @if (Model != null)
+    {
+        if (Model.IsSuccessful != null)
+        {
+            if (Model.IsSuccessful.Value)
+            {
+                <script type="text/javascript">
+                    $('#successModal').modal();
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    $('#failModal').modal();
+                </script>
+            }
+        }
+    }
+}
+
+@section customCss
+{
+    <link rel="stylesheet" href="~/Content/tempusdominus-datetimepicker.css" />
+}
+
+@section datepicker
+{
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/tempusdominus-datetimepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/datepicker.util.js"></script>
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Create Reward</li>
+    </ol>
+
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon"></i> Create Reward
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("CreateReward", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.TextBoxFor(m => m.Description, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.Description)
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.Content)
+                        @Html.TextBoxFor(m => m.Content, new
+                        {
+                            @class = "form-control form-control-sm"
+                        })
+                        @Html.ValidationMessageFor(m => m.Content)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.Quantity)
+                        @Html.TextBoxFor(m => m.Quantity, new
+                        {
+                            @class = "form-control form-control-sm",
+                            @type = "number",
+                            @min = "1",
+                            @step = "1"
+                        })
+                        @Html.ValidationMessageFor(m => m.Quantity)
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        @Html.LabelFor(m => m.PointCost)
+                        @Html.TextBoxFor(m => m.PointCost, new
+                        {
+                            @class = "form-control form-control-sm",
+                            @type = "number",
+                            @min = "1",
+                            @step = "1"
+                        })
+                        @Html.ValidationMessageFor(m => m.PointCost)
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate)
+                            <div class="input-group date" id="startDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.StartDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#startDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#startDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+
+
+                            @Html.ValidationMessageFor(m => m.StartDate)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate)
+                            <div class="input-group date" id="endDateTimePicker" data-target-input="nearest">
+                                @Html.TextBoxFor(m => m.EndDate, new
+                                {
+                                    @class = "form-control datetimepicker-input",
+                                    @data_target = "#endDateTimePicker",
+                                })
+                                <div class="input-group-append" data-target="#endDateTimePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fas fa-calendar fw"></i></div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EndDate)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-lg-12">
+
+                        <button type="submit" class="btn btn-outline-success">Create</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="successModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Create successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="failModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Create unsuccessfully</p>
+                <p class="text-center">Please try again later</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
