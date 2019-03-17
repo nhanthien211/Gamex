@@ -24,15 +24,19 @@ namespace GamexApiService.Implement {
             _unitOfWork = unitOfWork;
         }
 
-        public List<RewardShortViewModel> GetRewards() {
+        public List<RewardDetailViewModel> GetRewards() {
             var now = DateTime.Now;
             var rewards = _rewardRepo.GetList(r => r.IsActive
                                                    && r.StartDate <= now && now <= r.EndDate
                                                    && r.Quantity > 0);
-            return rewards.Select(r => new RewardShortViewModel() {
+            return rewards.Select(r => new RewardDetailViewModel() {
                 RewardId = r.RewardId,
                 PointCost = r.PointCost,
-                Content = r.Content
+                Content = r.Content,
+                StartDate = r.StartDate.ToLongDateString(),
+                EndDate = r.EndDate.ToLongDateString(),
+                Description = r.Description,
+                Quantity = r.Quantity
             }).ToList();
         }
 
