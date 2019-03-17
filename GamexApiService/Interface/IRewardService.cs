@@ -3,7 +3,7 @@ using GamexApiService.Models;
 
 namespace GamexApiService.Interface {
     public interface IRewardService {
-        List<RewardShortViewModel> GetRewards();
+        List<RewardDetailViewModel> GetRewards();
         RewardDetailViewModel GetReward(int id);
         RewardContentViewModel GetRewardContent(int id);
         ServiceActionResult ExchangeReward(string accountId, int rewardId);

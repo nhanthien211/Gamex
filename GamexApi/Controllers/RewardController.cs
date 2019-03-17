@@ -28,15 +28,15 @@ namespace GamexApi.Controllers {
 
         [HttpGet]
         [Route("rewards")]
-        public List<RewardShortViewModel> GetRewards() {
+        public List<RewardDetailViewModel> GetRewards() {
             return _rewardService.GetRewards();
         }
 
-        [HttpGet]
-        [Route("reward")]
-        public RewardDetailViewModel GetReward(int id) {
-            return _rewardService.GetReward(id);
-        }
+        //[HttpGet]
+        //[Route("reward")]
+        //public RewardDetailViewModel GetReward(int id) {
+        //    return _rewardService.GetReward(id);
+        //}
 
         [HttpPost]
         [Route("reward")]

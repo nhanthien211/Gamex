@@ -42,7 +42,8 @@ namespace GamexApiService.Implement {
             var history = _rewardHistoryRepo.GetPagingProjection(
                 rh => new {
                     rh.ExchangedDate,
-                    rh.Reward.Content
+                    rh.Reward.Content,
+                    rh.Reward.Description
                 },
                 rh => rh.AccountId.Equals(accountId),
                 rh => rh.ExchangedDate,
@@ -51,7 +52,8 @@ namespace GamexApiService.Implement {
                 0);
             return history.Select(h => new RewardHistoryViewModel {
                 ExchangedDate = h.ExchangedDate.ToLongDateString(),
-                RewardContent = h.Content
+                Content = h.Content,
+                Description = h.Description
             }).ToList();
         }
     }
