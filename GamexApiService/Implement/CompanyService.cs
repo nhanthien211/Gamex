@@ -1,20 +1,29 @@
 ﻿using GamexApiService.Interface;
 using GamexApiService.Models;
-using GamexApiService.ViewModel;
 using GamexEntity;
 using GamexRepository;
 
 namespace GamexApiService.Implement {
     public class CompanyService : ICompanyService {
         private IRepository<Company> _companyRepo;
+        private IRepository<CompanyBookmark> _companyBookmarkRepo;
         private IUnitOfWork _unitOfWork;
 
-        public CompanyService(IRepository<Company> companyRepo, IUnitOfWork unitOfWork) {
+        public CompanyService(IRepository<Company> companyRepo,
+            IRepository<CompanyBookmark> companyBookmarkRepo,
+            IUnitOfWork unitOfWork) {
             _companyRepo = companyRepo;
+            _companyBookmarkRepo = companyBookmarkRepo;
             _unitOfWork = unitOfWork;
         }
 
-        public CompanyViewModel GetCompany(string companyId) {
+        private bool HasBookmarked(string accountId, string companyId) {
+            return _companyBookmarkRepo.GetSingle(cb =>
+                       cb.AccountId.Equals(accountId) && cb.CompanyBookmark1.Equals(companyId)
+                                                      && cb.BookmarkDate != null) != null;
+        }
+
+        public CompanyViewModel GetCompany(string accountId, string companyId) {
             var company = _companyRepo.GetById(companyId);
             return new CompanyViewModel {
                 CompanyId = company.CompanyId,
@@ -25,7 +34,8 @@ namespace GamexApiService.Implement {
                 Address = company.Address,
                 Logo = company.Logo,
                 Website = company.Website,
-                TaxNumber = company.TaxNumber
+                TaxNumber = company.TaxNumber,
+                IsBookmarked = HasBookmarked(accountId, companyId)
             };
         }
     }

@@ -1,6 +1,5 @@
 ﻿using GamexApiService.Interface;
 using GamexApiService.Models;
-using GamexApiService.ViewModel;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
@@ -41,8 +40,9 @@ namespace GamexApi.Controllers {
 
         [HttpGet]
         [Route("exhibition")]
-        public ExhibitionViewModel GetExhibition(string id) {
-            return _exhibitionService.GetExhibition(id);
+        public ExhibitionDetailViewModel GetExhibition(string id) {
+            var accountId = User.Identity.GetUserId();
+            return _exhibitionService.GetExhibition(accountId, id);
         }
 
         [HttpPost]
@@ -55,7 +55,7 @@ namespace GamexApi.Controllers {
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
             if (result.Ok) {
-                var exhibition = _exhibitionService.GetExhibition(model.Id);
+                var exhibition = _exhibitionService.GetExhibition(accountId, model.Id);
                 RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
                 EarnPoint(accountId, CheckInExhibitionPoint);
                 return Ok(new { point = CheckInExhibitionPoint, message = result.Message });

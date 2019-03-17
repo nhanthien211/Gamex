@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GamexApiService.Models;
-using GamexApiService.ViewModel;
 
 namespace GamexApiService.Interface {
     public interface IActivityHistoryService {

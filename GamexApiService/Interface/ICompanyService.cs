@@ -2,6 +2,6 @@
 
 namespace GamexApiService.Interface {
     public interface ICompanyService {
-        CompanyViewModel GetCompany(string companyId);
+        CompanyViewModel GetCompany(string accountId, string companyId);
     }
 }

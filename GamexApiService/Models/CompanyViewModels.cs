@@ -16,5 +16,6 @@
         public string Logo { get; set; }
         public string Website { get; set; }
         public string TaxNumber { get; set; }
+        public bool IsBookmarked { get; set; }
     }
 }

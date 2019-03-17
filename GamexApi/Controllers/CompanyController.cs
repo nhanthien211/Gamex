@@ -2,6 +2,7 @@
 using GamexApiService.Models;
 using GamexEntity.Constant;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 
 namespace GamexApi.Controllers {
     [Authorize(Roles = AccountRole.User)]
@@ -17,7 +18,8 @@ namespace GamexApi.Controllers {
         [HttpGet]
         [Route("company")]
         public CompanyViewModel GetCompany(string id) {
-            return _companyService.GetCompany(id);
+            var accountId = User.Identity.GetUserId();
+            return _companyService.GetCompany(accountId, id);
         }
     }
 }

@@ -1,15 +1,13 @@
-﻿using System;
-using GamexApiService.Interface;
-using GamexApiService.ViewModel;
+﻿using GamexApiService.Interface;
+using GamexApiService.Models;
 using GamexEntity;
+using GamexEntity.Constant;
 using GamexRepository;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using GamexApiService.Models;
-using GamexEntity.Constant;
 
 namespace GamexApiService.Implement {
     public class ExhibitionService : IExhibitionService {
@@ -95,14 +93,20 @@ namespace GamexApiService.Implement {
             }).ToList();
         }
 
-        public ExhibitionViewModel GetExhibition(string exhibitionId) {
+        private bool HasBookmarked(string accountId, string exhibitionId) {
+            return _exhibitionAttendeeRepo.GetSingle(ea =>
+                       ea.AccountId.Equals(accountId) && ea.ExhibitionId.Equals(exhibitionId)
+                                                      && ea.BookmarkDate != null) != null;
+        }
+
+        public ExhibitionDetailViewModel GetExhibition(string accountId, string exhibitionId) {
             var exhibition = _exhibitionRepo.GetSingle(
                 e => e.IsActive && e.ExhibitionId.Equals(exhibitionId), e => e.Booth.Select(b => b.Company));
             if (exhibition == null) {
                 return null;
             }
             var companies = exhibition.Booth.Select(b => b.Company);
-            return new ExhibitionViewModel {
+            return new ExhibitionDetailViewModel {
                 ExhibitionId = exhibition.ExhibitionId,
                 Name = exhibition.Name,
                 Description = exhibition.Description,
@@ -113,6 +117,7 @@ namespace GamexApiService.Implement {
                 //Lat = exhibition.Location.Latitude?.ToString(),
                 //Lng = exhibition.Location.Longitude?.ToString(),
                 Logo = exhibition.Logo,
+                IsBookmarked = HasBookmarked(accountId, exhibitionId),
                 ListCompany = companies.Select(c => new CompanyShortViewModel() {
                     CompanyId = c.CompanyId,
                     Name = c.Name,
