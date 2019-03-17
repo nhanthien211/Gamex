@@ -88,6 +88,11 @@ namespace GamexWeb
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.organizer.datatable.upcoming.event.company.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatableReward").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.admin.reward.list.js"));
+
 
             //Validate File Upload
             bundles.Add(new ScriptBundle("~/bundles/validateFile").Include(

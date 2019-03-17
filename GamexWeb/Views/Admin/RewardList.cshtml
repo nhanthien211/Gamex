@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Reward List";
+    ViewBag.RewardList = "active";
+    ViewBag.ManageReward = "active";
+    ViewBag.ManageRewardDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/datatableReward")
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Reward List</li>
+    </ol>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="menu-icon fas fa-award fa-fw"></i> Reward List
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Reward Description</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

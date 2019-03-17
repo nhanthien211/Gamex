@@ -267,5 +267,53 @@ namespace GamexWeb.Controllers
             model.IsSuccessful = false;
             return View(model);
         }
+
+        [HttpGet]
+        [Route("Reward/List")]
+        [Authorize(Roles = AccountRole.Admin)]
+        public ActionResult RewardList()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("LoadRewardList")]
+        [Authorize(Roles = AccountRole.Admin)]
+        public ActionResult LoadRewardList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumn = Request.Form.GetValues("order[0][column]").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _adminService.LoadRewardDataTable(sortColumn, sortColumnDirection, searchValue, skip, take);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Admin)]
+        [Route("Reward/View/{rewardId}")]
+        public ActionResult RewardDetail(string rewardId)
+        {
+            var reward = _adminService.GetRewardDetail(rewardId);
+            return View(reward);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Admin)]
+        [Route("Reward/View/{rewardId}")]
+        public ActionResult UpdateReward(RewardDetailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Admin/RewardDetail.cshtml", model);
+            }
+            model.IsSuccessful = _adminService.UpdateReward(model);
+            return View("~/Views/Admin/RewardDetail.cshtml", model);
+        }
     }
 }
