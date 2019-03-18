@@ -78,5 +78,12 @@ namespace GamexApi.Controllers {
             var point = _accountService.GetPoint(accountId);
             return point;
         }
+
+        [HttpGet]
+        [Route("reward/leader-board")]
+        public LeaderBoardViewModel GetLeaderBoard() {
+            var accountId = User.Identity.GetUserId();
+            return _accountService.GetLeaderBoardAccounts(accountId);
+        }
     }
 }
