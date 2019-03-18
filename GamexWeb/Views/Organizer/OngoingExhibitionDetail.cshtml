@@ -1,0 +1,120 @@
+﻿@using GamexWeb.Utilities
+@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
+
+@{
+    ViewBag.Title = "Exhibition Detail";
+    ViewBag.OngoingExhibition = "active";
+    ViewBag.Exhibition = "active";
+    ViewBag.ViewExhibitionDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "@Model.ExhibitionId",
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <!-- DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left;"></i> Exhibition Detail
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
+                Show QR
+            </button>
+        </div>
+        <div class="card-body">
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <img alt="" src="@Model.Logo" id="imagePreview" />
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    @Html.LabelFor(m => m.Name)
+                    @Html.TextBoxFor(m => m.Name, new
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate)
+                        @Html.TextBoxFor(m => m.StartDate, new
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate)
+                        @Html.TextBoxFor(m => m.EndDate, new
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Address)
+                    @Html.TextBoxFor(m => m.Address, new
+                    {
+                        @class = "form-control form-control-sm",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="qrModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Check-in QR Code</h4>
+
+            </div>
+            <div class="modal-body">
+                <div id="qrcode"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -81,7 +81,7 @@ namespace GamexWeb.Controllers
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _organizerService.LoadUpcomingExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetUserId());
+            var data = _organizerService.LoadExhibitionDataTable(ExhibitionTypes.Upcoming, sortColumnDirection, searchValue, skip, take, User.Identity.GetUserId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
@@ -180,6 +180,47 @@ namespace GamexWeb.Controllers
             }
             TempData["RESULT"] = _organizerService.AssignBoothToCompany(model, exhibitionId, companyId);
             return RedirectToAction("AttendedCompanyDetail", "Organizer", new {exhibitionId = exhibitionId, companyId = companyId});
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Ongoing")]
+        public ActionResult OngoingExhibition()
+        {
+            return null;
+        }
+
+        [HttpPost]
+        [Route("LoadOngoingExhibitionList")]
+        [Authorize(Roles = AccountRole.Organizer)]
+        public ActionResult LoadOngoingExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _organizerService.LoadExhibitionDataTable(ExhibitionTypes.Ongoing, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Exhibition/Ongoing/{id}")]
+        public ActionResult OngoingExhibitionDetail(string id)
+        {
+
+            var detail = _organizerService.GetExhibitionDetailViewOnly(id);
+            if (detail == null)
+            {
+                return RedirectToAction("OngoingExhibition", "Organizer");
+            }
+
+            return View(detail);
         }
     }
 }

@@ -95,30 +95,6 @@ namespace GamexService.Implement
             _unitOfWork.SaveChanges();
         }
 
-        public List<UpcomingExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
-        {
-            var newExhibitionList = _exhibitionRepository.GetPagingProjection(
-                e => new
-                {
-                    ExhibitionId = e.ExhibitionId,
-                    ExhibitionName = e.Name,
-                    StartDate = e.StartDate,
-                    EndDate = e.EndDate
-                },
-                e => !e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId) 
-                            && e.StartDate > DateTime.Now
-                            && e.Name.Contains(searchValue), 
-                e => e.StartDate, sortColumnDirection, take, skip
-                );
-            var result = newExhibitionList.Select(e => new UpcomingExhibitionViewModel
-            {
-                ExhibitionId = e.ExhibitionId,
-                ExhibitionName = e.ExhibitionName,
-                Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
-            }).ToList();
-            return result;
-        }
-
         public ExhibitionDetailViewOnlyModel GetExhibitionDetail(string exhibitionId, string type)
         {
             switch (type)
@@ -199,12 +175,33 @@ namespace GamexService.Implement
             return result > 0;
         }
 
-        public List<UpcomingExhibitionViewModel> LoadExhibitionDataTable(string type, string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        public List<ExhibitionTableViewModel> LoadExhibitionDataTable(string type, string sortColumnDirection, string searchValue, int skip, int take, string companyId)
         {
             switch (type)
             {
-                case ExhibitionTypes.Upcoming:
+                case ExhibitionTypes.New:
                     var exhibitionList = _exhibitionRepository.GetPagingProjection(
+                        e => new
+                        {
+                            ExhibitionId = e.ExhibitionId,
+                            ExhibitionName = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate
+                        },
+                        e => !e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId)
+                             && e.StartDate > DateTime.Now
+                             && e.Name.Contains(searchValue),
+                        e => e.StartDate, sortColumnDirection, take, skip
+                    );
+                    var result = exhibitionList.Select(e => new ExhibitionTableViewModel
+                    {
+                        ExhibitionId = e.ExhibitionId,
+                        ExhibitionName = e.ExhibitionName,
+                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                    }).ToList();
+                    return result;
+                case ExhibitionTypes.Upcoming:
+                    exhibitionList = _exhibitionRepository.GetPagingProjection(
                         e => new
                         {
                             ExhibitionId = e.ExhibitionId,
@@ -217,7 +214,7 @@ namespace GamexService.Implement
                              && e.Name.Contains(searchValue),
                         e => e.StartDate, sortColumnDirection, take, skip
                     );
-                    var result = exhibitionList.Select(e => new UpcomingExhibitionViewModel
+                    result = exhibitionList.Select(e => new ExhibitionTableViewModel
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
@@ -238,7 +235,7 @@ namespace GamexService.Implement
                              && e.Name.Contains(searchValue),
                         e => e.StartDate, sortColumnDirection, take, skip
                     );
-                    result = exhibitionList.Select(e => new UpcomingExhibitionViewModel
+                    result = exhibitionList.Select(e => new ExhibitionTableViewModel
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,

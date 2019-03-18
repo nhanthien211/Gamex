@@ -228,7 +228,7 @@ namespace GamexWeb.Controllers
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _companyService.LoadNewExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var data = _companyService.LoadExhibitionDataTable(ExhibitionTypes.New, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
@@ -301,10 +301,9 @@ namespace GamexWeb.Controllers
             var length = Request.Form.GetValues("length").FirstOrDefault();
             var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
-            var type = Request.Form.GetValues("type").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _companyService.LoadExhibitionDataTable(type, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var data = _companyService.LoadExhibitionDataTable(ExhibitionTypes.Upcoming, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
@@ -645,10 +644,9 @@ namespace GamexWeb.Controllers
             var length = Request.Form.GetValues("length").FirstOrDefault();
             var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
-            var type = Request.Form.GetValues("type").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _companyService.LoadExhibitionDataTable(type, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var data = _companyService.LoadExhibitionDataTable(ExhibitionTypes.Ongoing, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }

@@ -6,6 +6,7 @@ using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GamexEntity.Constant;
 
 namespace GamexService.Implement
 {
@@ -59,28 +60,56 @@ namespace GamexService.Implement
             return result > 0;
         }
 
-        public List<UpcomingExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string organizerId)
+        public List<ExhibitionTableViewModel> LoadExhibitionDataTable(string type, string sortColumnDirection, string searchValue, int skip, int take, string organizerId)
         {
-            var newExhibitionList = _exhibitionRepository.GetPagingProjection(
-                e => new
-                {
-                    ExhibitionId = e.ExhibitionId,
-                    ExhibitionName = e.Name,
-                    StartDate = e.StartDate,
-                    EndDate = e.EndDate
-                },
-                e => e.OrganizerId == organizerId
-                     && e.StartDate > DateTime.Now
-                     && e.Name.Contains(searchValue),
-                e => e.StartDate, sortColumnDirection, take, skip
-            );
-            var result = newExhibitionList.Select(e => new UpcomingExhibitionViewModel
+            switch (type)
             {
-                ExhibitionId = e.ExhibitionId,
-                ExhibitionName = e.ExhibitionName,
-                Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
-            }).ToList();
-            return result;
+                case ExhibitionTypes.Upcoming:
+                    var exhibitionList = _exhibitionRepository.GetPagingProjection(
+                        e => new
+                        {
+                            ExhibitionId = e.ExhibitionId,
+                            ExhibitionName = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate
+                        },
+                        e => e.OrganizerId == organizerId
+                             && e.StartDate > DateTime.Now
+                             && e.Name.Contains(searchValue),
+                        e => e.StartDate, sortColumnDirection, take, skip
+                    );
+                    var result = exhibitionList.Select(e => new ExhibitionTableViewModel
+                    {
+                        ExhibitionId = e.ExhibitionId,
+                        ExhibitionName = e.ExhibitionName,
+                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                    }).ToList();
+                    return result;
+                case ExhibitionTypes.Ongoing:
+                    exhibitionList = _exhibitionRepository.GetPagingProjection(
+                        e => new
+                        {
+                            ExhibitionId = e.ExhibitionId,
+                            ExhibitionName = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate
+                        },
+                        e => e.OrganizerId == organizerId
+                             && e.StartDate <= DateTime.Now && e.EndDate >= DateTime.Now
+                             && e.Name.Contains(searchValue),
+                        e => e.StartDate, sortColumnDirection, take, skip
+                    );
+                    result = exhibitionList.Select(e => new ExhibitionTableViewModel
+                    {
+                        ExhibitionId = e.ExhibitionId,
+                        ExhibitionName = e.ExhibitionName,
+                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                    }).ToList();
+                    return result;
+                default:
+                    return null;
+            }
+            
         }
 
         public ExhibitionDetailViewModel GetExhibitionDetail(string exhibitionId)
@@ -99,6 +128,24 @@ namespace GamexService.Implement
                     Longitude = e.Location.Longitude
                 },
                 e => e.ExhibitionId == exhibitionId && e.StartDate > DateTime.Now
+            ); 
+        }
+
+        public ExhibitionDetailViewOnlyModel GetExhibitionDetailViewOnly(string exhibitionId)
+        {
+            return _exhibitionRepository.GetSingleProjection(
+                e => new ExhibitionDetailViewOnlyModel
+                {
+                    Description = e.Description,
+                    Logo = e.Logo,
+                    Name = e.Name,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Address = e.Address,
+                    ExhibitionId = e.ExhibitionId
+                },
+                e => e.ExhibitionId == exhibitionId && e.StartDate <= DateTime.Now
+                                                    && e.EndDate >= DateTime.Now
             );
         }
 

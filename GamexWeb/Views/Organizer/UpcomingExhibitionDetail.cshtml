@@ -34,15 +34,6 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/validateFile")
-    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
-    <script>
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "@Model.ExhibitionId",
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-    </script>
     @if (Model != null)
     {
         if (Model.IsSuccessful != null)
@@ -84,9 +75,6 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left"></i> Exhibition Detail
-            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
-                Show QR
-            </button>
         </div>
         <div class="card-body">
             @using (Html.BeginForm("UpdateUpcomingExhibitionDetail", "Organizer", FormMethod.Post, new
@@ -229,23 +217,6 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="qrModal" class="modal fade">
-    <div class="modal-dialog modal-confirm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Check-in QR Code</h4>
-                
-            </div>
-            <div class="modal-body">
-                <div id="qrcode"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>

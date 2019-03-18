@@ -8,9 +8,6 @@
         order: [[1, "asc"]],
         "ajax": {
             "url": "../LoadUpcomingExhibitionList",
-            "data": function(d) {
-                d.type = "upcoming";
-            },
             "type": "POST",
             "datatype": "json"
         },

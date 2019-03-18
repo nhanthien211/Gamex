@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Ongoing Exhibition";
+    ViewBag.ManageOngoingExhibition = "active";
+    ViewBag.ManageExhibition = "active";
+    ViewBag.ManageExhibitionDropDownShow = "show";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/datatableManageOngoingEvent")
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Exhibition List</li>
+    </ol>
+
+    <!-- Content-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="menu-icon fa-fw fas fa-calendar-alt"></i> Ongoing Exhibition
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

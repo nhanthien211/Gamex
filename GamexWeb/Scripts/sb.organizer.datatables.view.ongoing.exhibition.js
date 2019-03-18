@@ -43,7 +43,7 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="/Company/Exhibition/Ongoing/' +
+                    return '<a href="/Organizer/Exhibition/Ongoing/' +
                         full.ExhibitionId +
                         '"><i class="fas fa-edit"></i>View Detail</a>';
                 }

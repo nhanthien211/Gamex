@@ -1,6 +1,6 @@
 ﻿namespace GamexService.ViewModel
 {
-    public class UpcomingExhibitionViewModel
+    public class ExhibitionTableViewModel
     {
         public string ExhibitionName { get; set; }
         public string ExhibitionId { get; set; }

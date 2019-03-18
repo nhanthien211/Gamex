@@ -67,7 +67,7 @@
     <Compile Include="ViewModel\CompanyRegisterViewModel.cs" />
     <Compile Include="ViewModel\CompanyTableViewModel.cs" />
     <Compile Include="ViewModel\CreateRewardViewModel.cs" />
-    <Compile Include="ViewModel\UpcomingExhibitionViewModel.cs" />
+    <Compile Include="ViewModel\ExhibitionTableViewModel.cs" />
     <Compile Include="ViewModel\CreateExhibitionViewModel.cs" />
     <Compile Include="ViewModel\CreateOrganizerViewModel.cs" />
     <Compile Include="ViewModel\CreateSurveyViewModel.cs" />
