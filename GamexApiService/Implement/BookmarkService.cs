@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using GamexApiService.Interface;
 using GamexApiService.Models;
@@ -167,15 +168,20 @@ namespace GamexApiService.Implement {
                 BookmarkDate = DateTime.Now
             };
 
-            var hasBookmarkedExhibition = _exhibitionBookmarkRepo.GetSingle(eb =>
-                                           eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId)
-                                                                          && eb.BookmarkDate != null) != null;
+            var exhibitionAttendeeRow = _exhibitionBookmarkRepo.GetSingle(eb =>
+                                           eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId));
 
-            if (hasBookmarkedExhibition) {
+            if (exhibitionAttendeeRow?.BookmarkDate != null) {
                 return new ServiceActionResult { Ok = false, Message = "Bookmark failed: You've already bookmarked this exhibition!" };
             }
 
-            _exhibitionBookmarkRepo.Insert(bookmark);
+            if (exhibitionAttendeeRow == null) {
+                _exhibitionBookmarkRepo.Insert(bookmark);
+            }
+            else {
+                _exhibitionBookmarkRepo.Update(exhibitionAttendeeRow);
+                exhibitionAttendeeRow.BookmarkDate = DateTime.Now;
+            }
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {
@@ -194,16 +200,20 @@ namespace GamexApiService.Implement {
         }
 
         public ServiceActionResult RemoveBookmarkExhibition(string accountId, string exhibitionId) {
-            var bookmark = _exhibitionBookmarkRepo.GetSingle(
-                eb => eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId)
-                                                     && eb.BookmarkDate != null);
+            var exhibitionAttendeeRow = _exhibitionBookmarkRepo.GetSingle(
+                eb => eb.AccountId.Equals(accountId) && eb.ExhibitionId.Equals(exhibitionId));
 
-
-            if (bookmark == null) {
+            if (exhibitionAttendeeRow?.BookmarkDate == null) {
                 return new ServiceActionResult { Ok = false, Message = "Remove bookmark failed: You haven't bookmarked this exhibition yet!" };
             }
 
-            _exhibitionBookmarkRepo.Delete(bookmark);
+            if (exhibitionAttendeeRow?.CheckinTime == null) {
+                _exhibitionBookmarkRepo.Delete(exhibitionAttendeeRow);
+            }
+            else {
+                _exhibitionBookmarkRepo.Update(exhibitionAttendeeRow);
+                exhibitionAttendeeRow.BookmarkDate = null;
+            }
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {

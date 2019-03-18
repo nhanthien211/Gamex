@@ -166,14 +166,22 @@ namespace GamexApiService.Implement {
                 };
             }
 
-            if (HasCheckedIn(accountId, exhibitionId)) {
+            var exhibitionAttendeeRow = _exhibitionAttendeeRepo.GetSingle(
+                ea => ea.ExhibitionId.Equals(exhibitionId) && ea.AccountId.Equals(accountId));
+            if (exhibitionAttendeeRow?.CheckinTime != null) {
                 return new ServiceActionResult() {
                     Ok = false,
                     Message = "You has already checked in this exhibition!"
                 };
             }
 
-            _exhibitionAttendeeRepo.Insert(checkin);
+            if (exhibitionAttendeeRow == null) {
+                _exhibitionAttendeeRepo.Insert(checkin);
+            }
+            else {
+                _exhibitionAttendeeRepo.Update(exhibitionAttendeeRow);
+                exhibitionAttendeeRow.CheckinTime = DateTime.Now;
+            }
             try {
                 var affectedRows = _unitOfWork.SaveChanges();
                 if (affectedRows == 1) {
@@ -189,8 +197,7 @@ namespace GamexApiService.Implement {
         public bool HasCheckedIn(string accountId, string exhibitionId) {
             var exhibitionAttendee = _exhibitionAttendeeRepo.GetSingle(
                 ea => ea.AccountId.Equals(accountId) && ea.ExhibitionId.Equals(exhibitionId)
-                                                     && ea.CheckinTime != null
-            );
+                                                     && ea.CheckinTime != null);
             return exhibitionAttendee != null;
         }
 
