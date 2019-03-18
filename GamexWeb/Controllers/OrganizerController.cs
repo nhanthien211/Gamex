@@ -187,7 +187,7 @@ namespace GamexWeb.Controllers
         [Route("Exhibition/Ongoing")]
         public ActionResult OngoingExhibition()
         {
-            return null;
+            return View();
         }
 
         [HttpPost]
@@ -202,7 +202,7 @@ namespace GamexWeb.Controllers
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _organizerService.LoadExhibitionDataTable(ExhibitionTypes.Ongoing, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var data = _organizerService.LoadExhibitionDataTable(ExhibitionTypes.Ongoing, sortColumnDirection, searchValue, skip, take, User.Identity.GetUserId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
