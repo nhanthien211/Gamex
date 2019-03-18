@@ -11,11 +11,11 @@ namespace GamexService.Interface
         void RemoveCompany(string companyId);
 
         List<UpcomingExhibitionViewModel> LoadNewExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId);
-        ExhibitionDetailViewOnlyModel GetExhibitionDetail(string exhibitionId);
+        ExhibitionDetailViewOnlyModel GetExhibitionDetail(string exhibitionId, string type);
         bool IsCompanyHasJoinExhibition(string exhibitionId, string companyId);
         bool JoinExhibition(string exhibitionId, string companyId);
         
-        List<UpcomingExhibitionViewModel> LoadUpcomingExhibitionDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId);
+        List<UpcomingExhibitionViewModel> LoadExhibitionDataTable(string type, string sortColumnDirection, string searchValue, int skip, int take, string companyId);
         bool QuitExhibition(string exhibitionId, string companyId);
         bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId);
 
@@ -31,5 +31,6 @@ namespace GamexService.Interface
         bool RemoveSurvey(string surveyId);
         CompanyProfileViewModel GetCompanyProfile(string companyId);
         bool UpdateCompanyProfile(CompanyProfileViewModel model, string companyId);
+        string GetCompanyBoothInExhibition(string exhibitionId, string companyId);
     }
 }

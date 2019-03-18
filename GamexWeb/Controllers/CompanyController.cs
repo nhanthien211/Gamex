@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using GamexEntity;
 
 namespace GamexWeb.Controllers
 {
@@ -245,7 +246,7 @@ namespace GamexWeb.Controllers
             {
                 return RedirectToAction("NewExhibition", "Company");
             }
-            var detail = _companyService.GetExhibitionDetail(id);
+            var detail = _companyService.GetExhibitionDetail(id, ExhibitionTypes.New);
             if (detail == null)
             {
                 return RedirectToAction("NewExhibition", "Company");
@@ -300,9 +301,10 @@ namespace GamexWeb.Controllers
             var length = Request.Form.GetValues("length").FirstOrDefault();
             var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
             var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var type = Request.Form.GetValues("type").FirstOrDefault();
             var take = length != null ? Convert.ToInt32(length) : 0;
             var skip = start != null ? Convert.ToInt32(start) : 0;
-            var data = _companyService.LoadUpcomingExhibitionDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var data = _companyService.LoadExhibitionDataTable(type, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
             var recordsTotal = data.Count;
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
@@ -314,18 +316,20 @@ namespace GamexWeb.Controllers
         public ActionResult UpcomingExhibitionDetail(string id)
         {
             //check if company join exhibition or not (validation)
-            var join = _companyService.IsCompanyHasJoinExhibition(id, User.Identity.GetCompanyId());
+            var companyId = User.Identity.GetCompanyId();
+            var join = _companyService.IsCompanyHasJoinExhibition(id, companyId);
 
             if (!join)
             {
                 return RedirectToAction("UpcomingExhibition", "Company");
             }
-            var detail = _companyService.GetExhibitionDetail(id);
+            var detail = _companyService.GetExhibitionDetail(id, ExhibitionTypes.Upcoming);
             if (detail == null)
             {
                 return RedirectToAction("UpcomingExhibition", "Company");
             }
 
+            detail.Booth = _companyService.GetCompanyBoothInExhibition(id, companyId);
             if (TempData["RESULT"] != null)
             {
                 detail.IsSuccessful = false;
@@ -621,6 +625,56 @@ namespace GamexWeb.Controllers
         public ActionResult EmployeeJoinList()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/Ongoing")]
+        public ActionResult OngoingExhibition()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/LoadOngoingExhibitionList")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadOngoingExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var type = Request.Form.GetValues("type").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadExhibitionDataTable(type, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Company/Exhibition/Ongoing/{id}")]
+        public ActionResult OngoingExhibitionDetail(string id)
+        {
+            //check if company join exhibition or not (validation)
+            var companyId = User.Identity.GetCompanyId();
+            var join = _companyService.IsCompanyHasJoinExhibition(id, companyId);
+
+            if (!join)
+            {
+                return RedirectToAction("OngoingExhibition", "Company");
+            }
+            var detail = _companyService.GetExhibitionDetail(id, ExhibitionTypes.Ongoing);
+            if (detail == null)
+            {
+                return RedirectToAction("OngoingExhibition", "Company");
+            }
+
+            detail.Booth = _companyService.GetCompanyBoothInExhibition(id, companyId);
+            return View(detail);
         }
     }
 }

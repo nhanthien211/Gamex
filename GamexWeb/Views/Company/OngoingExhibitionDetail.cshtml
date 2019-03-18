@@ -1,55 +1,39 @@
-﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
+﻿@using GamexWeb.Utilities
+@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
 
 @{
-    ViewBag.UpcomingExhibition = "active";
+    ViewBag.Title = "Exhibition Detail";
+    ViewBag.OngoingExhibition = "active";
     ViewBag.Exhibition = "active";
     ViewBag.ViewExhibitionDropDownShow = "show";
-    ViewBag.Title = "View Detail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
 @section scripts
 {
-
-    @if (Model != null && Model.IsSuccessful.HasValue)
-    {
-        if (!Model.IsSuccessful.Value)
-        {
-            <script type="text/javascript">
-                $('#failModal').modal();
-            </script>
-        }
-    }
+    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "exhibitionId=@Model.ExhibitionId&companyId=@User.Identity.GetCompanyId()",
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
 }
 
 <div class="container-fluid">
     <!-- Breadcrumbs-->
 
-    <nav class="navbar navbar-expand-xs navbar-light" style="margin-bottom: 1rem; background-color: #e9ecef; border-radius: 0.25rem;">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    @Html.ActionLink("Exhibition Detail", "UpcomingExhibitionDetail", "Company", new {id = Model.ExhibitionId}, new { @class = "nav-link" })
-                </li>
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarSurvey" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Survey
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarSurvey">
-                        @Html.ActionLink("Create Survey", "CreateSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Manage Survey", "UpcomingSurvey", "Company", new { id = Model.ExhibitionId }, new { @class = "dropdown-item" })
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    
 
     <!-- DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left;"></i> Exhibition Detail
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
+                Show QR
+            </button>
         </div>
         <div class="card-body">
 
@@ -83,10 +67,10 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.StartDate)
                         @Html.TextBoxFor(m => m.StartDate, new
-                       {
-                           @class = "form-control",
-                           @readonly = true
-                       })
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
                     </div>
                 </div>
 
@@ -124,38 +108,24 @@
                 </div>
             </div>
 
-            <hr />
-            @using (Html.BeginForm("QuitExhibition", "Company", FormMethod.Post))
-            {
-                @Html.HiddenFor(m => m.ExhibitionId)
-                <div class="row for-exhibition-form">
-                    <div class="col-sm-12 col-lg-12">
-                        <button type="submit" class="btn btn-outline-danger">Quit</button>
-                    </div>
-                </div>
-            }
         </div>
     </div>
 </div>
 
-<div id="failModal" class="modal fade">
+<div id="qrModal" class="modal fade">
     <div class="modal-dialog modal-confirm">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="icon-box-fail">
-                    <i class="fas fa-times"></i>
-                </div>
-                <h4 class="modal-title">Error!</h4>
+                <h4 class="modal-title">Your company QR Code for this exhibition</h4>
+
             </div>
             <div class="modal-body">
-                <div class="field-validation-error">
-                    <p class="text-center">Submit unsuccessfully</p>
-                    <p class="text-center">Please try again later</p>
-                </div>
+                <div id="qrcode"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
+

@@ -66,6 +66,11 @@ namespace GamexWeb
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.company.datatables.view.upcoming.exhibition.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatableOngoingEvent").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.view.ongoing.exhibition.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/datatableCompanyManageUpcomingEvent").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
