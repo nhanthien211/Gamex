@@ -7,9 +7,9 @@
         "pagingType": "full_numbers",
         order: [[1, "asc"]],
         "ajax": {
-            "url": "../LoadUpcomingExhibitionList",
-            "data": function(d) {
-                d.type = "upcoming";
+            "url": "../LoadOngoingExhibitionList",
+            "data": function (d) {
+                d.type = "ongoing";
             },
             "type": "POST",
             "datatype": "json"
@@ -46,7 +46,7 @@
             },
             {
                 "render": function (data, type, full, meta) {
-                    return '<a href="/Company/Exhibition/Upcoming/' +
+                    return '<a href="/Company/Exhibition/Ongoing/' +
                         full.ExhibitionId +
                         '"><i class="fas fa-edit"></i>View Detail</a>';
                 }

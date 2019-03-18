@@ -73,6 +73,8 @@ namespace GamexService.ViewModel
 
         public string ExhibitionId { get; set; }
 
+        public string Booth { get; set; }
+
         public bool? IsSuccessful { get; set; }
     }
 }
