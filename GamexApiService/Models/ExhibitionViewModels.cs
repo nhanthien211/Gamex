@@ -14,8 +14,8 @@ namespace GamexApiService.Models {
         public string EndDate { get; set; }
         public string Logo { get; set; }
         public bool IsBookmarked { get; set; }
-        //public string Lat { get; set; }
-        //public string Lng { get; set; }
+        public string Lat { get; set; }
+        public string Lng { get; set; }
         public List<CompanyShortViewModel> ListCompany { get; set; }
     }
 

@@ -112,11 +112,11 @@ namespace GamexApiService.Implement {
 
         public ExhibitionDetailViewModel GetExhibition(string accountId, string exhibitionId) {
             var exhibition = _exhibitionRepo.GetSingle(
-                e => e.IsActive && e.ExhibitionId.Equals(exhibitionId), e => e.Booth.Select(b => b.Company));
+                e => e.IsActive && e.ExhibitionId.Equals(exhibitionId), e => e.Booth.Select(b => b.Company.Booth));
             if (exhibition == null) {
                 return null;
             }
-            var companies = exhibition.Booth.Select(b => b.Company);
+            var companies = exhibition.Booth.Select(b => b.Company);     
             return new ExhibitionDetailViewModel {
                 ExhibitionId = exhibition.ExhibitionId,
                 Name = exhibition.Name,
@@ -125,15 +125,15 @@ namespace GamexApiService.Implement {
                 //OrganizerId = exhibition.OrganizerId,
                 StartDate = exhibition.StartDate.ToString("f"),
                 EndDate = exhibition.EndDate.ToString("f"),
-                //Lat = exhibition.Location.Latitude?.ToString(),
-                //Lng = exhibition.Location.Longitude?.ToString(),
+                Lat = exhibition.Location.Latitude?.ToString(),
+                Lng = exhibition.Location.Longitude?.ToString(),
                 Logo = exhibition.Logo,
                 IsBookmarked = HasBookmarked(accountId, exhibitionId),
                 ListCompany = companies.Select(c => new CompanyShortViewModel() {
                     CompanyId = c.CompanyId,
                     Name = c.Name,
                     Logo = c.Logo,
-                    Booths = c.Booth.Select(b => b.BoothNumber).ToArray()
+                    Booths = c.Booth.Where(b => b.ExhibitionId == exhibitionId).Select(b => b.BoothNumber).ToArray()
                 }).ToList().RemoveRedundancies()
             };
         }
