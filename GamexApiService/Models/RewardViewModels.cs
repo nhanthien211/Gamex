@@ -36,5 +36,6 @@ namespace GamexApiService.Models {
     public class LeaderBoardViewModel {
         public List<AccountRankingViewModel> LeaderBoard { get; set; }
         public int CurrentUserRank { get; set; }
+        public int CurrentUserTotalPoint { get; set; }
     }
 }

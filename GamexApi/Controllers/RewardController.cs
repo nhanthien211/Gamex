@@ -80,7 +80,7 @@ namespace GamexApi.Controllers {
         }
 
         [HttpGet]
-        [Route("reward/leader-board")]
+        [Route("reward/leaderboards")]
         public LeaderBoardViewModel GetLeaderBoard() {
             var accountId = User.Identity.GetUserId();
             return _accountService.GetLeaderBoardAccounts(accountId);

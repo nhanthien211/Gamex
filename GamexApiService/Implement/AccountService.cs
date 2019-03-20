@@ -80,7 +80,8 @@ namespace GamexApiService.Implement {
 
             return new LeaderBoardViewModel {
                 LeaderBoard = list,
-                CurrentUserRank = userRanking
+                CurrentUserRank = userRanking,
+                CurrentUserTotalPoint = user.TotalPointEarned
             };
         }
     }
