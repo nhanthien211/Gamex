@@ -28,7 +28,12 @@ function initAutocomplete() {
     });
 
     google.maps.event.addDomListener(document.getElementById("Address"), 'blur', function () {
-        if (originalAddress != null && originalAddress == document.getElementById("Address").value) {
+        if (document.getElementById("Address").value === "") {
+            document.getElementById("Latitude").value = '';
+            document.getElementById("Longitude").value = '';
+            return;
+        }
+        if (originalAddress != null && originalAddress.length !== 0 && originalAddress == document.getElementById("Address").value) {
             return;
         }
         // Find the pac-container element

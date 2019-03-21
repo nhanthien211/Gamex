@@ -123,6 +123,7 @@
     <Compile Include="Constant\ExhibitionTypes.cs" />
     <Compile Include="Enumeration\AccountStatusEnum.cs" />
     <Compile Include="Enumeration\CompanyStatusEnum.cs" />
+    <Compile Include="Enumeration\DistanceEnum.cs" />
     <Compile Include="Enumeration\QuestionTypeEnum.cs" />
     <Compile Include="Exhibition.cs">
       <DependentUpon>GamexModel.tt</DependentUpon>
