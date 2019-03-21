@@ -2,10 +2,12 @@
 using GamexApiService.Models;
 using GamexEntity.Constant;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
-namespace GamexApi.Controllers {
+namespace GamexApi.Controllers
+{
     [Authorize(Roles = AccountRole.User)]
     [System.Web.Mvc.RequireHttps]
     [RoutePrefix("api")]
@@ -35,6 +37,11 @@ namespace GamexApi.Controllers {
 
             var accountId = User.Identity.GetUserId();
             var exhibitionList = _exhibitionService.GetExhibitions(list, type, take, skip, lat, lng, accountId);
+            if (type == ExhibitionTypes.NearYou)
+            {
+                //add google map distance api utilities
+                exhibitionList = _exhibitionService.GetExhibitionListRouteLengthNear(lat, lng, exhibitionList);
+            }
             return exhibitionList;
         }
 

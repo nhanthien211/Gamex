@@ -9,5 +9,7 @@ namespace GamexApiService.Interface {
         ServiceActionResult CheckInExhibition(string accountId, string exhibitionId);
         bool HasCheckedIn(string accountId, string exhibitionId);
         bool IsOnGoing(string exhibitionId);
+
+        List<ExhibitionShortViewModel> GetExhibitionListRouteLengthNear(string lat, string lng, List<ExhibitionShortViewModel> exhibitionList);
     }
 }

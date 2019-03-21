@@ -8,6 +8,12 @@ using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Linq.Expressions;
+using GamexEntity.Enumeration;
+using System.Configuration;
+using System.IO;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GamexApiService.Implement {
     public class ExhibitionService : IExhibitionService {
@@ -50,9 +56,8 @@ namespace GamexApiService.Implement {
                     filter = e => e.IsActive && e.StartDate > DateTime.Now;
                     break;
                 case ExhibitionTypes.NearYou:
-                    const double range = 5000; // meters
                     filter = e =>
-                        e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= range
+                        e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= (double) DistanceEnum.Near 
                         && e.EndDate >= DateTime.Now;
                     break;
                 case ExhibitionTypes.Past:
@@ -72,7 +77,8 @@ namespace GamexApiService.Implement {
                     e.Address,
                     e.StartDate,
                     e.EndDate,
-                    e.Logo
+                    e.Logo,
+                    e.Location
                 },
                 filter,
                 sort,
@@ -101,7 +107,9 @@ namespace GamexApiService.Implement {
                 Address = e.Address,
                 StartDate = e.StartDate.ToString("f"),
                 EndDate = e.EndDate.ToString("f"),
-                Logo = e.Logo
+                Logo = e.Logo,
+                Latitude = e.Location.Latitude,
+                Longitude = e.Location.Longitude
             }).ToList();
         }
 
@@ -206,6 +214,36 @@ namespace GamexApiService.Implement {
             var exhibition = _exhibitionRepo.GetById(exhibitionId);
             var now = DateTime.Now;
             return exhibition.StartDate <= now && now <= exhibition.EndDate;
+        }
+
+        public List<ExhibitionShortViewModel> GetExhibitionListRouteLengthNear(string lat, string lng, List<ExhibitionShortViewModel> exhibitionList)
+       {
+            var apiUrl = ConfigurationManager.AppSettings.Get("GoogleDistanceMatrixApiUrl");
+            var apiKey = ConfigurationManager.AppSettings.Get("GoogleMapApiKey");
+            var userLat = Convert.ToDouble(lat);
+            var userLng = Convert.ToDouble(lng);
+            var destinationArray = exhibitionList.Select(e => new
+            {
+                Latitude = e.Latitude.Value,
+                Longitude = e.Longitude.Value
+            }).ToArray().Select(d => string.Join(",", d.Latitude, d.Longitude)).ToArray();
+            var destinationAddresses = string.Join("|", destinationArray);
+            var requestUrl = $"{apiUrl}?origins={userLat},{userLng}&destinations={destinationAddresses}&key={apiKey}";
+            var request = (HttpWebRequest) WebRequest.Create(requestUrl);
+            var response = request.GetResponse();
+            var dataStream = response.GetResponseStream();
+            var reader = new StreamReader(dataStream);
+            var responseString = reader.ReadToEnd();
+            response.Close();
+            var responseObject = JsonConvert.DeserializeObject<GoogleMapResponse>(responseString);
+            for (int i = 0; i < responseObject.Rows[0].Elements.Length; i++)
+            {
+                if (responseObject.Rows[0].Elements[i].Distance.Value > (double) DistanceEnum.Near)
+                {
+                    exhibitionList.RemoveAt(i);
+                }
+            }
+            return exhibitionList;
         }
     }
 }
