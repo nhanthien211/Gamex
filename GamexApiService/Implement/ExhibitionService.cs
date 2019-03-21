@@ -52,7 +52,8 @@ namespace GamexApiService.Implement {
                 case ExhibitionTypes.NearYou:
                     const double range = 5000; // meters
                     filter = e =>
-                        e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= range;
+                        e.IsActive && e.Location.Distance(DbGeography.FromText("POINT(" + lng + " " + lat + ")")) <= range
+                        && e.EndDate >= DateTime.Now;
                     break;
                 case ExhibitionTypes.Past:
                     filter = e => e.IsActive && e.EndDate < DateTime.Now;

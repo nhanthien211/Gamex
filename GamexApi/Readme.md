@@ -108,7 +108,9 @@ We will get a url as step 2 above, which contains an `access_token`. Use this to
 ## 2. Exhibition
 `GET /api/exhibition?id=<id>`
 
-`GET /api/exhibitions?type=<type>&take=<take>&skip=<skip>&lat=<lat>&lng=<lng>`
+`GET /api/exhibitions?list=<list>&type=<type>&take=<take>&skip=<skip>&lat=<lat>&lng=<lng>`
+
+    `list` = "checked-in". Include this parameter to get the checked-in exhibition list of logged in user.
 
     `type` = "ongoing", "upcoming", "near-you". Default to "ongoing". "near-you" default distance is 5000 meters.
     
