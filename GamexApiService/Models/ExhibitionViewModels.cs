@@ -26,7 +26,7 @@ namespace GamexApiService.Models {
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string Logo { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }      
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }      
     }
 }

@@ -108,8 +108,8 @@ namespace GamexApiService.Implement {
                 StartDate = e.StartDate.ToString("f"),
                 EndDate = e.EndDate.ToString("f"),
                 Logo = e.Logo,
-                Latitude = e.Location.Latitude,
-                Longitude = e.Location.Longitude
+                Latitude = e.Location?.Latitude != null ? e.Location.Latitude.Value.ToString() : "",
+                Longitude = e.Location?.Longitude != null ? e.Location.Longitude.Value.ToString() : ""
             }).ToList();
         }
 
@@ -134,8 +134,8 @@ namespace GamexApiService.Implement {
                 //OrganizerId = exhibition.OrganizerId,
                 StartDate = exhibition.StartDate.ToString("f"),
                 EndDate = exhibition.EndDate.ToString("f"),
-                Lat = exhibition.Location.Latitude?.ToString(),
-                Lng = exhibition.Location.Longitude?.ToString(),
+                Lat = exhibition.Location?.Latitude != null ? exhibition.Location.Latitude.Value.ToString() : "",
+                Lng = exhibition.Location?.Longitude != null ? exhibition.Location.Longitude.Value.ToString() : "",
                 Logo = exhibition.Logo,
                 IsBookmarked = HasBookmarked(accountId, exhibitionId),
                 ListCompany = companies.Select(c => new CompanyShortViewModel() {
@@ -220,15 +220,13 @@ namespace GamexApiService.Implement {
        {
             var apiUrl = ConfigurationManager.AppSettings.Get("GoogleDistanceMatrixApiUrl");
             var apiKey = ConfigurationManager.AppSettings.Get("GoogleMapApiKey");
-            var userLat = Convert.ToDouble(lat);
-            var userLng = Convert.ToDouble(lng);
             var destinationArray = exhibitionList.Select(e => new
             {
-                Latitude = e.Latitude.Value,
-                Longitude = e.Longitude.Value
+                Latitude = e.Latitude,
+                Longitude = e.Longitude
             }).ToArray().Select(d => string.Join(",", d.Latitude, d.Longitude)).ToArray();
             var destinationAddresses = string.Join("|", destinationArray);
-            var requestUrl = $"{apiUrl}?origins={userLat},{userLng}&destinations={destinationAddresses}&key={apiKey}";
+            var requestUrl = $"{apiUrl}?origins={lat},{lng}&destinations={destinationAddresses}&key={apiKey}";
             var request = (HttpWebRequest) WebRequest.Create(requestUrl);
             var response = request.GetResponse();
             var dataStream = response.GetResponseStream();
