@@ -5,9 +5,11 @@ using GamexService.Interface;
 using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GamexEntity.Constant;
 using GamexService.Utilities;
+using OfficeOpenXml;
 
 namespace GamexService.Implement
 {
@@ -129,6 +131,20 @@ namespace GamexService.Implement
                         e => e.ExhibitionId == exhibitionId && e.StartDate <= DateTime.Now 
                              && e.EndDate >= DateTime.Now
                     );
+                case ExhibitionTypes.Past:
+                    return _exhibitionRepository.GetSingleProjection(
+                        e => new ExhibitionDetailViewOnlyModel
+                        {
+                            Description = e.Description,
+                            Logo = e.Logo,
+                            Name = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate,
+                            Address = e.Address,
+                            ExhibitionId = e.ExhibitionId
+                        },
+                        e => e.ExhibitionId == exhibitionId && e.EndDate < DateTime.Now
+                    );
                 default:
                     return null;
             }
@@ -150,8 +166,9 @@ namespace GamexService.Implement
     
         public bool IsCompanyHasJoinExhibition(string exhibitionId, string companyId)
         {
-            return  _boothRepository.GetSingleProjection(b => b.Id,
-                b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId 
+            return  _boothRepository.GetSingleProjection(
+                        b => b.Id,
+                            b => b.CompanyId == companyId && b.ExhibitionId == exhibitionId 
                      ) != 0;
         }
 
@@ -232,6 +249,27 @@ namespace GamexService.Implement
                         },
                         e => e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId)
                              && e.StartDate <= DateTime.Now && e.EndDate >= DateTime.Now 
+                             && e.Name.Contains(searchValue),
+                        e => e.StartDate, sortColumnDirection, take, skip
+                    );
+                    result = exhibitionList.Select(e => new ExhibitionTableViewModel
+                    {
+                        ExhibitionId = e.ExhibitionId,
+                        ExhibitionName = e.ExhibitionName,
+                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                    }).ToList();
+                    return result;
+                case ExhibitionTypes.Past:
+                    exhibitionList = _exhibitionRepository.GetPagingProjection(
+                        e => new
+                        {
+                            ExhibitionId = e.ExhibitionId,
+                            ExhibitionName = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate
+                        },
+                        e => e.Booth.Where(b => b.ExhibitionId == e.ExhibitionId).Select(b => b.CompanyId).Contains(companyId)
+                             && e.EndDate < DateTime.Now 
                              && e.Name.Contains(searchValue),
                         e => e.StartDate, sortColumnDirection, take, skip
                     );
@@ -685,6 +723,119 @@ namespace GamexService.Implement
                 }
             }
             return false;
+        }
+
+        public List<PastSurveyViewModel> LoadPastSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId)
+        {
+            var pastSurveyList = _surveyRepository.GetPagingProjection(
+                s => new PastSurveyViewModel
+                {
+                    ExhibitionId = s.ExhibitionId,
+                    SurveyId = s.SurveyId,
+                    SurveyTitle = s.Title,
+                    ResponseCount = s.SurveyParticipation.Count
+                },
+                s => s.CompanyId == companyId && s.ExhibitionId == exhibitionId
+                                              && s.Title.Contains(searchValue),
+                s => s.Title, sortColumnDirection, take, skip
+            );
+            return pastSurveyList.ToList();
+        }
+
+        public bool IsValidSurveyExportRequest(string surveyId, string companyId)
+        {
+            try
+            {
+                int id = Convert.ToInt32(surveyId);
+                var survey = _surveyRepository.GetSingle(
+                    s => s.SurveyId == id && s.CompanyId == companyId 
+                         && s.Exhibition.EndDate < DateTime.Now && s.SurveyParticipation.Count > 0
+                );
+                return survey != null;
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public Stream GetSurveyResponseExcelFile(string surveyId)
+        {
+            int id = Convert.ToInt32(surveyId);
+
+            var surveyResult = _surveyRepository.GetSingleProjection(
+                s => new SurveyResultViewModel
+                {
+                    SurveyTitle = s.Title,
+                    Questions = s.Question.Select(q => q.Content).ToList(),
+                    AnswerList = s.SurveyParticipation.Select(sp => new SurveyAnswerViewModel
+                    {
+                        ParticipantName = sp.AspNetUsers.LastName + " " + sp.AspNetUsers.FirstName,
+                        TimeStamp = sp.CompleteDate,
+                        QuestionList = s.SurveyAnswer.Where(sa => sa.AccountId == sp.AspNetUsers.Id).Select(sa => new
+                        {
+                            QuestionId = sa.Question.QuestionId,
+                            Answer = sa.ProposedAnswerId != null ? sa.ProposedAnswer.Content : sa.Other
+                        }).GroupBy(rs => rs.QuestionId).Select(g => new QuestionAnswerViewModel
+                        {
+                            QuestionId = g.Key,
+                            QuestionAnswer = g.Select(v => v.Answer).ToList()
+                        }).ToList()
+                    }).ToList()
+                },
+                s => s.SurveyId == id
+            );
+            if (surveyResult == null || surveyResult.Questions.Count == 0 || surveyResult.AnswerList.Count == 0)
+            {
+                return null;
+            }
+            using (var excelPackage = new ExcelPackage(new MemoryStream()))
+            {
+                var workSheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+                workSheet.Row(1).Style.Font.Bold = true;
+
+                var headerRow = new List<string[]>();
+
+                var row = new List<string> {"Full Name", "Timestamp"};
+
+                foreach (var question in surveyResult.Questions)
+                {
+                    row.Add(question);
+                }
+                headerRow.Add(row.ToArray());
+                string headerRange = "A1:" + char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+                workSheet.Cells[headerRange].LoadFromArrays(headerRow);
+                int currentRow = 2;
+                foreach (var surveyAnswer in surveyResult.AnswerList)
+                {
+                    
+                    var contentRow = new List<string[]>();
+                    row = new List<string>
+                    {
+                        surveyAnswer.ParticipantName,
+                        surveyAnswer.TimeStamp.ToString("HH:mm dddd, dd MMMM yyyy")
+                    };
+                    foreach (var answers in surveyAnswer.QuestionList)
+                    {
+                        row.Add(string.Join(", ", answers.QuestionAnswer));
+                    }
+                    contentRow.Add(row.ToArray());
+                    string rowRange = "A" + currentRow + ":" + Char.ConvertFromUtf32(contentRow[0].Length + 64) + currentRow;
+                    workSheet.Cells[rowRange].LoadFromArrays(contentRow);
+                    currentRow++;
+                }
+
+                int columnCount = 2 + surveyResult.Questions.Count;
+                for (int i = 1; i <= columnCount; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                excelPackage.Save();
+                excelPackage.Stream.Position = 0;
+                return excelPackage.Stream;
+            }
         }
     }
 

@@ -674,5 +674,99 @@ namespace GamexWeb.Controllers
             detail.Booth = _companyService.GetCompanyBoothInExhibition(id, companyId);
             return View(detail);
         }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [Route("Company/Exhibition/Past")]
+        public ActionResult PastExhibition()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Company/LoadPastExhibitionList")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadPastExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadExhibitionDataTable(ExhibitionTypes.Past, sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Company)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Company/Exhibition/Past/{id}")]
+        public ActionResult PastExhibitionDetail(string id)
+        {
+            //check if company join exhibition or not (validation)
+            var companyId = User.Identity.GetCompanyId();
+            var join = _companyService.IsCompanyHasJoinExhibition(id, companyId);
+
+            if (!join)
+            {
+                return RedirectToAction("PastExhibition", "Company");
+            }
+            var detail = _companyService.GetExhibitionDetail(id, ExhibitionTypes.Past);
+            if (detail == null)
+            {
+                return RedirectToAction("PastExhibition", "Company");
+            }
+
+            return View(detail);
+        }
+
+        [HttpGet]
+        [Route("Company/Exhibition/Past/{id}/Survey/Manage")]
+        [FilterConfig.NoDirectAccess]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult PastSurvey(string id)
+        {
+            return View((object)id);
+        }
+
+        [HttpPost]
+        [Route("Company/Exhibition/Past/{id}/Survey/Manage")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadPastSurveyList(string id)
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadPastSurveyDataTable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId(), id);
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Route("Company/ExportSurveyResponse/{surveyId}")]
+        [Authorize(Roles = AccountRole.Company)]
+        [FileDownload]
+        public ActionResult DownloadSurveyResponse(string surveyId)
+        {
+            var companyId = User.Identity.GetCompanyId();
+            if (!_companyService.IsValidSurveyExportRequest(surveyId, companyId))
+            {
+                return Content("Failed");
+            }
+            var stream = _companyService.GetSurveyResponseExcelFile(surveyId);
+
+            if (stream == null)
+            {
+                return Content("Failed");
+            }
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
     }
 }
