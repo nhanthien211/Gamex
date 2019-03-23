@@ -1,8 +1,8 @@
-﻿@model GamexService.ViewModel.ExhibitionDetailViewOnlyModel
+﻿@model GamexService.ViewModel.PastExhibitionViewModel
 
 @{
     ViewBag.Title = "Exhibition Detail";
-    ViewBag.ManageOngoingExhibition = "active";
+    ViewBag.ManagePastExhibition = "active";
     ViewBag.ManageExhibition = "active";
     ViewBag.ManageExhibitionDropDownShow = "show";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -10,13 +10,15 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="~/Scripts/qrcode.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.fileDownload.js"></script>
     <script>
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "@Model.ExhibitionId",
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
+        $(document).on("click", "a.downloadReport", function () {
+            $.fileDownload($(this).prop('href'))
+                .fail(function () {
+                        $('#failModal').modal();
+                    }
+                );
+            return false; //this is critical to stop the click event which will trigger a normal file download
         });
     </script>
 }
@@ -26,7 +28,7 @@
     <ol class="breadcrumb">
 
         <li class="breadcrumb-item">
-            @Html.ActionLink("Exhibition List", "OngoingExhibition", "Organizer")
+            @Html.ActionLink("Exhibition List", "PastExhibition", "Organizer")
         </li>
         <li class="breadcrumb-item active">Exhibition Detail</li>
     </ol>
@@ -35,9 +37,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left;"></i> Exhibition Detail
-            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#qrModal" style="float: right">
-                Show QR
-            </button>
+
         </div>
         <div class="card-body">
 
@@ -46,15 +46,28 @@
                     <img alt="" src="@Model.Logo" id="imagePreview" />
                 </div>
             </div>
-
+            
             <div class="row for-exhibition-form">
                 <div class="col-sm-12 col-md-6 col-lg-6">
-                    @Html.LabelFor(m => m.Name)
-                    @Html.TextBoxFor(m => m.Name, new
-                    {
-                        @class = "form-control",
-                        @readonly = true
-                    })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AttendeeCount)
+                        @Html.TextBoxFor(m => m.AttendeeCount, new
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CompanyCount)
+                        @Html.TextBoxFor(m => m.CompanyCount, new
+                        {
+                            @class = "form-control",
+                            @readonly = true
+                        })
+                    </div>
                 </div>
             </div>
 
@@ -84,6 +97,17 @@
 
             <div class="row for-exhibition-form">
                 <div class="col-sm-12 col-md-12 col-lg-12">
+                    @Html.LabelFor(m => m.Name)
+                    @Html.TextBoxFor(m => m.Name, new
+                    {
+                        @class = "form-control",
+                        @readonly = true
+                    })
+                </div>
+            </div>
+
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-md-12 col-lg-12">
                     @Html.LabelFor(m => m.Address)
                     @Html.TextBoxFor(m => m.Address, new
                     {
@@ -103,25 +127,42 @@
                     })
                 </div>
             </div>
-
+            
+            <hr/>
+            <div class="row for-exhibition-form">
+                <div class="col-sm-12 col-lg-12">
+                    @Html.ActionLink("Download Exhibition Report", "DownloadExhibitionReport", "Organizer", new
+                   {
+                       exhibitionId = Model.ExhibitionId
+                   }, new
+                   {
+                       @class = "btn btn-outline-info downloadReport",
+                       @role = "button"
+                   })
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="qrModal" class="modal fade">
+<div id="failModal" class="modal fade">
     <div class="modal-dialog modal-confirm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Check-in QR Code</h4>
-
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
             </div>
             <div class="modal-body">
-                <div id="qrcode"></div>
+                <div class="field-validation-error">
+                    <p class="text-center">Export unsuccessfully</p>
+                    <p class="text-center">Please try again later</p>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
-

@@ -5,8 +5,10 @@ using GamexService.Utilities;
 using GamexService.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GamexEntity.Constant;
+using OfficeOpenXml;
 
 namespace GamexService.Implement
 {
@@ -106,13 +108,34 @@ namespace GamexService.Implement
                         Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
                     }).ToList();
                     return result;
+                case ExhibitionTypes.Past:
+                    exhibitionList = _exhibitionRepository.GetPagingProjection(
+                        e => new
+                        {
+                            ExhibitionId = e.ExhibitionId,
+                            ExhibitionName = e.Name,
+                            StartDate = e.StartDate,
+                            EndDate = e.EndDate
+                        },
+                        e => e.OrganizerId == organizerId
+                             && e.EndDate < DateTime.Now
+                             && e.Name.Contains(searchValue),
+                        e => e.StartDate, sortColumnDirection, take, skip
+                    );
+                    result = exhibitionList.Select(e => new ExhibitionTableViewModel
+                    {
+                        ExhibitionId = e.ExhibitionId,
+                        ExhibitionName = e.ExhibitionName,
+                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                    }).ToList();
+                    return result;
                 default:
                     return null;
             }
             
         }
 
-        public ExhibitionDetailViewModel GetExhibitionDetail(string exhibitionId)
+        public ExhibitionDetailViewModel GetExhibitionDetail(string exhibitionId, string organizerId)
         {
             return _exhibitionRepository.GetSingleProjection(
                 e => new ExhibitionDetailViewModel
@@ -127,11 +150,11 @@ namespace GamexService.Implement
                     Latitude = e.Location.Latitude,
                     Longitude = e.Location.Longitude
                 },
-                e => e.ExhibitionId == exhibitionId && e.StartDate > DateTime.Now
+                e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.StartDate > DateTime.Now
             ); 
         }
 
-        public ExhibitionDetailViewOnlyModel GetExhibitionDetailViewOnly(string exhibitionId)
+        public ExhibitionDetailViewOnlyModel GetExhibitionDetailViewOnly(string exhibitionId, string organizerId)
         {
             return _exhibitionRepository.GetSingleProjection(
                 e => new ExhibitionDetailViewOnlyModel
@@ -144,7 +167,7 @@ namespace GamexService.Implement
                     Address = e.Address,
                     ExhibitionId = e.ExhibitionId
                 },
-                e => e.ExhibitionId == exhibitionId && e.StartDate <= DateTime.Now
+                e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.StartDate <= DateTime.Now
                                                     && e.EndDate >= DateTime.Now
             );
         }
@@ -261,6 +284,126 @@ namespace GamexService.Implement
                 return false;
             }
             return false;
+        }
+
+        public PastExhibitionViewModel GetPastExhibitionDetail(string exhibitionId, string organizerId)
+        {
+            return _exhibitionRepository.GetSingleProjection(
+                e => new PastExhibitionViewModel
+                {
+                    Description = e.Description,
+                    Logo = e.Logo,
+                    Name = e.Name,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Address = e.Address,
+                    ExhibitionId = e.ExhibitionId,
+                    AttendeeCount = e.ExhibitionAttendee.Count(ae => ae.CheckinTime != null),
+                    CompanyCount = e.Booth.Select(b => new {b.CompanyId, b.ExhibitionId}).Distinct().Count()
+                },
+                e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.EndDate < DateTime.Now
+            );
+        }
+
+        public bool IsValidExhibitionExportRequest(string exhibitionId, string organizerId)
+        {
+            var exhibition = _exhibitionRepository.GetSingle(
+                e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.EndDate < DateTime.Now 
+                     && (e.ExhibitionAttendee.Count(ae => ae.CheckinTime != null) > 0 || e.Booth.Select(b => new { b.CompanyId, b.ExhibitionId }).Distinct().Any())
+            );
+            return exhibition != null;
+        }
+
+        public Stream GetExhibitionReportExcelFile(string exhibitionId, string organizerId)
+        {
+            var report = _exhibitionRepository.GetSingleProjection(
+                e => new ExhibitionReportViewModel
+                {
+                    CompanyReport = e.Booth.Select(b => new CompanyReport
+                    {
+                        CompanyName = b.Company.Name,
+                        CompanyEmail = b.Company.Email
+                    }).Distinct().ToList(),
+                    AttendeeReport = e.ExhibitionAttendee.Where(a => a.CheckinTime != null).Select(a => new AttendeeReport
+                    {
+                        Email = a.AspNetUsers.Email,
+                        FullName = a.AspNetUsers.LastName + " " + a.AspNetUsers.FirstName,
+                        CheckinTime = a.CheckinTime.Value
+                    }).ToList()
+                },
+                e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.EndDate < DateTime.Now
+                     && (e.ExhibitionAttendee.Count(ae => ae.CheckinTime != null) > 0 || e.Booth.Select(b => new { b.CompanyId, b.ExhibitionId }).Distinct().Any())
+                );
+            if (report == null || (report.CompanyReport.Count == 0 && report.AttendeeReport.Count == 0))
+            {
+                return null;
+            }
+            using (var excelPackage = new ExcelPackage(new MemoryStream()))
+            {
+                //attendee generate
+                var attendeeWorkSheet = excelPackage.Workbook.Worksheets.Add("Attendee");
+                attendeeWorkSheet.Row(1).Style.Font.Bold = true;
+                var headerRow = new List<string[]>
+                {
+                    new []{ "Attendee Name", "Email", "Check-in Time" }
+                };
+
+                string headerRange = "A1:" + char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+                attendeeWorkSheet.Cells[headerRange].LoadFromArrays(headerRow);
+                var currentRow = 2;
+                foreach (var attendee in report.AttendeeReport)
+                {
+
+                    var contentRow = new List<string[]>();
+                    var row = new List<string>
+                    {
+                        attendee.FullName,
+                        attendee.Email,
+                        attendee.CheckinTime.ToString("HH:mm dddd, dd MMMM yyyy")
+                    };
+                    contentRow.Add(row.ToArray());
+                    string rowRange = "A" + currentRow + ":" + Char.ConvertFromUtf32(contentRow[0].Length + 64) + currentRow;
+                    attendeeWorkSheet.Cells[rowRange].LoadFromArrays(contentRow);
+                    currentRow++;
+                }
+                attendeeWorkSheet.Column(1).AutoFit();
+                attendeeWorkSheet.Column(2).AutoFit();
+                attendeeWorkSheet.Column(3).AutoFit();
+
+                //company generate
+                var companyWorkSheet = excelPackage.Workbook.Worksheets.Add("Company");
+                companyWorkSheet.Row(1).Style.Font.Bold = true;
+
+                headerRow = new List<string[]>
+                {
+                    new []{ "Company Name", "Company Email" }
+                };
+
+                headerRange = "A1:" + char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+                companyWorkSheet.Cells[headerRange].LoadFromArrays(headerRow);
+                currentRow = 2;
+                foreach (var company in report.CompanyReport)
+                {
+
+                    var contentRow = new List<string[]>();
+                    var row = new List<string>
+                    {
+                        company.CompanyName,
+                        company.CompanyEmail
+                    };
+
+                    contentRow.Add(row.ToArray());
+                    string rowRange = "A" + currentRow + ":" + Char.ConvertFromUtf32(contentRow[0].Length + 64) + currentRow;
+                    companyWorkSheet.Cells[rowRange].LoadFromArrays(contentRow);
+                    currentRow++;
+                }
+                companyWorkSheet.Column(1).AutoFit();
+                companyWorkSheet.Column(2).AutoFit();
+
+                excelPackage.Save();
+                excelPackage.Stream.Position = 0;
+                return excelPackage.Stream;
+            }
         }
     }
 }

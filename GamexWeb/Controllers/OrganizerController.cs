@@ -92,7 +92,7 @@ namespace GamexWeb.Controllers
         [Route("Exhibition/Upcoming/{id}")]
         public ActionResult UpcomingExhibitionDetail(string id)
         {
-            var detail = _organizerService.GetExhibitionDetail(id);
+            var detail = _organizerService.GetExhibitionDetail(id, User.Identity.GetUserId());
             if (detail == null)
             {
                 return RedirectToAction("UpcomingExhibition", "Organizer");
@@ -214,13 +214,73 @@ namespace GamexWeb.Controllers
         public ActionResult OngoingExhibitionDetail(string id)
         {
 
-            var detail = _organizerService.GetExhibitionDetailViewOnly(id);
+            var detail = _organizerService.GetExhibitionDetailViewOnly(id, User.Identity.GetUserId());
             if (detail == null)
             {
                 return RedirectToAction("OngoingExhibition", "Organizer");
             }
 
             return View(detail);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [Route("Exhibition/Past")]
+        public ActionResult PastExhibition()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("LoadPastExhibitionList")]
+        [Authorize(Roles = AccountRole.Organizer)]
+        public ActionResult LoadPastExhibitionList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _organizerService.LoadExhibitionDataTable(ExhibitionTypes.Past, sortColumnDirection, searchValue, skip, take, User.Identity.GetUserId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [FilterConfig.NoDirectAccess]
+        [Route("Exhibition/Past/{id}")]
+        public ActionResult PastExhibitionDetail(string id)
+        {
+
+            var detail = _organizerService.GetPastExhibitionDetail(id, User.Identity.GetUserId());
+            if (detail == null)
+            {
+                return RedirectToAction("PastExhibition", "Organizer");
+            }
+            return View(detail);
+        }
+
+        [HttpGet]
+        [Route("ExportExhibitionReport/{exhibitionId}")]
+        [Authorize(Roles = AccountRole.Organizer)]
+        [FileDownload]
+        public ActionResult DownloadExhibitionReport(string exhibitionId)
+        {
+            var organizerId = User.Identity.GetUserId();
+            if (!_organizerService.IsValidExhibitionExportRequest(exhibitionId, organizerId))
+            {
+                return Content("Failed");
+            }
+            var stream = _organizerService.GetExhibitionReportExcelFile(exhibitionId, organizerId);
+
+            if (stream == null)
+            {
+                return Content("Failed");
+            }
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
     }
 }
