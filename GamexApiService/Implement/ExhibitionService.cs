@@ -85,7 +85,6 @@ namespace GamexApiService.Implement {
                 "asc",
                 queryTake,
                 querySkip);
-
             var isCheckedInList = !string.IsNullOrEmpty(list) && list.Equals(ExhibitionLists.CheckedIn);
             if (isCheckedInList) {
                 // list == "checked-in" && (type == "ongoing" || type == "past")
