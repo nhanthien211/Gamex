@@ -65,11 +65,11 @@ namespace GamexApi
                         //    .Description("Basic HTTP Authentication");
                         //
                         // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
-                        //c.ApiKey("apiKey")
-                        //    .Description("API Key Authentication")
-                        //    .Name("apiKey")
-                        //    .In("header");
-                        //
+                        c.ApiKey("Token")
+                            .Description("API Key Authentication")
+                            .Name("Authorization")
+                            .In("header");
+                        
                         //c.OAuth2("oauth2")
                         //    .Description("OAuth2 Implicit Grant")
                         //    .Flow("implicit")
@@ -209,7 +209,7 @@ namespace GamexApi
                         // in a badge at the bottom of the page. Use these options to set a different validator URL or to disable the
                         // feature entirely.
                         //c.SetValidatorUrl("http://localhost/validator");
-                        //c.DisableValidator();
+                        c.DisableValidator();
 
                         // Use this option to control how the Operation listing is displayed.
                         // It can be set to "None" (default), "List" (shows operations for each resource),
@@ -251,7 +251,7 @@ namespace GamexApi
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"
                         //
-                        //c.EnableApiKeySupport("apiKey", "header");
+                        c.EnableApiKeySupport("Authorization", "header");
                     });
         }
     }
@@ -275,21 +275,21 @@ namespace GamexApi
                             type = "string",
                             name = "grant_type",
                             required = true,
-                            @in = "formData"
+                            @in = "x-www-form-urlencoded"
                         },
                         new Parameter
                         {
                             type = "string",
                             name = "username",
                             required = false,
-                            @in = "formData"
+                            @in = "x-www-form-urlencoded"
                         },
                         new Parameter
                         {
                             type = "string",
                             name = "password",
                             required = false,
-                            @in = "formData"
+                            @in = "x-www-form-urlencoded"
                         }
                     }
                 }
