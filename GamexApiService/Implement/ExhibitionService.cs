@@ -37,8 +37,9 @@ namespace GamexApiService.Implement {
         }
 
         public List<ExhibitionShortViewModel> GetExhibitions(string list, string type, int take, int skip,
-            string lat, string lng, string accountId) {
+            string lat, string lng, string name, string accountId) {
 
+            // filter exhibition by type
             Expression<Func<Exhibition, bool>> filter;
             Expression<Func<Exhibition, DateTime>> sort = e => e.StartDate;
             var queryTake = take;
@@ -70,6 +71,15 @@ namespace GamexApiService.Implement {
                     break;
             }
 
+            // search exhibition by name
+            if (!string.IsNullOrEmpty(name)) {
+                // to combine with other filter rule, toggle the 2 lines of code below
+                //filter = filter.And(e => e.Name.Contains(name) && e.EndDate >= DateTime.Now);
+                filter = e => e.IsActive && e.EndDate >= DateTime.Now && e.Name.Contains(name);
+                querySkip = 0;
+                queryTake = 0;
+            }
+
             var exhibitionList = _exhibitionRepo.GetPagingProjection(
                 e => new {
                     e.ExhibitionId,
@@ -86,6 +96,7 @@ namespace GamexApiService.Implement {
                 queryTake,
                 querySkip);
 
+            // filter exhibition by user checked in exhibition list
             var isCheckedInList = !string.IsNullOrEmpty(list) && list.Equals(ExhibitionLists.CheckedIn);
             if (isCheckedInList) {
                 // list == "checked-in" && (type == "ongoing" || type == "past")
@@ -94,7 +105,7 @@ namespace GamexApiService.Implement {
                     .Skip(skip).Take(take);
             }
 
-            if (!isCheckedInList && type.Equals(ExhibitionTypes.Ongoing)) {
+            if (!isCheckedInList && string.IsNullOrEmpty(name) && type.Equals(ExhibitionTypes.Ongoing)) {
                 var checkedInExhibitionIds = GetCheckedInExhibitionIds(accountId);
                 // exclude checked in exhibitions
                 exhibitionList = exhibitionList.Where(e => !checkedInExhibitionIds.Contains(e.ExhibitionId))
@@ -125,7 +136,7 @@ namespace GamexApiService.Implement {
             if (exhibition == null) {
                 return null;
             }
-            var companies = exhibition.Booth.Select(b => b.Company);     
+            var companies = exhibition.Booth.Select(b => b.Company);
             return new ExhibitionDetailViewModel {
                 ExhibitionId = exhibition.ExhibitionId,
                 Name = exhibition.Name,
@@ -186,8 +197,7 @@ namespace GamexApiService.Implement {
 
             if (exhibitionAttendeeRow == null) {
                 _exhibitionAttendeeRepo.Insert(checkin);
-            }
-            else {
+            } else {
                 _exhibitionAttendeeRepo.Update(exhibitionAttendeeRow);
                 exhibitionAttendeeRow.CheckinTime = DateTime.Now;
             }
@@ -242,6 +252,89 @@ namespace GamexApiService.Implement {
                 }
             }
             return exhibitionList;
+        }
+    }
+
+    public static class LambdaExtensions {
+        /// <summary>
+        /// Composes the specified left expression.
+        /// </summary>
+        /// <typeparam name="T">Param Type</typeparam>
+        /// <param name="leftExpression">The left expression.</param>
+        /// <param name="rightExpression">The right expression.</param>
+        /// <param name="merge">The merge.</param>
+        /// <returns>Returns the expression</returns>
+        public static Expression<T> Compose<T>(this Expression<T> leftExpression, Expression<T> rightExpression, Func<Expression, Expression, Expression> merge) {
+            var map = leftExpression.Parameters.Select((left, i) => new {
+                left,
+                right = rightExpression.Parameters[i]
+            }).ToDictionary(p => p.right, p => p.left);
+
+            var rightBody = ExpressionRebinder.ReplacementExpression(map, rightExpression.Body);
+
+            return Expression.Lambda<T>(merge(leftExpression.Body, rightBody), leftExpression.Parameters);
+        }
+
+        /// <summary>
+        /// Performs an "AND" operation
+        /// </summary>
+        /// <typeparam name="T">Param Type</typeparam>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Returns the expression</returns>
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right) {
+            return left.Compose(right, Expression.And);
+        }
+
+        /// <summary>
+        /// Performs an "OR" operation
+        /// </summary>
+        /// <typeparam name="T">Param Type</typeparam>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Returns the expression</returns>
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right) {
+            return left.Compose(right, Expression.Or);
+        }
+    }
+
+    public class ExpressionRebinder : ExpressionVisitor {
+        /// <summary>
+        /// The map
+        /// </summary>
+        private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionRebinder"/> class.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        public ExpressionRebinder(Dictionary<ParameterExpression, ParameterExpression> map) {
+            this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+        }
+
+        /// <summary>
+        /// Replacements the expression.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="exp">The exp.</param>
+        /// <returns>Returns replaced expression</returns>
+        public static Expression ReplacementExpression(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp) {
+            return new ExpressionRebinder(map).Visit(exp);
+        }
+
+        /// <summary>
+        /// Visits the <see cref="T:System.Linq.Expressions.ParameterExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>
+        /// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
+        /// </returns>
+        protected override Expression VisitParameter(ParameterExpression node) {
+            ParameterExpression replacement;
+            if (this.map.TryGetValue(node, out replacement)) {
+                node = replacement;
+            }
+
+            return base.VisitParameter(node);
         }
     }
 }

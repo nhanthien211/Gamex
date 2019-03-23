@@ -33,10 +33,10 @@ namespace GamexApi.Controllers
         [HttpGet]
         [Route("exhibitions")]
         public List<ExhibitionShortViewModel> GetExhibitions(string list = null, string type = ExhibitionTypes.Ongoing,
-                int take = 5, int skip = 0, string lat = "0", string lng = "0") {
+                int take = 5, int skip = 0, string lat = "0", string lng = "0", string name = "") {
 
             var accountId = User.Identity.GetUserId();
-            var exhibitionList = _exhibitionService.GetExhibitions(list, type, take, skip, lat, lng, accountId);
+            var exhibitionList = _exhibitionService.GetExhibitions(list, type, take, skip, lat, lng, name, accountId);
             if (type == ExhibitionTypes.NearYou)
             {
                 //add google map distance api utilities
