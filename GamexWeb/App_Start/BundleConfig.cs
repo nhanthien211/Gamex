@@ -71,10 +71,21 @@ namespace GamexWeb
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.company.datatables.view.ongoing.exhibition.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatablePastEvent").Include(
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.view.past.exhibition.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/datatableCompanyManageUpcomingEvent").Include(
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap4.js",
                 "~/Scripts/sb.company.datatables.view.upcoming.survey.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatableCompanyManagePastSurvey").Include(
+                "~/Scripts/jquery.fileDownload.js",
+                "~/Scripts/jquery.dataTables.js",
+                "~/Scripts/dataTables.bootstrap4.js",
+                "~/Scripts/sb.company.datatables.view.past.survey.js"));
             
 
             bundles.Add(new ScriptBundle("~/bundles/datatableCompanyManageUpcomingSurveyQuestion").Include(

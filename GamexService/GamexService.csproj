@@ -37,10 +37,19 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implement\AccountService.cs" />
@@ -60,6 +69,7 @@
     <Compile Include="ViewModel\AttendedCompanyDetailViewModel.cs" />
     <Compile Include="ViewModel\AttendedCompanyViewModel.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\PastSurveyViewModel.cs" />
     <Compile Include="ViewModel\RewardDetailViewModel.cs" />
     <Compile Include="ViewModel\RewardListViewModel.cs" />
     <Compile Include="ViewModel\CompanyEmployeeRegisterViewModel.cs" />
@@ -76,6 +86,7 @@
     <Compile Include="ViewModel\OrganizerTableViewModel.cs" />
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SelectCompanyViewModel.cs" />
+    <Compile Include="ViewModel\SurveyResultViewModel.cs" />
     <Compile Include="ViewModel\SurveyQuestionDetailViewModel.cs" />
     <Compile Include="ViewModel\UpcomingSurveyDetailViewModel.cs" />
     <Compile Include="ViewModel\UpcomingSurveyQuestionViewModel.cs" />

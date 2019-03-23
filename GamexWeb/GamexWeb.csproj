@@ -252,6 +252,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\FileDownloadAttribute.cs" />
     <Compile Include="Utilities\FirebaseUploadUtility.cs" />
     <Compile Include="Utilities\IdentityExtensions.cs" />
   </ItemGroup>
@@ -276,11 +277,14 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\add.question.util.js" />
     <Content Include="Scripts\assign.booth.util.js" />
+    <Content Include="Scripts\jquery.fileDownload.js" />
     <Content Include="Scripts\jquery.repeater.js" />
     <Content Include="Scripts\qrcode.js" />
     <Content Include="Scripts\reward.datetime.util.js" />
     <Content Include="Scripts\sb.admin.reward.list.js" />
     <Content Include="Scripts\sb.company.datatables.view.ongoing.exhibition.js" />
+    <Content Include="Scripts\sb.company.datatables.view.past.exhibition.js" />
+    <Content Include="Scripts\sb.company.datatables.view.past.survey.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.js" />
     <Content Include="Scripts\sb.company.datatables.view.upcoming.survey.question.js" />
@@ -424,6 +428,9 @@
     <Content Include="Views\Company\OngoingExhibitionDetail.cshtml" />
     <Content Include="Views\Organizer\OngoingExhibition.cshtml" />
     <Content Include="Views\Organizer\OngoingExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\PastExhibition.cshtml" />
+    <Content Include="Views\Company\PastExhibitionDetail.cshtml" />
+    <Content Include="Views\Company\PastSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GamexEntity\GamexEntity.csproj">

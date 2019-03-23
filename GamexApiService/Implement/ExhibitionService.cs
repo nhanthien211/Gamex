@@ -197,7 +197,8 @@ namespace GamexApiService.Implement {
 
             if (exhibitionAttendeeRow == null) {
                 _exhibitionAttendeeRepo.Insert(checkin);
-            } else {
+            }
+            else {
                 _exhibitionAttendeeRepo.Update(exhibitionAttendeeRow);
                 exhibitionAttendeeRow.CheckinTime = DateTime.Now;
             }

@@ -37,7 +37,7 @@ namespace GamexApi.Controllers
 
             var accountId = User.Identity.GetUserId();
             var exhibitionList = _exhibitionService.GetExhibitions(list, type, take, skip, lat, lng, name, accountId);
-            if (type == ExhibitionTypes.NearYou)
+            if (type == ExhibitionTypes.NearYou && exhibitionList.Count > 0)
             {
                 //add google map distance api utilities
                 exhibitionList = _exhibitionService.GetExhibitionListRouteLengthNear(lat, lng, exhibitionList);

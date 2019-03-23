@@ -1,5 +1,6 @@
 ﻿using GamexService.ViewModel;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GamexService.Interface
 {
@@ -31,5 +32,8 @@ namespace GamexService.Interface
         CompanyProfileViewModel GetCompanyProfile(string companyId);
         bool UpdateCompanyProfile(CompanyProfileViewModel model, string companyId);
         string GetCompanyBoothInExhibition(string exhibitionId, string companyId);
+        List<PastSurveyViewModel> LoadPastSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId);
+        bool IsValidSurveyExportRequest(string surveyId, string companyId);
+        Stream GetSurveyResponseExcelFile(string surveyId);
     }
 }
