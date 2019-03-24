@@ -253,6 +253,7 @@
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\FileDownloadAttribute.cs" />
+    <Compile Include="Utilities\FirebaseCloudMessageUtility.cs" />
     <Compile Include="Utilities\FirebaseUploadUtility.cs" />
     <Compile Include="Utilities\IdentityExtensions.cs" />
   </ItemGroup>

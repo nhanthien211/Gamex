@@ -3,6 +3,7 @@ using GamexService.ViewModel;
 using GamexWeb.Utilities;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using GamexService.Interface;
@@ -102,7 +103,7 @@ namespace GamexWeb.Controllers
 
         [HttpPost]
         [Authorize(Roles = AccountRole.Organizer)]
-        [Route("Exhibition/Upcoming/{id}/Upcoming")]
+        [Route("Exhibition/Upcoming/{id}")]
         public async Task<ActionResult> UpdateUpcomingExhibitionDetail(ExhibitionDetailViewModel model) 
         {
             if (!ModelState.IsValid)
@@ -115,7 +116,6 @@ namespace GamexWeb.Controllers
                 model.ImageUrl =
                     await FirebaseUploadUtility.UploadImageToFirebase(model.Logo.InputStream, model.ExhibitionId);
             }
-
             if (!string.IsNullOrEmpty(model.ImageUrl))
             {
                 model.IsSuccessful = _organizerService.UpdateExhibitionDetail(model);
@@ -281,6 +281,27 @@ namespace GamexWeb.Controllers
                 return Content("Failed");
             }
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+        [HttpPost]
+        [Route("NotifyUserAboutExhibition")]
+        [Authorize(Roles = AccountRole.Organizer)]
+        public ActionResult NotifyUserAboutExhibition(string exhibitionId)
+        {
+            var exhibition =
+                _organizerService.GetExhibitionDetailForNotification(exhibitionId, User.Identity.GetUserId());
+
+            if (exhibition == null)
+            {
+                return Json(new { success = false, responseText = "Exhibition ID " + exhibitionId + " is not valid" });
+            }
+            var firebasePushNotification = new FirebaseCloudMessageUtility();
+            var response = firebasePushNotification.SendNotification(exhibition.ExhibitionId, exhibition.ExhibitionName, exhibition.ExhibitionImage);
+            if (response.Error == null)
+            {
+                return Json(new { success = true });
+            }    
+            return Json(new { success = false });            
         }
     }
 }

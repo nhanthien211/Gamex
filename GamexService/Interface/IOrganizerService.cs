@@ -23,5 +23,6 @@ namespace GamexService.Interface
         PastExhibitionViewModel GetPastExhibitionDetail(string exhibitionId, string organizerId);
         bool IsValidExhibitionExportRequest(string exhibitionId, string organizerId);
         Stream GetExhibitionReportExcelFile(string exhibitionId, string organizerId);
+        ExhibitionNotificationViewModel GetExhibitionDetailForNotification(string exhibitionId, string organizerId);
     }
 }

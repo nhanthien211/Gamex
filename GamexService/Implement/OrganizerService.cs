@@ -43,7 +43,7 @@ namespace GamexService.Implement
                 Address = model.Address,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
-                IsActive = true
+                IsActive = false
             };
             if (model.Latitude.HasValue && model.Longitude.HasValue)
             {
@@ -148,7 +148,8 @@ namespace GamexService.Implement
                     Address = e.Address,
                     ExhibitionId = e.ExhibitionId,
                     Latitude = e.Location.Latitude,
-                    Longitude = e.Location.Longitude
+                    Longitude = e.Location.Longitude,
+                    IsActive = e.IsActive
                 },
                 e => e.ExhibitionId == exhibitionId && e.OrganizerId == organizerId && e.StartDate > DateTime.Now
             ); 
@@ -184,6 +185,7 @@ namespace GamexService.Implement
                 exhibition.Logo = model.ImageUrl;
                 exhibition.StartDate = model.StartDate;
                 exhibition.Name = model.Name;
+                exhibition.IsActive = model.IsActive;
                 if (model.Latitude.HasValue && model.Longitude.HasValue)
                 {
                     exhibition.Location = MyUtilities.CreateDbGeography(model.Longitude.Value, model.Latitude.Value);
@@ -404,6 +406,21 @@ namespace GamexService.Implement
                 excelPackage.Stream.Position = 0;
                 return excelPackage.Stream;
             }
+        }
+
+        public ExhibitionNotificationViewModel GetExhibitionDetailForNotification(string exhibitionId, string organizerId)
+        {
+            return _exhibitionRepository.GetSingleProjection(
+                e => new ExhibitionNotificationViewModel
+                {
+                    ExhibitionId = e.ExhibitionId,
+                    ExhibitionName = e.Name,
+                    ExhibitionImage = e.Logo
+                }, 
+                e =>
+                    e.ExhibitionId == exhibitionId && e.IsActive && e.StartDate > DateTime.Now &&
+                    e.OrganizerId == organizerId
+                );
         }
     }
 }
