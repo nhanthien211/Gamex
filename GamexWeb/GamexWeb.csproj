@@ -283,6 +283,7 @@
     <Content Include="Scripts\qrcode.js" />
     <Content Include="Scripts\reward.datetime.util.js" />
     <Content Include="Scripts\sb.admin.reward.list.js" />
+    <Content Include="Scripts\sb.company.datatables.employee.list.js" />
     <Content Include="Scripts\sb.company.datatables.view.ongoing.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.past.exhibition.js" />
     <Content Include="Scripts\sb.company.datatables.view.past.survey.js" />

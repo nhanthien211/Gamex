@@ -69,6 +69,7 @@
     <Compile Include="ViewModel\AttendedCompanyDetailViewModel.cs" />
     <Compile Include="ViewModel\AttendedCompanyViewModel.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\EmployeeRequestViewModel.cs" />
     <Compile Include="ViewModel\ExhibitionNotificationViewModel.cs" />
     <Compile Include="ViewModel\ExhibitionReportViewModel.cs" />
     <Compile Include="ViewModel\PastExhibitionViewModel.cs" />
