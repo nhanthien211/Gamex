@@ -52,6 +52,34 @@
             }
         }
     }
+    @if (Model.IsActive)
+    {
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#notify-user").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Organizer/NotifyUserAboutExhibition",
+                        data: {
+                            exhibitionId: "@Model.ExhibitionId"
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#sendSuccessModal').modal();
+                            } else {
+                                $('#sendFailModal').modal();
+                            }
+                        },
+                        error: function (response) {
+                            alert("Unexpected Error!");  //
+                        }
+                    });
+                });
+            });
+
+        </script>
+    }
 }
 
 <div class="container-fluid">
@@ -75,6 +103,12 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-fw fa-sliders-h menu-icon" style="float: left"></i> Exhibition Detail
+            @if (Model.IsActive)
+            {
+                <button id="notify-user" type="button" class="btn btn-outline-info" style="float: right">
+                    Notify about exhibition
+                </button>
+            }
         </div>
         <div class="card-body">
             @using (Html.BeginForm("UpdateUpcomingExhibitionDetail", "Organizer", FormMethod.Post, new
@@ -171,14 +205,36 @@
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         @Html.LabelFor(m => m.Description)
                         @Html.TextAreaFor(m => m.Description, new
-                       {
-                           @class = "form-control",
-                           @rows = "10",
-                           @cols = "80"
-                       })
+                        {
+                            @class = "form-control",
+                            @rows = "10",
+                            @cols = "80"
+                        })
                         @Html.ValidationMessageFor(m => m.Description)
                     </div>
                 </div>
+
+                <div class="row for-exhibition-form">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="IsActive">Status</label>
+                            <select class="form-control" id="IsActive" name="IsActive">
+                                @if (Model.IsActive)
+                                {
+                                    <option value="true" selected="selected">Published</option>
+                                    <option value="false">Not Published</option>
+                                }
+                                else
+                                {
+                                    <option value="false" selected="selected">Not Published</option>
+                                    <option value="true">Published</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
                 @Html.TextBoxFor(m => m.Latitude, new
                 {
                     @type = "hidden"
@@ -233,6 +289,47 @@
             </div>
             <div class="modal-body">
                 <p class="text-center">Update successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sendFailModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4 class="modal-title">Error!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="field-validation-error">
+                    <p class="text-center">Send notification failed</p>
+                    <p class="text-center">Please try again later</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sendSuccessModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box-success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="modal-title">Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Send notification successfully</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>

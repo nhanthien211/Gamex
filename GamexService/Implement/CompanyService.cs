@@ -21,11 +21,13 @@ namespace GamexService.Implement
         private readonly IRepository<Survey> _surveyRepository;
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<ProposedAnswer> _proposedAnswerRepository;
+        private readonly IRepository<AspNetUsers> _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, 
             IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, 
             IRepository<Question> questionRepository, IRepository<ProposedAnswer> proposedAnswerRepository,
+            IRepository<AspNetUsers> accountRepository,
             IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
@@ -34,6 +36,7 @@ namespace GamexService.Implement
             _surveyRepository = surveyRepository;
             _questionRepository = questionRepository;
             _proposedAnswerRepository = proposedAnswerRepository;
+            _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -836,6 +839,21 @@ namespace GamexService.Implement
                 excelPackage.Stream.Position = 0;
                 return excelPackage.Stream;
             }
+        }
+
+        public List<EmployeeRequestViewModel> LoadEmployeeRequestDatatable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)
+        {
+            var employeeRequestList = _accountRepository.GetPagingProjection(
+                a => new EmployeeRequestViewModel
+                {
+                    FullName = a.LastName + " " + a.FirstName,
+                    Email = a.Email,
+                    UserId = a.Id
+                },
+                a => (a.FirstName.Contains(searchValue) || a.LastName.Contains(searchValue)) && a.CompanyId == companyId && a.StatusId == (int)AccountStatusEnum.Pending,
+                a => a.LastName, sortColumnDirection, take, skip
+            );
+            return employeeRequestList.ToList();
         }
     }
 

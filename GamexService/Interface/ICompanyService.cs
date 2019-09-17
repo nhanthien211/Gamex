@@ -35,5 +35,7 @@ namespace GamexService.Interface
         List<PastSurveyViewModel> LoadPastSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId);
         bool IsValidSurveyExportRequest(string surveyId, string companyId);
         Stream GetSurveyResponseExcelFile(string surveyId);
+
+        List<EmployeeRequestViewModel> LoadEmployeeRequestDatatable(string sortColumnDirection, string searchValue, int skip, int take, string companyId);
     }
 }

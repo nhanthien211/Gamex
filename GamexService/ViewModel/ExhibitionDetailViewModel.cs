@@ -49,6 +49,9 @@ namespace GamexService.ViewModel
 
         public double? Longitude { get; set; }
 
+        [Display(Name = "Status")]
+        public bool IsActive { get; set; }
+
         public bool? IsSuccessful { get; set; }
     }
 

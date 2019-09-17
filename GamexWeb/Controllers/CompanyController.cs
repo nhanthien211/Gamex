@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using GamexEntity;
 
 namespace GamexWeb.Controllers
 {
@@ -18,12 +17,14 @@ namespace GamexWeb.Controllers
         private readonly ApplicationUserManager _userManager;
         private readonly IAccountService _accountService;
         private readonly ICompanyService _companyService;
+        private readonly IIdentityMessageService _emailService;
 
-        public CompanyController(ICompanyService companyService, ApplicationUserManager userManager, IAccountService accountService)
+        public CompanyController(ICompanyService companyService, ApplicationUserManager userManager, IAccountService accountService, IIdentityMessageService emailService)
         {
             _companyService = companyService;
             _userManager = userManager;
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -624,6 +625,53 @@ namespace GamexWeb.Controllers
         public ActionResult EmployeeJoinList()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Route("Company/LoadEmployeeRequestList")]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult LoadEmployeeRequestList()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+            var sortColumnDirection = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var take = length != null ? Convert.ToInt32(length) : 0;
+            var skip = start != null ? Convert.ToInt32(start) : 0;
+            var data = _companyService.LoadEmployeeRequestDatatable(sortColumnDirection, searchValue, skip, take, User.Identity.GetCompanyId());
+            var recordsTotal = data.Count;
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = AccountRole.Company)]
+        public ActionResult ApproveOrDeny(string userId, bool isApproved)
+        {
+            var user = _userManager.FindById(userId);
+            if (isApproved)
+            {
+                user.StatusId = (int)AccountStatusEnum.Active;
+                _userManager.Update(user);
+                _emailService.Send(new IdentityMessage
+                {
+                    Destination = user.Email,
+                    Subject = "[INFO] EMPLOYEE JOIN STATUS",
+                    Body = "Your join request has been approved."
+                });
+            }
+            else
+            {
+                _userManager.Delete(user);
+                _emailService.Send(new IdentityMessage
+                {
+                    Destination = user.Email,
+                    Subject = "[INFO] EMPLOYEE JOIN STATUS",
+                    Body = "Your join request has been rejected due to malicious information"
+                });
+            }
+            
+            return RedirectToAction("EmployeeJoinList", "Company");
         }
 
         [HttpGet]
