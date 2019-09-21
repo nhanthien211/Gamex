@@ -17,10 +17,8 @@ namespace GamexEntity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Exhibition()
         {
-            this.Agenda = new HashSet<Agenda>();
             this.Booth = new HashSet<Booth>();
             this.ExhibitionAttendee = new HashSet<ExhibitionAttendee>();
-            this.Survey = new HashSet<Survey>();
         }
     
         public string ExhibitionId { get; set; }
@@ -34,14 +32,10 @@ namespace GamexEntity
         public string Logo { get; set; }
         public bool IsActive { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Agenda> Agenda { get; set; }
         public virtual AspNetUsers AspNetUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Booth> Booth { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExhibitionAttendee> ExhibitionAttendee { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Survey> Survey { get; set; }
     }
 }

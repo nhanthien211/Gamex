@@ -18,24 +18,17 @@ namespace GamexService.Implement
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Exhibition> _exhibitionRepository;
         private readonly IRepository<Booth> _boothRepository;
-        private readonly IRepository<Survey> _surveyRepository;
-        private readonly IRepository<Question> _questionRepository;
-        private readonly IRepository<ProposedAnswer> _proposedAnswerRepository;
         private readonly IRepository<AspNetUsers> _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CompanyService(IRepository<Company> companyRepository, IRepository<Exhibition> exhibitionRepository, 
-            IRepository<Booth> boothRepository, IRepository<Survey> surveyRepository, 
-            IRepository<Question> questionRepository, IRepository<ProposedAnswer> proposedAnswerRepository,
+            IRepository<Booth> boothRepository,
             IRepository<AspNetUsers> accountRepository,
             IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _exhibitionRepository = exhibitionRepository;
             _boothRepository = boothRepository;
-            _surveyRepository = surveyRepository;
-            _questionRepository = questionRepository;
-            _proposedAnswerRepository = proposedAnswerRepository;
             _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
         }
@@ -217,7 +210,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 case ExhibitionTypes.Upcoming:
@@ -238,7 +231,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 case ExhibitionTypes.Ongoing:
@@ -259,7 +252,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 case ExhibitionTypes.Past:
@@ -280,7 +273,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 default:
@@ -296,377 +289,12 @@ namespace GamexService.Implement
             {
                 _boothRepository.Delete(record);
             }
-
-            var surveyList = _surveyRepository.GetList(s => s.ExhibitionId == exhibitionId && s.CompanyId == companyId);
-            foreach (var survey in surveyList)
-            {
-                _surveyRepository.Delete(survey);
-            }
             int result;
             try
             {
                 result = _unitOfWork.SaveChanges();
             }
             catch (Exception)
-            {
-                return false;
-            }
-            return result > 0;
-        }
-
-        public bool CreateSurvey(CreateSurveyViewModel model, string companyId, string accountId)
-        {
-            
-            var survey = new Survey
-            {
-                Description = model.Description,
-                Title = model.Title,
-                ExhibitionId = model.ExhibitionId,
-                Point = 100,
-                CompanyId = companyId,
-                AccountId = accountId,
-                IsActive = true
-            };
-            _surveyRepository.Insert(survey);
-            int result;
-            try
-            {
-                result = _unitOfWork.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return result > 0;
-        }
-
-        public List<UpcomingSurveyViewModel> LoadUpcomingSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId)
-        {
-            var upcomingSurveyList = _surveyRepository.GetPagingProjection(
-                e => new UpcomingSurveyViewModel
-                {
-                    ExhibitionId = e.ExhibitionId,                    
-                    SurveyId = e.SurveyId,
-                    SurveyTitle = e.Title
-                },
-                e => e.CompanyId == companyId && e.ExhibitionId == exhibitionId
-                     && e.Title.Contains(searchValue),
-                e => e.Title, sortColumnDirection, take, skip
-            );
-            return upcomingSurveyList.ToList();
-        }
-
-        public UpcomingSurveyDetailViewModel GetUpcomingSurveyDetail(string surveyId)
-        {
-            int id;
-            try
-            {
-                id = Convert.ToInt32(surveyId);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            return _surveyRepository.GetSingleProjection(
-                s => new UpcomingSurveyDetailViewModel
-                {
-                    Description = s.Description,
-                    Title = s.Title,
-                    SurveyId = s.SurveyId,
-                }, 
-                s => s.SurveyId == id
-                );
-        }
-
-        public bool UpdateSurveyInfo(UpcomingSurveyDetailViewModel model)
-        {
-            var survey = _surveyRepository.GetById(model.SurveyId);
-            if (survey == null)
-            {
-                return false;
-            }
-            _surveyRepository.Update(survey);
-            survey.Title = model.Title;
-            survey.Description = model.Description;
-            int result;
-            try
-            {
-                result = _unitOfWork.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return result >= 0;
-        }
-
-        public bool ValidateQuestionCreateField(string questionType, string id, string questionTitle = null, string[] answer = null)
-        {
-            if (string.IsNullOrEmpty(questionTitle))
-            {
-                return false;
-            }
-            if (questionTitle.Length <= 0 || questionTitle.Length > 1000)
-            {
-                return false;
-            }
-            if (answer != null && answer.Length > 0)
-            {
-                foreach (var check in answer)
-                {
-                    if (string.IsNullOrEmpty(check))
-                    {
-                        return false;
-                    }
-                    if (check.Length > 100)
-                    {
-                        return false;
-                    }
-                }
-            }
-            try
-            {
-                int surveyId = Convert.ToInt32(id);
-
-                var survey = _surveyRepository.GetById(surveyId);
-                if (survey == null)
-                {
-                    return false;
-                }
-
-                int type = Convert.ToInt32(questionType);
-                if (type < 1 || type > 3)
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool AddQuestionAndAnswer(string questionTitle, string[] answer, string id, string questionType)
-        {
-            int surveyId = Convert.ToInt32(id);
-            int type = Convert.ToInt32(questionType);
-            var question = new Question
-            {
-                Content = questionTitle,
-                SurveyId = surveyId,
-                QuestionType = type,
-            };
-            _questionRepository.Insert(question);
-            int addQuestion;
-            try
-            {
-                addQuestion = _unitOfWork.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            if (addQuestion > 0 && type != (int) QuestionTypeEnum.Text)
-            {
-                foreach (var option in answer)
-                {
-                    var proposedAnswer = new ProposedAnswer
-                    {
-                        Content = option,
-                        QuestionId = question.QuestionId
-                    };
-                    _proposedAnswerRepository.Insert(proposedAnswer);
-                }
-
-                int addAnswer;
-                try
-                {
-                    addAnswer = _unitOfWork.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-                return addAnswer > 0;
-            }
-            return addQuestion > 0;
-        }
-
-        public List<UpcomingSurveyQuestionViewModel> LoadUpcomingSurveyQuestionDataTable(string sortColumnDirection,
-            string searchValue, int skip, int take, string surveyId)
-        {
-            int id;
-            try
-            {
-                id = Convert.ToInt32(surveyId);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            var questionList = _questionRepository.GetPagingProjection(
-                q => new
-                {
-                    Question = q.Content,
-                    Type = q.QuestionType,
-                    QuestionId = q.QuestionId
-                },
-                q => q.SurveyId == id, 
-                q => q.QuestionType, sortColumnDirection, take, skip
-                );
-            var list = questionList.Select(q => new UpcomingSurveyQuestionViewModel
-            {
-                Question = q.Question,
-                QuestionId = q.QuestionId,
-                QuestionType = q.Type == (int) QuestionTypeEnum.Text ? "Text question" 
-                    : q.Type == (int)  QuestionTypeEnum.SelectOne ? "Select one" : "Select Multiple",
-                Type = q.Type
-            });
-            return list.ToList();
-        }
-
-        public SurveyQuestionDetailViewModel GetSurveyQuestionDetail(string questionId, string questionType)
-        {
-            int question, type;
-            try
-            {
-                question = Convert.ToInt32(questionId);
-                type = Convert.ToInt32(questionType);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            switch (type)
-            {
-                case (int)QuestionTypeEnum.Text:
-
-                    return _questionRepository.GetSingleProjection(
-                        q => new SurveyQuestionDetailViewModel
-                        {
-                            QuestionType = q.QuestionType,
-                            Question = q.Content,
-                            QuestionId = q.QuestionId
-                        },
-                        q => q.QuestionId == question
-                        );
-                case (int)QuestionTypeEnum.SelectOne:
-                case (int)QuestionTypeEnum.SelectMultiple:
-                    return _questionRepository.GetSingleProjection(
-                        q => new SurveyQuestionDetailViewModel
-                        {
-                            QuestionType = q.QuestionType,
-                            Question = q.Content,
-                            QuestionId = q.QuestionId,
-                            Answers = q.ProposedAnswer.Select(p => new ProposedAnswerViewModel
-                            {
-                                Content = p.Content,
-                            }).ToList()
-                        },
-                        q => q.QuestionId == question
-                    );
-                default:
-                    return null;
-            }
-        }
-
-        public bool UpdateSurveyQuestionDetail(SurveyQuestionDetailViewModel model)
-        {
-            var question = _questionRepository.GetById(model.QuestionId);
-            if (question == null)
-            {
-                return false;
-            }
-            _questionRepository.Update(question);
-            question.Content = model.Question;
-            if (question.QuestionType != (int) QuestionTypeEnum.Text)
-            {
-                var answersList = _proposedAnswerRepository.GetList(p => p.QuestionId == question.QuestionId);
-                if (answersList != null)
-                {
-                    foreach (var answer in answersList)
-                    {
-                        _proposedAnswerRepository.Delete(answer);
-                    }
-                }
-                foreach (var answer in model.Answers)
-                {
-                    var proposedAnswer = new ProposedAnswer
-                    {
-                        Content = answer.Content,
-                        QuestionId = question.QuestionId
-                    };
-                    _proposedAnswerRepository.Insert(proposedAnswer);
-                }
-            }
-            int result;
-            try
-            {
-                result = _unitOfWork.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return result >= 0;
-        }
-
-        public bool RemoveQuestion(string questionId)
-        {
-            int id;
-            try
-            {
-                id = Convert.ToInt32(questionId);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            var question = _questionRepository.GetById(id);
-            if (question == null)
-            {
-                return false;
-            }
-            _questionRepository.Delete(question);
-            int result;
-            try
-            {
-                result = _unitOfWork.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-            return result > 0;
-        }
-
-        public bool RemoveSurvey(string surveyId)
-        {
-            int id;
-            try
-            {
-                id = Convert.ToInt32(surveyId);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            var survey = _surveyRepository.GetById(id);
-            if (survey == null)
-            {
-                return false;
-            }
-            _surveyRepository.Delete(survey);
-            int result;
-            try
-            {
-                result = _unitOfWork.SaveChanges();
-            }
-            catch (Exception e)
             {
                 return false;
             }
@@ -726,119 +354,6 @@ namespace GamexService.Implement
                 }
             }
             return false;
-        }
-
-        public List<PastSurveyViewModel> LoadPastSurveyDataTable(string sortColumnDirection, string searchValue, int skip, int take, string companyId, string exhibitionId)
-        {
-            var pastSurveyList = _surveyRepository.GetPagingProjection(
-                s => new PastSurveyViewModel
-                {
-                    ExhibitionId = s.ExhibitionId,
-                    SurveyId = s.SurveyId,
-                    SurveyTitle = s.Title,
-                    ResponseCount = s.SurveyParticipation.Count
-                },
-                s => s.CompanyId == companyId && s.ExhibitionId == exhibitionId
-                                              && s.Title.Contains(searchValue),
-                s => s.Title, sortColumnDirection, take, skip
-            );
-            return pastSurveyList.ToList();
-        }
-
-        public bool IsValidSurveyExportRequest(string surveyId, string companyId)
-        {
-            try
-            {
-                int id = Convert.ToInt32(surveyId);
-                var survey = _surveyRepository.GetSingle(
-                    s => s.SurveyId == id && s.CompanyId == companyId 
-                         && s.Exhibition.EndDate < DateTime.Now && s.SurveyParticipation.Count > 0
-                );
-                return survey != null;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public Stream GetSurveyResponseExcelFile(string surveyId)
-        {
-            int id = Convert.ToInt32(surveyId);
-
-            var surveyResult = _surveyRepository.GetSingleProjection(
-                s => new SurveyResultViewModel
-                {
-                    SurveyTitle = s.Title,
-                    Questions = s.Question.Select(q => q.Content).ToList(),
-                    AnswerList = s.SurveyParticipation.Select(sp => new SurveyAnswerViewModel
-                    {
-                        ParticipantName = sp.AspNetUsers.LastName + " " + sp.AspNetUsers.FirstName,
-                        TimeStamp = sp.CompleteDate,
-                        QuestionList = s.SurveyAnswer.Where(sa => sa.AccountId == sp.AspNetUsers.Id).Select(sa => new
-                        {
-                            QuestionId = sa.Question.QuestionId,
-                            Answer = sa.ProposedAnswerId != null ? sa.ProposedAnswer.Content : sa.Other
-                        }).GroupBy(rs => rs.QuestionId).Select(g => new QuestionAnswerViewModel
-                        {
-                            QuestionId = g.Key,
-                            QuestionAnswer = g.Select(v => v.Answer).ToList()
-                        }).ToList()
-                    }).ToList()
-                },
-                s => s.SurveyId == id
-            );
-            if (surveyResult == null || surveyResult.Questions.Count == 0 || surveyResult.AnswerList.Count == 0)
-            {
-                return null;
-            }
-            using (var excelPackage = new ExcelPackage(new MemoryStream()))
-            {
-                var workSheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
-                workSheet.Row(1).Style.Font.Bold = true;
-
-                var headerRow = new List<string[]>();
-
-                var row = new List<string> {"Full Name", "Timestamp"};
-
-                foreach (var question in surveyResult.Questions)
-                {
-                    row.Add(question);
-                }
-                headerRow.Add(row.ToArray());
-                string headerRange = "A1:" + char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
-                workSheet.Cells[headerRange].LoadFromArrays(headerRow);
-                int currentRow = 2;
-                foreach (var surveyAnswer in surveyResult.AnswerList)
-                {
-                    
-                    var contentRow = new List<string[]>();
-                    row = new List<string>
-                    {
-                        surveyAnswer.ParticipantName,
-                        surveyAnswer.TimeStamp.ToString("HH:mm dddd, dd MMMM yyyy")
-                    };
-                    foreach (var answers in surveyAnswer.QuestionList)
-                    {
-                        row.Add(string.Join(", ", answers.QuestionAnswer));
-                    }
-                    contentRow.Add(row.ToArray());
-                    string rowRange = "A" + currentRow + ":" + Char.ConvertFromUtf32(contentRow[0].Length + 64) + currentRow;
-                    workSheet.Cells[rowRange].LoadFromArrays(contentRow);
-                    currentRow++;
-                }
-
-                int columnCount = 2 + surveyResult.Questions.Count;
-                for (int i = 1; i <= columnCount; i++)
-                {
-                    workSheet.Column(i).AutoFit();
-                }
-
-                excelPackage.Save();
-                excelPackage.Stream.Position = 0;
-                return excelPackage.Stream;
-            }
         }
 
         public List<EmployeeRequestViewModel> LoadEmployeeRequestDatatable(string sortColumnDirection, string searchValue, int skip, int take, string companyId)

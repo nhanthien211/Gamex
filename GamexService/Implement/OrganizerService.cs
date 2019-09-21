@@ -84,7 +84,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 case ExhibitionTypes.Ongoing:
@@ -105,7 +105,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 case ExhibitionTypes.Past:
@@ -126,7 +126,7 @@ namespace GamexService.Implement
                     {
                         ExhibitionId = e.ExhibitionId,
                         ExhibitionName = e.ExhibitionName,
-                        Time = e.StartDate.ToString("HH:mm dddd, dd MMMM yyyy") + " to " + e.EndDate.ToString("HH:mm dddd, dd MMMM yyyy")
+                        Time = e.StartDate.ToString("D") + " to " + e.EndDate.ToString("D")
                     }).ToList();
                     return result;
                 default:

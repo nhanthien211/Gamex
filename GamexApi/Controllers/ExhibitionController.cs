@@ -14,18 +14,15 @@ namespace GamexApi.Controllers
     public class ExhibitionController : ApiController {
 
         private readonly IExhibitionService _exhibitionService;
-        private readonly IActivityHistoryService _activityHistoryService;
         private readonly IAccountService _accountService;
 
         private const int CheckInExhibitionPoint = 100;
 
         public ExhibitionController(
             IExhibitionService exhibitionService,
-            IActivityHistoryService activityHistoryService,
             IAccountService accountService
             ) {
             _exhibitionService = exhibitionService;
-            _activityHistoryService = activityHistoryService;
             _accountService = accountService;
         }
 
@@ -62,18 +59,12 @@ namespace GamexApi.Controllers
             var accountId = User.Identity.GetUserId();
             var result = _exhibitionService.CheckInExhibition(accountId, model.Id);
             if (result.Ok) {
-                var exhibition = _exhibitionService.GetExhibition(accountId, model.Id);
-                RecordActivity(accountId, "Checked in exhibition " + exhibition.Name);
                 EarnPoint(accountId, CheckInExhibitionPoint);
                 return Ok(new { point = CheckInExhibitionPoint, message = result.Message });
             }
             return BadRequest(result.Message);
         }
-
-        private bool RecordActivity(string accountId, string activity) {
-            return _activityHistoryService.AddActivity(accountId, activity);
-        }
-
+        
         private bool EarnPoint(string accountId, int point) {
             return _accountService.EarnPoint(accountId, point);
         }

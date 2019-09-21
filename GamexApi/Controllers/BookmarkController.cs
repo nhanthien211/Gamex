@@ -12,49 +12,10 @@ namespace GamexApi.Controllers {
     [RoutePrefix("api")]
     public class BookmarkController : ApiController {
         private IBookmarkService _bookmarkService;
-        private IActivityHistoryService _activityHistoryService;
 
         public BookmarkController(
-            IBookmarkService bookmarkService,
-            IActivityHistoryService activityHistoryService) {
+            IBookmarkService bookmarkService) {
             _bookmarkService = bookmarkService;
-            _activityHistoryService = activityHistoryService;
-        }
-
-        [HttpPost]
-        [Route("bookmark/account")]
-        public IHttpActionResult AddBookmarkAccount(BookmarkBindingModel model) {
-            if (!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
-
-            var accountId = User.Identity.GetUserId();
-            var result = _bookmarkService.AddBookmarkAccount(accountId, model.Id);
-            if (!result.Ok) {
-                return BadRequest(result.Message);
-            }
-
-            var activity = "Bookmarked account " + ((BookmarkServiceActionResult)result).TgtAccount.UserName;
-            _activityHistoryService.AddActivity(accountId, activity);
-            return Ok(new { message = result.Message });
-        }
-
-        [HttpDelete]
-        [Route("bookmark/account")]
-        public IHttpActionResult RemoveBookmarkAccount(BookmarkBindingModel model) {
-            if (!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
-
-            var accountId = User.Identity.GetUserId();
-            var result = _bookmarkService.RemoveBookmarkAccount(accountId, model.Id);
-            if (!result.Ok) {
-                return BadRequest(result.Message);
-            }
-
-            var activity = "Removed bookmark account " + ((BookmarkServiceActionResult)result).TgtAccount.UserName;
-            _activityHistoryService.AddActivity(accountId, activity);
-            return Ok(new { message = result.Message });
         }
 
         [HttpPost]
@@ -63,15 +24,11 @@ namespace GamexApi.Controllers {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-
             var accountId = User.Identity.GetUserId();
             var result = _bookmarkService.AddBookmarkCompany(accountId, model.Id);
             if (!result.Ok) {
                 return BadRequest(result.Message);
             }
-
-            var activity = "Bookmarked company " + ((BookmarkServiceActionResult)result).Company.Name;
-            _activityHistoryService.AddActivity(accountId, activity);
             return Ok(new { message = result.Message });
         }
 
@@ -87,9 +44,6 @@ namespace GamexApi.Controllers {
             if (!result.Ok) {
                 return BadRequest(result.Message);
             }
-
-            var activity = "Removed bookmark company " + ((BookmarkServiceActionResult)result).Company.Name;
-            _activityHistoryService.AddActivity(accountId, activity);
             return Ok(new { message = result.Message });
         }
 
@@ -105,9 +59,6 @@ namespace GamexApi.Controllers {
             if (!result.Ok) {
                 return BadRequest(result.Message);
             }
-
-            var activity = "Bookmarked exhibition " + ((BookmarkServiceActionResult)result).Exhibition.Name;
-            _activityHistoryService.AddActivity(accountId, activity);
             return Ok(new { message = result.Message });
         }
 
@@ -123,9 +74,6 @@ namespace GamexApi.Controllers {
             if (!result.Ok) {
                 return BadRequest(result.Message);
             }
-
-            var activity = "Removed bookmark exhibition " + ((BookmarkServiceActionResult)result).Exhibition.Name;
-            _activityHistoryService.AddActivity(accountId, activity);
             return Ok(new { message = result.Message });
         }
 
@@ -135,8 +83,6 @@ namespace GamexApi.Controllers {
             var accountId = User.Identity.GetUserId();
             if (string.IsNullOrEmpty(type))
                 return _bookmarkService.GetBookmarks(accountId);
-            if (type.Equals(BookmarkTypes.Attendee))
-                return _bookmarkService.GetBookmarkAccounts(accountId);
             if (type.Equals(BookmarkTypes.Company))
                 return _bookmarkService.GetBookmarkCompanies(accountId);
             if (type.Equals(BookmarkTypes.Exhibition)) 

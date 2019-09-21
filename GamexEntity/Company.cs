@@ -20,7 +20,6 @@ namespace GamexEntity
             this.AspNetUsers = new HashSet<AspNetUsers>();
             this.Booth = new HashSet<Booth>();
             this.CompanyBookmark = new HashSet<CompanyBookmark>();
-            this.Survey = new HashSet<Survey>();
         }
     
         public string CompanyId { get; set; }
@@ -42,7 +41,5 @@ namespace GamexEntity
         public virtual CompanyStatus CompanyStatus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyBookmark> CompanyBookmark { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Survey> Survey { get; set; }
     }
 }

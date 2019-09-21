@@ -14,14 +14,13 @@ namespace GamexService.Implement
     {
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<AspNetUsers> _userRepository;
-        private readonly IRepository<Reward> _rewardRepository;
+        
         private readonly IUnitOfWork _unitOfWork;
 
-        public AdminService(IRepository<Company> companyRepository, IRepository<AspNetUsers> userRepository, IRepository<Reward> rewardRepository, IUnitOfWork unitOfWork)
+        public AdminService(IRepository<Company> companyRepository, IRepository<AspNetUsers> userRepository, IUnitOfWork unitOfWork)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
-            _rewardRepository = rewardRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -123,150 +122,6 @@ namespace GamexService.Implement
                 a => a.FirstName, sortColumnDirection, take, skip
             );
             return organizerList.ToList();
-        }
-
-        public bool CreateReward(string userId, CreateRewardViewModel model)
-        {
-            var reward = new Reward
-            {
-                CreatedBy =  userId,
-                Content = model.Content,
-                Description = model.Description,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
-                IsActive = true,
-                PointCost = model.PointCost,
-                Quantity = model.Quantity
-            };
-            _rewardRepository.Insert(reward);
-            try
-            {
-                var result = _unitOfWork.SaveChanges();
-                if (result > 0)
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-        public List<RewardListViewModel> LoadRewardDataTable(string sortColumn, string sortColumnDirection, string searchValue, int skip, int take)
-        {
-            int sortOption;
-            try
-            {
-                sortOption = Convert.ToInt32(sortColumn);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            switch (sortOption)
-            {
-                case 1:
-                    var rewardList = _rewardRepository.GetPagingProjection(
-                    r => new
-                    {
-                        RewardId = r.RewardId,
-                        RewardDescription = r.Description,
-                        Quantity = r.Quantity,
-                        IsActive = r.IsActive
-                    },
-                    r => r.Description.Contains(searchValue),
-                    r => r.Quantity, sortColumnDirection, take, skip
-                    );
-                    return rewardList.Select(r => new RewardListViewModel
-                    {
-                        Status = r.IsActive ? "Enable" : "Disable",
-                        Quantity = r.Quantity,
-                        RewardId = r.RewardId,
-                        RewardDescription = r.RewardDescription
-                    }).ToList();
-                case 2:
-                    rewardList = _rewardRepository.GetPagingProjection(
-                        r => new
-                        {
-                            RewardId = r.RewardId,
-                            RewardDescription = r.Description,
-                            Quantity = r.Quantity,
-                            IsActive = r.IsActive
-                        },
-                        r => r.Description.Contains(searchValue),
-                        r => r.IsActive, sortColumnDirection, take, skip
-                    );
-                    return rewardList.Select(r => new RewardListViewModel
-                    {
-                        Status = r.IsActive ? "Enable" : "Disable",
-                        Quantity = r.Quantity,
-                        RewardId = r.RewardId,
-                        RewardDescription = r.RewardDescription
-                    }).ToList();
-                default:
-                    return null;
-            }
-        }
-
-        public RewardDetailViewModel GetRewardDetail(string rewardId)
-        {
-            int id;
-            try
-            {
-                id = Convert.ToInt32(rewardId);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            return _rewardRepository.GetSingleProjection( 
-                r => new RewardDetailViewModel
-                {
-                    Content = r.Content,
-                    Description = r.Description,
-                    StartDate = r.StartDate,
-                    EndDate = r.EndDate,
-                    PointCost = r.PointCost,
-                    Quantity = r.Quantity,
-                    IsActive = r.IsActive,
-                    RewardId = r.RewardId
-                },
-                r => r.RewardId == id
-                );
-        }
-
-        public bool UpdateReward(RewardDetailViewModel model)
-        {
-            var reward = _rewardRepository.GetById(model.RewardId);
-            if (reward == null)
-            {
-                return false;
-            }
-            _rewardRepository.Update(reward);
-            reward.Content = model.Content;
-            reward.Description = model.Description;
-            reward.IsActive = model.IsActive;
-            reward.PointCost = model.PointCost;
-            reward.Quantity = model.Quantity;
-            reward.StartDate = model.StartDate;
-            reward.EndDate = model.EndDate;
-            try
-            {
-                var result = _unitOfWork.SaveChanges();
-                if (result >= 0)
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
         }
     }
 }

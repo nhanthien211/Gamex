@@ -11,7 +11,6 @@ using GamexRepository;
 namespace GamexApiService.Implement {
     public class BookmarkService : IBookmarkService {
 
-        private IRepository<AccountBookmark> _accountBookmarkRepo;
         private IRepository<CompanyBookmark> _companyBookmarkRepo;
         private IRepository<ExhibitionAttendee> _exhibitionBookmarkRepo;
         private IRepository<AspNetUsers> _accountRepo;
@@ -20,14 +19,12 @@ namespace GamexApiService.Implement {
         private IUnitOfWork _unitOfWork;
 
         public BookmarkService(
-            IRepository<AccountBookmark> accountBookmarkRepo,
             IRepository<CompanyBookmark> companyBookmarkRepo,
             IRepository<ExhibitionAttendee> exhibitionBookmarkRepo,
             IRepository<Company> companyRepo,
             IRepository<Exhibition> exhibitionRepo,
             IRepository<AspNetUsers> accountRepo,
             IUnitOfWork unitOfWork) {
-            _accountBookmarkRepo = accountBookmarkRepo;
             _companyBookmarkRepo = companyBookmarkRepo;
             _exhibitionBookmarkRepo = exhibitionBookmarkRepo;
             _accountRepo = accountRepo;
@@ -36,70 +33,6 @@ namespace GamexApiService.Implement {
             _unitOfWork = unitOfWork;
         }
 
-        private bool HasBookmarkedAccount(string srcAccountId, string tgtAccountId) {
-            return _accountBookmarkRepo.GetSingle(
-                                    ab => ab.AccountId.Equals(srcAccountId) && ab.AccountBookmark1.Equals(tgtAccountId)
-                                                                            && ab.BookmarkDate != null) != null;
-        }
-
-        public ServiceActionResult AddBookmarkAccount(string srcAccountId, string tgtAccountId) {
-            var bookmark = new AccountBookmark {
-                AccountId = srcAccountId,
-                AccountBookmark1 = tgtAccountId,
-                BookmarkDate = DateTime.Now
-            };
-
-
-            if (HasBookmarkedAccount(srcAccountId, tgtAccountId)) {
-                return new ServiceActionResult() { Ok = false, Message = "Bookmark failed: You've already bookmarked this account!" };
-            }
-
-            _accountBookmarkRepo.Insert(bookmark);
-            try {
-                var affectedRows = _unitOfWork.SaveChanges();
-                if (affectedRows == 1) {
-                    var tgtAccount = _accountRepo.GetById(tgtAccountId);
-                    return new BookmarkServiceActionResult {
-                        Ok = true,
-                        Message = "Bookmark account " + tgtAccount.UserName + " success!",
-                        TgtAccount = tgtAccount
-                    };
-                }
-
-                return ServiceActionResult.ErrorResult;
-            } catch (Exception e) {
-                return ServiceActionResult.ErrorResult;
-            }
-        }
-
-        public ServiceActionResult RemoveBookmarkAccount(string srcAccountId, string tgtAccountId) {
-            var bookmark = _accountBookmarkRepo.GetSingle(
-                ab => ab.AccountId.Equals(srcAccountId) && ab.AccountBookmark1.Equals(tgtAccountId)
-                                                        && ab.BookmarkDate != null);
-
-
-            if (bookmark == null) {
-                return new ServiceActionResult 
-                    { Ok = false, Message = "Remove bookmark failed: You haven't bookmarked this account yet!" };
-            }
-
-            _accountBookmarkRepo.Delete(bookmark);
-            try {
-                var affectedRows = _unitOfWork.SaveChanges();
-                if (affectedRows == 1) {
-                    var tgtAccount = _accountRepo.GetById(tgtAccountId);
-                    return new BookmarkServiceActionResult {
-                        Ok = true,
-                        Message = "Remove bookmark account " + tgtAccount.UserName + " success!",
-                        TgtAccount = tgtAccount
-                    };
-                }
-                return ServiceActionResult.ErrorResult;
-            }
-            catch (Exception e) {
-                return ServiceActionResult.ErrorResult;
-            }
-        }
 
         public ServiceActionResult AddBookmarkCompany(string accountId, string companyId) {
             var bookmark = new CompanyBookmark() {
@@ -230,18 +163,6 @@ namespace GamexApiService.Implement {
             }
         }
 
-        public List<BookmarkViewModel> GetBookmarkAccounts(string accountId) {
-            var bookmarks = _accountBookmarkRepo.GetList(ab =>
-                ab.AccountId.Equals(accountId));
-
-            return bookmarks.Select(bookmark => new BookmarkViewModel {
-                TargetType = BookmarkTypes.Attendee,
-                TargetId = bookmark.AccountBookmark1,
-                TargetName = bookmark.AspNetUsers1.UserName,
-                BookmarkDate = bookmark.BookmarkDate.ToString("f")
-            }).OrderBy(b => b.TargetName).ToList();
-        }
-
         public List<BookmarkViewModel> GetBookmarkCompanies(string accountId) {
             var bookmarks = _companyBookmarkRepo.GetList(cb =>
                 cb.AccountId.Equals(accountId));
@@ -266,7 +187,6 @@ namespace GamexApiService.Implement {
 
         public List<BookmarkViewModel> GetBookmarks(string accountId) {
             var list = new List<BookmarkViewModel>();
-            list.AddRange(GetBookmarkAccounts(accountId));
             list.AddRange(GetBookmarkCompanies(accountId));
             list.AddRange(GetBookmarkExhibitions(accountId));
             return list;

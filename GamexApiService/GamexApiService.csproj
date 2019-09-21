@@ -74,24 +74,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implement\AccountService.cs" />
-    <Compile Include="Implement\ActivityHistoryService.cs" />
     <Compile Include="Implement\BookmarkService.cs" />
     <Compile Include="Implement\CompanyService.cs" />
     <Compile Include="Implement\ExhibitionService.cs" />
-    <Compile Include="Implement\RewardHistoryService.cs" />
-    <Compile Include="Implement\RewardService.cs" />
-    <Compile Include="Implement\SurveyParticipationService.cs" />
-    <Compile Include="Implement\SurveyService.cs" />
     <Compile Include="Implement\SystemExtension.cs" />
     <Compile Include="Interface\IAccountService.cs" />
-    <Compile Include="Interface\IActivityHistoryService.cs" />
     <Compile Include="Interface\IBookmarkService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Interface\IExhibitionService.cs" />
-    <Compile Include="Interface\IRewardHistoryService.cs" />
-    <Compile Include="Interface\IRewardService.cs" />
-    <Compile Include="Interface\ISurveyParticipationService.cs" />
-    <Compile Include="Interface\ISurveyService.cs" />
     <Compile Include="Models\ActivityHistoryViewModels.cs" />
     <Compile Include="Models\BookmarkBindingModels.cs" />
     <Compile Include="Models\BookmarkViewModels.cs" />

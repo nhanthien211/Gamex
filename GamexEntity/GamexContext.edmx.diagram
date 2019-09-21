@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fea58b9951374b9e9cc4813077b41908" Name="Diagram1">
+        <EntityTypeShape EntityType="GamexModel.AccountStatus" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.AspNetRoles" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.AspNetUserClaims" Width="1.5" PointX="7.5" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.AspNetUserLogins" Width="1.5" PointX="7.5" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.AspNetUsers" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Booth" Width="1.5" PointX="9.75" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Company" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.CompanyBookmark" Width="1.5" PointX="10.5" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.CompanyStatus" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.Exhibition" Width="1.5" PointX="7.5" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="GamexModel.ExhibitionAttendee" Width="1.5" PointX="12.75" PointY="9" IsExpanded="true" />
+        <AssociationConnector Association="GamexModel.FK_AspNetUsers_AccountStatus" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_AspNetUserClaims_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_AspNetUserLogins_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_AspNetUsers_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_CompanyBookmark_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_Exhibition_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_ExhibitionAttendee_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_Booth_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_Booth_Exhibition" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_Company_CompanyStatus" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_CompanyBookmark_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.FK_ExhibitionAttendee_Exhibitio" ManuallyRouted="false" />
+        <AssociationConnector Association="GamexModel.AspNetUserRoles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

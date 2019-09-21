@@ -78,13 +78,8 @@ namespace GamexApi {
             //End of :Repo + UoW + DBContext registration
 
             container.RegisterType<IExhibitionService, ExhibitionService>();
-            container.RegisterType<IActivityHistoryService, ActivityHistoryService>();
             container.RegisterType<ICompanyService, CompanyService>();
-            container.RegisterType<ISurveyService, SurveyService>();
             container.RegisterType<IAccountService, AccountService>();
-            container.RegisterType<ISurveyParticipationService, SurveyParticipationService>();
-            container.RegisterType<IRewardService, RewardService>();
-            container.RegisterType<IRewardHistoryService, RewardHistoryService>();
             container.RegisterType<IBookmarkService, BookmarkService>();
 
             container.RegisterType(typeof(ISecureDataFormat<>), typeof(SecureDataFormat<>));
