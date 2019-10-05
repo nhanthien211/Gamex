@@ -405,6 +405,7 @@
     <Content Include="Views\Admin\OrganizerList.cshtml" />
     <Content Include="Views\Admin\CreateOrganizer.cshtml" />
     <Content Include="Views\Organizer\CreateExhibition.cshtml" />
+    <None Include="Properties\PublishProfiles\GamexCloudWeb - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\GamexWeb - Web Deploy.pubxml" />
     <Content Include="Views\Company\NewExhibition.cshtml" />
     <Content Include="Views\Company\NewExhibitionDetail.cshtml" />

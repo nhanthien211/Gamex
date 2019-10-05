@@ -67,8 +67,8 @@ namespace GamexApi
             //    consumerSecret: "");
 
             FacebookAuthOptions = new FacebookAuthenticationOptions() {
-                AppId = "2142549419154481",
-                AppSecret = "d30af411d4c7a2a50b3bbc6855381014",
+                AppId = "681767225676163",
+                AppSecret = "c64a057da33fe58affdf1ca70910fe4e",
                 Provider = new FacebookAuthProvider()
             };
             app.UseFacebookAuthentication(FacebookAuthOptions);
